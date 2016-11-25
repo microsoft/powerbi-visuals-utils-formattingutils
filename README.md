@@ -1,7 +1,7 @@
 # Microsoft Power BI visuals FormattingUtils
 [![Build Status](https://travis-ci.org/Microsoft/powerbi-visuals-utils-formattingutils.svg?branch=master)](https://travis-ci.org/Microsoft/powerbi-visuals-utils-formattingutils) [![npm version](https://img.shields.io/npm/v/powerbi-visuals-utils-formattingutils.svg)](https://www.npmjs.com/package/powerbi-visuals-utils-formattingutils) [![npm](https://img.shields.io/npm/dm/powerbi-visuals-utils-formattingutils.svg)](https://www.npmjs.com/package/powerbi-visuals-utils-formattingutils)
 
-> Formatting utility interfaces for creating powerbi custom visuals
+> FormattingUtils is a set of functions and classes in order to format values for Power BI custom visuals
 
 ## Usage
 Learn how to install and use the FormattingUtils in your custom visuals:
