@@ -1,2 +1,19 @@
-# powerbi-visuals-utils-formattingutils
-Formatting utility interfaces for creating powerbi custom visuals
+# Microsoft Power BI visuals FormattingUtils
+[![Build Status](https://travis-ci.org/Microsoft/powerbi-visuals-utils-formattingutils.svg?branch=master)](https://travis-ci.org/Microsoft/powerbi-visuals-utils-formattingutils) [![npm version](https://img.shields.io/npm/v/powerbi-visuals-utils-formattingutils.svg)](https://www.npmjs.com/package/powerbi-visuals-utils-formattingutils) [![npm](https://img.shields.io/npm/dm/powerbi-visuals-utils-formattingutils.svg)](https://www.npmjs.com/package/powerbi-visuals-utils-formattingutils)
+
+> FormattingUtils is a set of functions and classes in order to format values for Power BI custom visuals
+
+## Usage
+Learn how to install and use the FormattingUtils in your custom visuals:
+* [Installation Guide](./docs/usage/installation-guide.md)
+* [Usage Guide](./docs/usage/usage-guide.md)
+
+## Contributing
+* Read our [contribution guideline](./CONTRIBUTING.md) to find out how to contribute bugs fixes and improvements
+* [Issue Tracker](https://github.com/Microsoft/powerbi-visuals-utils-formattingutils/issues)
+* [Development workflow](./docs/dev/development-workflow.md)
+* [How to build](./docs/dev/development-workflow.md#how-to-build)
+* [How to run unit tests locally](./docs/dev/development-workflow.md#how-to-run-unit-tests-locally)
+
+## License
+See the [LICENSE](./LICENSE) file for license rights and limitations (MIT).
