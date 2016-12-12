@@ -55,6 +55,8 @@ textMeasurementService.measureSvgTextWidth(textProperties);
 // returns: 194.71875
 ```
 
+You can take a look at the example code of the custom visual [here](https://github.com/Microsoft/powerbi-visuals-sankey/blob/4d544ea145b4e15006083a3610dfead3da5f61a4/src/visual.ts#L371).
+
 ## measureSvgTextRect
 This function returns a rect with the given SVG text properties.
 
@@ -153,6 +155,8 @@ textMeasurementService.estimateSvgTextHeight(textProperties);
 
 // returns: 27
 ```
+
+You can take a look at the example code of the custom visual [here](https://github.com/Microsoft/powerbi-visuals-sankey/blob/4d544ea145b4e15006083a3610dfead3da5f61a4/src/visual.ts#L372).
 
 ## measureSvgTextElementWidth
 
@@ -312,7 +316,9 @@ let textProperties: TextProperties = {
     fontSize: "24px"
 };
 
-textMeasurementService.getTailoredTextOrDefault(textProperties);
+textMeasurementService.getTailoredTextOrDefault(textProperties, 100);
 
-// returns: Microsof...
+// returns: Micros...
 ```
+
+You can take a look at the example code of the custom visual [here](https://github.com/Microsoft/powerbi-visuals-sankey/blob/4d544ea145b4e15006083a3610dfead3da5f61a4/src/visual.ts#L987).

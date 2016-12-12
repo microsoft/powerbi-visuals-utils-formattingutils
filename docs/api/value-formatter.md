@@ -22,7 +22,7 @@ interface IValueFormatter {
 
 ## IValueFormatter.format
 
-This method formats the values.
+This method formats the given value.
 
 ```typescript
 function format(value: any, format?: string, allowFormatBeautification?: boolean): string;
@@ -139,6 +139,8 @@ iValueFormatter.format(3.141592653589793);
 // returns: 3.142
 ```
 
+You can take a look at the example code of the custom visual [here](https://github.com/Microsoft/powerbi-visuals-sankey/blob/4d544ea145b4e15006083a3610dfead3da5f61a4/src/visual.ts#L359).
+
 ## ValueFormatterOptions
 
 This interface describes options of the IValueFormatter.
@@ -185,3 +187,5 @@ valueFormatter.create({});
 
 // returns: an instance of IValueFormatter.
 ```
+
+You can take a look at the example code of the custom visual [here](https://github.com/Microsoft/powerbi-visuals-sankey/blob/4d544ea145b4e15006083a3610dfead3da5f61a4/src/visual.ts#L341).
