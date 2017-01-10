@@ -26,9 +26,11 @@
 
 'use strict';
 
-const recursivePathToTests = 'test/**/*.ts'
-    , indexFile = 'lib/index.js'
-    , indexCss = 'lib/index.css';
+const testRecursivePath = 'test/**/*.ts'
+    , srcOriginalRecursivePath = 'src/**/*.ts'
+    , srcRecursivePath = 'lib/**/*.js'
+    , srcCssRecursivePath = 'lib/**/*.css'
+    , coverageFolder = 'coverage';
 
 module.exports = (config) => {
     let browsers = [];
@@ -49,7 +51,11 @@ module.exports = (config) => {
         browsers: browsers,
         colors: true,
         frameworks: ['jasmine'],
-        reporters: ['progress'],
+        reporters: [
+            'progress',
+            'coverage',
+            'karma-remap-istanbul'
+        ],
         singleRun: true,
         files: [
             'node_modules/jquery/dist/jquery.min.js',
@@ -62,12 +68,18 @@ module.exports = (config) => {
             'node_modules/powerbi-visuals-utils-svgutils/lib/index.js',
             'node_modules/powerbi-visuals-utils-testutils/lib/index.js',
             'node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js',
-            indexCss,
-            indexFile,
-            recursivePathToTests
+            srcCssRecursivePath,
+            srcRecursivePath,
+            testRecursivePath,
+            {
+                pattern: srcOriginalRecursivePath,
+                included: false,
+                served: true
+            }
         ],
         preprocessors: {
-            [recursivePathToTests]: ['typescript']
+            [testRecursivePath]: ['typescript'],
+            [srcRecursivePath]: ['sourcemap', 'coverage']
         },
         typescriptPreprocessor: {
             options: {
@@ -75,9 +87,19 @@ module.exports = (config) => {
                 target: 'ES5',
                 removeComments: false,
                 concatenateOutput: false
-            },
-            transformPath: (path) => {
-                return path.replace(/\.ts$/, '.js');
+            }
+        },
+        coverageReporter: {
+            dir: coverageFolder,
+            reporters: [
+                { type: 'html' },
+                { type: 'lcov' }
+            ]
+        },
+        remapIstanbulReporter: {
+            reports: {
+                lcovonly: coverageFolder + '/lcov.info',
+                html: coverageFolder
             }
         }
     });
