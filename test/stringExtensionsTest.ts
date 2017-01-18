@@ -29,111 +29,307 @@
 module powerbi.extensibility.utils.formatting.test {
     import stringExtensions = powerbi.extensibility.utils.formatting.stringExtensions;
 
-    describe("stringExtensionsTests", () => {
-        it("constructNameFromList not exceeding max value", () => {
-            let result = stringExtensions.constructNameFromList(["FirstName", "SecondName"], "&", 50);
+    describe("stringExtensions", () => {
+        describe("format", () => {
+            it("should return the original value if the value if empty string", () => {
+                const expectedValue: string = "";
 
-            expect(result).toBe("FirstName & SecondName");
+                const actualValue: string = stringExtensions.format(expectedValue);
+
+                expect(actualValue).toBe(expectedValue);
+            });
         });
 
-        it("constructNameFromList exceeding max value", () => {
-            let result = stringExtensions.constructNameFromList(["The first category name", "The second category name", "The third category name"], "&", 50);
+        describe("equalIgnoreCase", () => {
+            it("should return true if strings are the same", () => {
+                const firstString: string = "PoWeR bI",
+                    secondString: string = "pOwEr Bi";
 
-            expect(result).toBe("The first category name & The second category name & ...");
+                const actualResult: boolean = stringExtensions.equalIgnoreCase(
+                    firstString,
+                    secondString);
+
+                expect(actualResult).toBeTruthy();
+            });
         });
 
-        it("startsWith - positive test", () => {
-            let result = stringExtensions.startsWith("abcdefg", "abcd");
-            expect(result).toBe(true);
+        describe("stringToArrayBuffer", () => {
+            it("should return null if the given string is empty", () => {
+                const expectedBuffer: ArrayBuffer = null,
+                    str: string = "";
+
+                const actualBuffer: ArrayBuffer = stringExtensions.stringToArrayBuffer(str);
+
+                expect(actualBuffer).toBe(expectedBuffer);
+            });
+
+            it("should contain the correct amount of letters", () => {
+                const str: string = "Power BI",
+                    expectedAmountOfLetters: number = str.length;
+
+                const actualBuffer: ArrayBuffer = stringExtensions.stringToArrayBuffer(str);
+
+                expect(actualBuffer.byteLength).toBe(expectedAmountOfLetters);
+            });
         });
 
-        it("startsWith - negative test", () => {
-            let result = stringExtensions.startsWith("abcdefg", "gfe");
-            expect(result).toBe(false);
+        describe("containsWhitespace", () => {
+            it("should return true if the string contains white spaces", () => {
+                const str: string = "Power BI";
+
+                const actualResult: boolean = stringExtensions.containsWhitespace(str);
+
+                expect(actualResult).toBeTruthy();
+            });
         });
 
-        it("startsWith - case sensitivity test", () => {
-            let result = stringExtensions.startsWith("abcdefg", "abC");
-            expect(result).toBe(false);
+        describe("trimTrailingWhitespace", () => {
+            it("should remove the last white spaces of the string", () => {
+                const str: string = "Power BI  ",
+                    expectedValue: string = "Power BI";
+
+                const actualValue: string = stringExtensions.trimTrailingWhitespace(str);
+
+                expect(actualValue).toBe(expectedValue);
+            });
         });
 
-        it("ensureUniqueNames - basic", () => {
-            let result = stringExtensions.ensureUniqueNames(["a", "b"]);
-            expect(result[0]).toBe("a");
-            expect(result[1]).toBe("b");
+        describe("isWhitespace", () => {
+            it("should return false if string contains other letter excepting white spaces", () => {
+                const str: string = " Power BI ";
+
+                const actualResult: boolean = stringExtensions.isWhitespace(str);
+
+                expect(actualResult).toBeFalsy();
+            });
         });
 
-        it("ensureUniqueNames - simple repeat", () => {
-            let result = stringExtensions.ensureUniqueNames(["a", "a", "f", "a"]);
-            expect(result[0]).toBe("a");
-            expect(result[1]).toBe("a.1");
-            expect(result[2]).toBe("f");
-            expect(result[3]).toBe("a.2");
+        describe("trimWhitespace", () => {
+            it("should remove white spaces at the beginning and ending of the string", () => {
+                const str: string = " Power BI ",
+                    expectedValue: string = "Power BI";
+
+                const actualResult: string = stringExtensions.trimWhitespace(str);
+
+                expect(actualResult).toBe(expectedValue);
+            });
         });
 
-        it("ensureUniqueNames - original name kept regardless of order", () => {
-            let result = stringExtensions.ensureUniqueNames(["a", "a", "a", "a.2", "a.2"]);
-            expect(result[0]).toBe("a");
-            expect(result[1]).toBe("a.1");
-            expect(result[2]).toBe("a.3");
-            expect(result[3]).toBe("a.2");
-            expect(result[4]).toBe("a.2.1");
+        describe("getLengthDifference", () => {
+            it("should return the correct diff", () => {
+                const firstString: string = "Integer viverra nibh at tempus pretium. ",
+                    secondString: string = "Nulla suscipit justo mauris, et varius metus gravida ac. Curabitur mattis",
+                    expectedDiff: number = secondString.length - firstString.length;
+
+                const actualDiff: number = stringExtensions.getLengthDifference(
+                    firstString,
+                    secondString);
+
+                expect(actualDiff).toBe(expectedDiff);
+            });
         });
 
-        it("normalizeFileName - string with quote", () => {
-            expect(stringExtensions.normalizeFileName(`Hello"World`)).toEqual("HelloWorld");
+        describe("replaceAll", () => {
+            it("should return the original string if the textToFind is undefined", () => {
+                const expectedValue: string = "Power BI";
+
+                const actualValue: string = stringExtensions.replaceAll(
+                    expectedValue,
+                    undefined,
+                    undefined);
+
+                expect(actualValue).toBe(expectedValue);
+            });
+
+            it("should replace every instance of the substring", () => {
+                const str: string = "Power BI Power BI Power BI",
+                    textToFind: string = "Power",
+                    textToReplace: string = "Microsoft Power",
+                    expectedValue: string = "Microsoft Power BI Microsoft Power BI Microsoft Power BI";
+
+                const actualValue: string = stringExtensions.replaceAll(
+                    str,
+                    textToFind,
+                    textToReplace);
+
+                expect(actualValue).toBe(expectedValue);
+            });
         });
 
-        it("normalizeFileName - string with all reserved characters", () => {
-            expect(stringExtensions.normalizeFileName("<>:\"/\\|?*")).toEqual("");
+        describe("findUniqueName", () => {
+            it("should return an unique name", () => {
+                const baseName: string = "Power BI",
+                    expectedValue: string = `${baseName}2`,
+                    usedNamed: any = {
+                        [baseName]: true,
+                        [`${baseName}4`]: true,
+                        [`${baseName}1`]: true,
+                        [`${baseName}0`]: true
+                    };
+
+                const actualValue: string = stringExtensions.findUniqueName(
+                    usedNamed,
+                    baseName);
+
+                expect(actualValue).toBe(expectedValue);
+            });
+        });
+
+        describe("stripTagDelimiters", () => {
+            it("should return brackets of the tag", () => {
+                const strWithTag: string = "<header><p>Power BI</p></header>",
+                    expectedValue: string = "headerpPower BI/p/header";
+
+                const actualValue: string = stringExtensions.stripTagDelimiters(strWithTag);
+
+                expect(actualValue).toBe(expectedValue);
+            });
+        });
+
+        describe("constructNameFromList", () => {
+            it("not exceeding max value", () => {
+                const result: string = stringExtensions.constructNameFromList([
+                    "FirstName",
+                    "SecondName"
+                ], "&", 50);
+
+                expect(result).toBe("FirstName & SecondName");
+            });
+
+            it("exceeding max value", () => {
+                const result: string = stringExtensions.constructNameFromList([
+                    "The first category name",
+                    "The second category name",
+                    "The third category name"
+                ], "&", 50);
+
+                expect(result).toBe("The first category name & The second category name & ...");
+            });
+        });
+
+        describe("startsWith", () => {
+            it("positive test", () => {
+                const result: boolean = stringExtensions.startsWith("abcdefg", "abcd");
+
+                expect(result).toBe(true);
+            });
+
+            it("negative test", () => {
+                const result: boolean = stringExtensions.startsWith("abcdefg", "gfe");
+
+                expect(result).toBe(false);
+            });
+
+            it("case sensitivity test", () => {
+                const result: boolean = stringExtensions.startsWith("abcdefg", "abC");
+
+                expect(result).toBe(false);
+            });
+        });
+
+        describe("ensureUniqueNames", () => {
+            it("basic", () => {
+                const result: string[] = stringExtensions.ensureUniqueNames(["a", "b"]);
+
+                expect(result[0]).toBe("a");
+                expect(result[1]).toBe("b");
+            });
+
+            it("simple repeat", () => {
+                const result: string[] = stringExtensions.ensureUniqueNames([
+                    "a",
+                    "a",
+                    "f",
+                    "a"
+                ]);
+
+                expect(result[0]).toBe("a");
+                expect(result[1]).toBe("a.1");
+                expect(result[2]).toBe("f");
+                expect(result[3]).toBe("a.2");
+            });
+
+            it("original name kept regardless of order", () => {
+                const result: string[] = stringExtensions.ensureUniqueNames([
+                    "a",
+                    "a",
+                    "a",
+                    "a.2",
+                    "a.2"
+                ]);
+
+                expect(result[0]).toBe("a");
+                expect(result[1]).toBe("a.1");
+                expect(result[2]).toBe("a.3");
+                expect(result[3]).toBe("a.2");
+                expect(result[4]).toBe("a.2.1");
+            });
+        });
+
+        describe("normalizeFileName", () => {
+            it("string with quote", () => {
+                expect(stringExtensions.normalizeFileName(`Hello"World`))
+                    .toEqual("HelloWorld");
+            });
+
+            it("string with all reserved characters", () => {
+                expect(stringExtensions.normalizeFileName("<>:\"/\\|?*"))
+                    .toEqual("");
+            });
         });
 
         it("stringyAsPrettyJSON", () => {
-            let testObj = {
+            const testObj: any = {
                 name: "foo",
                 subs: [
                     { name: "bar" },
-                    { name: "baz" }]
+                    { name: "baz" }
+                ]
             };
 
-            expect(stringExtensions.stringifyAsPrettyJSON(testObj)).toEqual(`{"name":"foo","subs":[{"name":"bar"},{"name":"baz"}]}`);
+            expect(stringExtensions.stringifyAsPrettyJSON(testObj))
+                .toEqual(`{"name":"foo","subs":[{"name":"bar"},{"name":"baz"}]}`);
         });
 
-        it("deriveClsCompliantName - valid input unchanged", () => {
-            let input = "valid";
+        describe("deriveClsCompliantName", () => {
+            it("valid input unchanged", () => {
+                const input: string = "valid";
 
-            expect(stringExtensions.deriveClsCompliantName(input, "fallback")).toBe(input);
-        });
+                expect(stringExtensions.deriveClsCompliantName(input, "fallback")).toBe(input);
+            });
 
-        it("deriveClsCompliantName - fallback returned if input string is invalid", () => {
-            let input = "!!!";
-            let fallback = "fallback";
+            it("fallback returned if input string is invalid", () => {
+                const input: string = "!!!",
+                    fallback: string = "fallback";
 
-            expect(stringExtensions.deriveClsCompliantName(input, fallback)).toBe(fallback);
-        });
+                expect(stringExtensions.deriveClsCompliantName(input, fallback)).toBe(fallback);
+            });
 
-        it("deriveClsCompliantName - leading nonalpha characters removed", () => {
-            let input = "123!@#$%^&*()-_abc123";
+            it("leading nonalpha characters removed", () => {
+                const input: string = "123!@#$%^&*()-_abc123";
 
-            expect(stringExtensions.deriveClsCompliantName(input, "fallback")).toBe("abc123");
-        });
+                expect(stringExtensions.deriveClsCompliantName(input, "fallback")).toBe("abc123");
+            });
 
-        it("deriveClsCompliantName - non-leading non-CLS non-unicode separators transformed to underscore", () => {
-            let input = "abc./\\- :123";
+            it("non-leading non-CLS non-unicode separators transformed to underscore", () => {
+                const input: string = "abc./\\- :123";
 
-            expect(stringExtensions.deriveClsCompliantName(input, "fallback")).toBe("abc______123");
-        });
+                expect(stringExtensions.deriveClsCompliantName(input, "fallback")).toBe("abc______123");
+            });
 
-        it("deriveClsCompliantName - non-leading non-CLS unicode separators transformed to underscore", () => {
-            let unicodeInput = "abc\u00a0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000123";
+            it("non-leading non-CLS unicode separators transformed to underscore", () => {
+                const unicodeInput: string = "abc\u00a0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000123";
 
-            expect(stringExtensions.deriveClsCompliantName(unicodeInput, "fallback")).toBe("abc___________________123");
-        });
+                expect(stringExtensions.deriveClsCompliantName(unicodeInput, "fallback"))
+                    .toBe("abc___________________123");
+            });
 
-        it("deriveClsCompliantName - non-CLS non-separator characters removed", () => {
-            let unicodeInput = "abc!@#$%^&*()123";
+            it("non-CLS non-separator characters removed", () => {
+                const unicodeInput: string = "abc!@#$%^&*()123";
 
-            expect(stringExtensions.deriveClsCompliantName(unicodeInput, "fallback")).toBe("abc123");
+                expect(stringExtensions.deriveClsCompliantName(unicodeInput, "fallback"))
+                    .toBe("abc123");
+            });
         });
 
         it("contains", () => {
