@@ -440,13 +440,14 @@ declare module powerbi.extensibility.utils.formatting {
     }
 }
 declare module powerbi.extensibility.utils.formatting {
+    interface DateFormat {
+        value: Date;
+        format: string;
+    }
     /**
      * Translate .NET format into something supported by jQuery.Globalize.
      */
-    function findDateFormat(value: Date, format: string, cultureName: string): {
-        value: Date;
-        format: string;
-    };
+    function findDateFormat(value: Date, format: string, cultureName: string): DateFormat;
     /**
      * Translates unsupported .NET custom format expressions to the custom expressions supported by JQuery.Globalize.
      */
@@ -490,6 +491,7 @@ declare module powerbi.extensibility.utils.formatting.font {
 }
 declare module powerbi.extensibility.utils.formatting {
     import IFormattingService = powerbi.extensibility.utils.formatting.IFormattingService;
+    import DateTimeUnit = powerbi.extensibility.utils.formatting.DateTimeUnit;
     /** Culture interfaces. These match the Globalize library interfaces intentionally. */
     interface Culture {
         name: string;
@@ -509,6 +511,39 @@ declare module powerbi.extensibility.utils.formatting {
         groupSizes: number[];
         negativeInfinity: string;
         positiveInfinity: string;
+    }
+    /** Formatting Service */
+    class FormattingService implements IFormattingService {
+        private _currentCultureSelector;
+        private _currentCulture;
+        private _dateTimeScaleFormatInfo;
+        formatValue(value: any, format?: string, culture?: string): string;
+        format(formatWithIndexedTokens: string, args: any[], culture?: string): string;
+        isStandardNumberFormat(format: string): boolean;
+        formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string): string;
+        dateFormatString(unit: DateTimeUnit): string;
+        /**
+         * Sets the current localization culture
+         * @param cultureSelector - name of a culture: "en", "en-UK", "fr-FR" etc. (See National Language Support (NLS) for full lists. Use "default" for invariant culture).
+         */
+        private setCurrentCulture(cultureSelector);
+        /**
+         * Gets the culture assotiated with the specified cultureSelector ("en", "en-US", "fr-FR" etc).
+         * @param cultureSelector - name of a culture: "en", "en-UK", "fr-FR" etc. (See National Language Support (NLS) for full lists. Use "default" for invariant culture).
+         * Exposing this function for testability of unsupported cultures
+         */
+        getCulture(cultureSelector?: string): Culture;
+        /** By default the Globalization module initializes to the culture/calendar provided in the language/culture URL params */
+        private initialize();
+        /**
+         *  Exposing this function for testability
+         */
+        getCurrentCulture(): string;
+        /**
+         *  Exposing this function for testability
+         *  @param name: queryString name
+         */
+        getUrlParam(name: string): string;
     }
     /**
      * NumberFormat module contains the static methods for formatting the numbers.

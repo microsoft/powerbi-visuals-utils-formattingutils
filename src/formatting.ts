@@ -34,10 +34,15 @@ module powerbi.extensibility.utils.formatting {
 
     let regexCache: IRegexInt[];
 
+    export interface DateFormat {
+        value: Date;
+        format: string;
+    }
+
     /** 
      * Translate .NET format into something supported by jQuery.Globalize.
      */
-    export function findDateFormat(value: Date, format: string, cultureName: string) {
+    export function findDateFormat(value: Date, format: string, cultureName: string): DateFormat {
         switch (format) {
             case "m":
                 // Month + day

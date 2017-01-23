@@ -60,13 +60,6 @@ module powerbi.extensibility.utils.formatting {
         positiveInfinity: string;
     }
 
-    /**
-     *  Creating a dummy module to declare cultureInfo string, so we could do a strongly typed usage in Visuals
-     */
-    // declare module powerbi.common {
-    //     let cultureInfo: string;
-    // }
-
     /** Formatting Encoder */
     module formattingEncoder {
         // quoted and escaped literal patterns
@@ -147,11 +140,10 @@ module powerbi.extensibility.utils.formatting {
     const NumericPlaceholderRegex = new RegExp(NumericPlaceholders.join("|"), "g");
 
     /** Formatting Service */
-    class FormattingService implements IFormattingService {
-
-        _currentCultureSelector: string;
-        _currentCulture: Culture;
-        _dateTimeScaleFormatInfo: DateTimeScaleFormatInfo;
+    export class FormattingService implements IFormattingService {
+        private _currentCultureSelector: string;
+        private _currentCulture: Culture;
+        private _dateTimeScaleFormatInfo: DateTimeScaleFormatInfo;
 
         public formatValue(value: any, format?: string, culture?: string): string {
             // Handle special cases
