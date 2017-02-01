@@ -43,7 +43,7 @@ module powerbi.extensibility.utils.formatting {
          * @param value - value to be formatted and converted to string.
          * @param format - format to be applied. If undefined or empty then generic format is used.        
          */
-        formatValue(value: any, format?: string): string;
+        formatValue(value: any, format?: string, cultureSelector?: string): string;
 
         /** 
          * Replaces the indexed format tokens (for example {0:c2}) in the format string with the localized formatted arguments.

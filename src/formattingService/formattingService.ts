@@ -145,12 +145,13 @@ module powerbi.extensibility.utils.formatting {
         private _currentCulture: Culture;
         private _dateTimeScaleFormatInfo: DateTimeScaleFormatInfo;
 
-        public formatValue(value: any, format?: string, culture?: string): string {
+        public formatValue(value: any, format?: string, cultureSelector?: string): string {
             // Handle special cases
             if (value === undefined || value === null) {
                 return "";
             }
-            let gculture = this.getCulture(culture);
+
+            const gculture: Culture = this.getCulture(cultureSelector);
 
             if (dateTimeFormat.canFormat(value)) {
                 // Dates
@@ -158,10 +159,10 @@ module powerbi.extensibility.utils.formatting {
             } else if (numberFormat.canFormat(value)) {
                 // Numbers
                 return numberFormat.format(value, format, gculture);
-            } else {
-                // Other data types - return as string
-                return value.toString();
             }
+
+            // Other data types - return as string
+            return value.toString();
         }
 
         public format(formatWithIndexedTokens: string, args: any[], culture?: string): string {
