@@ -213,7 +213,7 @@ declare module powerbi.extensibility.utils.formatting {
          * @param value - value to be formatted and converted to string.
          * @param format - format to be applied. If undefined or empty then generic format is used.
          */
-        formatValue(value: any, format?: string): string;
+        formatValue(value: any, format?: string, cultureSelector?: string): string;
         /**
          * Replaces the indexed format tokens (for example {0:c2}) in the format string with the localized formatted arguments.
          * @param formatWithIndexedTokens - format string with a set of indexed format tokens.
@@ -517,7 +517,7 @@ declare module powerbi.extensibility.utils.formatting {
         private _currentCultureSelector;
         private _currentCulture;
         private _dateTimeScaleFormatInfo;
-        formatValue(value: any, format?: string, culture?: string): string;
+        formatValue(value: any, format?: string, cultureSelector?: string): string;
         format(formatWithIndexedTokens: string, args: any[], culture?: string): string;
         isStandardNumberFormat(format: string): boolean;
         formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string): string;
@@ -630,15 +630,15 @@ declare module powerbi.extensibility.utils.formatting {
         title: string;
         update(value: number): void;
         private findApplicableDisplayUnit(value);
-        format(value: number, format: string, decimals?: number, trailingZeros?: boolean): string;
+        format(value: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
         isFormatSupported(format: string): boolean;
         isPercentageFormat(format: string): boolean;
         shouldRespectScalingUnit(format: string): boolean;
         getNumberOfDecimalsForFormatting(format: string, decimals?: number): number;
         isScalingUnit(): boolean;
-        private formatHelper(value, nonScientificFormat, format, decimals?, trailingZeros?);
+        private formatHelper(options);
         /** Formats a single value by choosing an appropriate base for the DisplayUnitSystem before formatting. */
-        formatSingleValue(value: number, format: string, decimals?: number, trailingZeros?: boolean): string;
+        formatSingleValue(value: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
         private shouldUseValuePrecision(value);
         protected isScientific(value: number): boolean;
         protected hasScientitifcFormat(format: string): boolean;
@@ -655,7 +655,7 @@ declare module powerbi.extensibility.utils.formatting {
     class DefaultDisplayUnitSystem extends DisplayUnitSystem {
         private static units;
         constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames);
-        format(data: number, format: string, decimals?: number, trailingZeros?: boolean): string;
+        format(data: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
         static reset(): void;
         private static getUnits(unitLookup);
     }
@@ -667,7 +667,7 @@ declare module powerbi.extensibility.utils.formatting {
         constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames);
         static reset(): void;
         private static getUnits(unitLookup);
-        format(data: number, format: string, decimals?: number, trailingZeros?: boolean): string;
+        format(data: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
     }
     class DataLabelsDisplayUnitSystem extends DisplayUnitSystem {
         private static AUTO_DISPLAYUNIT_VALUE;
@@ -677,7 +677,7 @@ declare module powerbi.extensibility.utils.formatting {
         constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames);
         isFormatSupported(format: string): boolean;
         private static getUnits(unitLookup);
-        format(data: number, format: string, decimals?: number, trailingZeros?: boolean): string;
+        format(data: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
     }
     interface DisplayUnitSystemNames {
         title: string;
@@ -745,6 +745,8 @@ declare module powerbi.extensibility.utils.formatting {
         detectAxisPrecision?: boolean;
         /** Specifies the column type of the data value */
         columnType?: ValueTypeDescriptor;
+        /** Specifies the culture */
+        cultureSelector?: string;
     }
     interface IValueFormatter {
         format(value: any): string;
@@ -774,10 +776,10 @@ declare module powerbi.extensibility.utils.formatting {
         function getLocalizedString(stringId: string): string;
         function getFormatMetadata(format: string): NumberFormat.NumericFormatMetadata;
         function setLocaleOptions(options: ValueFormatterLocalizationOptions): void;
-        function createDefaultFormatter(formatString: string, allowFormatBeautification?: boolean): IValueFormatter;
+        function createDefaultFormatter(formatString: string, allowFormatBeautification?: boolean, cultureSelector?: string): IValueFormatter;
         /** Creates an IValueFormatter to be used for a range of values. */
         function create(options: ValueFormatterOptions): IValueFormatter;
-        function format(value: any, format?: string, allowFormatBeautification?: boolean): string;
+        function format(value: any, format?: string, allowFormatBeautification?: boolean, cultureSelector?: string): string;
         /**
          * Value formatting function to handle variant measures.
          * For a Date/Time value within a non-date/time field, it's formatted with the default date/time formatString instead of as a number
@@ -787,7 +789,7 @@ declare module powerbi.extensibility.utils.formatting {
          * @param {boolean} nullsAreBlank? Whether to show "(Blank)" instead of empty string for null values
          * @returns Formatted value
          */
-        function formatVariantMeasureValue(value: any, column: DataViewMetadataColumn, formatStringProp: DataViewObjectPropertyIdentifier, nullsAreBlank?: boolean): string;
+        function formatVariantMeasureValue(value: any, column: DataViewMetadataColumn, formatStringProp: DataViewObjectPropertyIdentifier, nullsAreBlank?: boolean, cultureSelector?: string): string;
         function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSystemType): DisplayUnitSystem;
         function getFormatString(column: DataViewMetadataColumn, formatStringProperty: DataViewObjectPropertyIdentifier, suppressTypeFallback?: boolean): string;
         function getFormatStringByColumn(column: DataViewMetadataColumn, suppressTypeFallback?: boolean): string;

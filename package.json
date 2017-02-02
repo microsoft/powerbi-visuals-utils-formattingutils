@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "FormattingUtils",
   "main": "lib/index.js",
   "repository": {
@@ -30,7 +30,7 @@
     "lessc": "lessc src/styles/style.less lib/index.css"
   },
   "devDependencies": {
-    "powerbi-visuals-utils-testutils": "^0.2.0",
+    "powerbi-visuals-utils-testutils": "0.2.2",
     "@types/jasmine": "2.5.37",
     "jasmine": "2.5.2",
     "jasmine-jquery": "2.1.1",
@@ -49,9 +49,9 @@
     "karma-sourcemap-loader": "0.3.7"
   },
   "dependencies": {
-    "powerbi-visuals-utils-dataviewutils": "^0.3.0",
-    "powerbi-visuals-utils-svgutils": "^0.2.0",
-    "powerbi-visuals-utils-typeutils": "^0.2.0",
+    "powerbi-visuals-utils-dataviewutils": "1.0.1",
+    "powerbi-visuals-utils-svgutils": "0.2.1",
+    "powerbi-visuals-utils-typeutils": "0.2.1",
     "d3": "3.5.5",
     "globalize": "0.1.0-a2",
     "jquery": "3.1.1"

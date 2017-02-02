@@ -47,6 +47,15 @@ module powerbi.extensibility.utils.formatting {
      */
     const SUPPORTED_SCIENTIFIC_FORMATS = /^([0\#,]*\.[0\#]+|[0\#,]+|g)$/i;
 
+    interface FormattingOptions {
+        value: number;
+        nonScientificFormat: string;
+        cultureSelector: string;
+        format: string;
+        decimals?: number;
+        trailingZeros?: boolean;
+    }
+
     export class DisplayUnit {
         // Fields
         public value: number;
@@ -118,16 +127,34 @@ module powerbi.extensibility.utils.formatting {
             return undefined;
         }
 
-        public format(value: number, format: string, decimals?: number, trailingZeros?: boolean): string {
-            decimals = this.getNumberOfDecimalsForFormatting(format, decimals);
-            let nonScientificFormat = "";
+        public format(
+            value: number,
+            format: string,
+            decimals?: number,
+            trailingZeros?: boolean,
+            cultureSelector?: string): string {
 
-            if (this.isFormatSupported(format) && !this.hasScientitifcFormat(format) && this.isScalingUnit() && this.shouldRespectScalingUnit(format)) {
+            decimals = this.getNumberOfDecimalsForFormatting(format, decimals);
+
+            let nonScientificFormat: string = "";
+
+            if (this.isFormatSupported(format)
+                && !this.hasScientitifcFormat(format)
+                && this.isScalingUnit()
+                && this.shouldRespectScalingUnit(format)) {
+
                 value = this.displayUnit.project(value);
                 nonScientificFormat = this.displayUnit.labelFormat;
             }
 
-            return this.formatHelper(value, nonScientificFormat, format, decimals, trailingZeros);
+            return this.formatHelper({
+                value,
+                nonScientificFormat,
+                format,
+                decimals,
+                trailingZeros,
+                cultureSelector
+            });
         }
 
         public isFormatSupported(format: string): boolean {
@@ -150,32 +177,53 @@ module powerbi.extensibility.utils.formatting {
             return this.displayUnit && this.displayUnit.isScaling();
         }
 
-        private formatHelper(value: number, nonScientificFormat: string, format: string, decimals?: number, trailingZeros?: boolean) {
+        private formatHelper(options: FormattingOptions) {
+            let {
+                value,
+                nonScientificFormat,
+                cultureSelector,
+                format,
+                decimals,
+                trailingZeros
+            } = options;
+
             // If the format is "general" and we want to override the number of decimal places then use the default numeric format string.
-            if ((format === "g" || format === "G") && decimals != null)
-                // format = visuals.valueFormatter.DefaultNumericFormat;
-                format = "#,0.00"; // TODO: it seems that we have some recursive dependencies, we should investigate this problem in the near time.
+            if ((format === "g" || format === "G") && decimals != null) {
+                format = "#,0.00";
+            }
 
             format = NumberFormat.addDecimalsToFormat(format, decimals, trailingZeros);
 
             if (format && !formattingService.isStandardNumberFormat(format))
-                return formattingService.formatNumberWithCustomOverride(value, format, nonScientificFormat);
+                return formattingService.formatNumberWithCustomOverride(
+                    value,
+                    format,
+                    nonScientificFormat);
 
-            if (!format)
+            if (!format) {
                 format = "G";
-            if (!nonScientificFormat)
-                nonScientificFormat = "{0}";
+            }
 
-            let text = formattingService.formatValue(value, format);
+            if (!nonScientificFormat) {
+                nonScientificFormat = "{0}";
+            }
+
+            let text: string = formattingService.formatValue(value, format, cultureSelector);
+
             return formattingService.format(nonScientificFormat, [text]);
         }
 
         /** Formats a single value by choosing an appropriate base for the DisplayUnitSystem before formatting. */
-        public formatSingleValue(value: number, format: string, decimals?: number, trailingZeros?: boolean): string {
+        public formatSingleValue(
+            value: number,
+            format: string,
+            decimals?: number,
+            trailingZeros?: boolean,
+            cultureSelector?: string): string {
             // Change unit base to a value appropriate for this value
             this.update(this.shouldUseValuePrecision(value) ? Double.getPrecision(value, 8) : value);
 
-            return this.format(value, format, decimals, trailingZeros);
+            return this.format(value, format, decimals, trailingZeros, cultureSelector);
         }
 
         private shouldUseValuePrecision(value: number): boolean {
@@ -252,10 +300,16 @@ module powerbi.extensibility.utils.formatting {
         }
 
         // Methods
-        public format(data: number, format: string, decimals?: number, trailingZeros?: boolean): string {
+        public format(
+            data: number,
+            format: string,
+            decimals?: number,
+            trailingZeros?: boolean,
+            cultureSelector?: string): string {
+
             format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
-            return super.format(data, format, decimals, trailingZeros);
+            return super.format(data, format, decimals, trailingZeros, cultureSelector);
         }
 
         public static reset(): void {
@@ -306,10 +360,15 @@ module powerbi.extensibility.utils.formatting {
             return WholeUnitsDisplayUnitSystem.units;
         }
 
-        public format(data: number, format: string, decimals?: number, trailingZeros?: boolean): string {
+        public format(
+            data: number,
+            format: string,
+            decimals?: number,
+            trailingZeros?: boolean,
+            cultureSelector?: string): string {
             format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
-            return super.format(data, format, decimals, trailingZeros);
+            return super.format(data, format, decimals, trailingZeros, cultureSelector);
         }
     }
 
@@ -360,10 +419,15 @@ module powerbi.extensibility.utils.formatting {
             return DataLabelsDisplayUnitSystem.units;
         }
 
-        public format(data: number, format: string, decimals?: number, trailingZeros?: boolean): string {
+        public format(
+            data: number,
+            format: string,
+            decimals?: number,
+            trailingZeros?: boolean,
+            cultureSelector?: string): string {
             format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
-            return super.format(data, format, decimals, trailingZeros);
+            return super.format(data, format, decimals, trailingZeros, cultureSelector);
         }
     }
 

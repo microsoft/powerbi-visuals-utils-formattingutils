@@ -62,7 +62,7 @@ module.exports = (config) => {
             'node_modules/lodash/lodash.min.js',
             'node_modules/d3/d3.min.js',
             "node_modules/globalize/lib/globalize.js",
-            "node_modules/globalize/lib/cultures/globalize.culture.en-US.js",
+            "node_modules/globalize/lib/cultures/globalize.cultures.js",
             'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
             'node_modules/powerbi-visuals-utils-typeutils/lib/index.js',
             'node_modules/powerbi-visuals-utils-svgutils/lib/index.js',
@@ -99,7 +99,8 @@ module.exports = (config) => {
         remapIstanbulReporter: {
             reports: {
                 lcovonly: coverageFolder + '/lcov.info',
-                html: coverageFolder
+                html: coverageFolder,
+                'text-summary': null
             }
         }
     });

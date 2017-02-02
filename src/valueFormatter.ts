@@ -99,6 +99,9 @@ module powerbi.extensibility.utils.formatting {
 
         /** Specifies the column type of the data value */
         columnType?: ValueTypeDescriptor;
+
+        /** Specifies the culture */
+        cultureSelector?: string;
     }
 
     export interface IValueFormatter {
@@ -124,6 +127,13 @@ module powerbi.extensibility.utils.formatting {
         restatementComma: string;
         restatementCompoundAnd: string;
         restatementCompoundOr: string;
+    }
+
+    interface CoreFormattingOptions {
+        value: any;
+        format: string;
+        nullsAreBlank?: boolean;
+        cultureSelector: string;
     }
 
     export module valueFormatter {
@@ -226,7 +236,7 @@ module powerbi.extensibility.utils.formatting {
         }
 
         // NOTE: Define default locale options, but these can be overriden by setLocaleOptions.
-        let locale: ValueFormatterLocalizationOptions = {
+        let localizationOptions: ValueFormatterLocalizationOptions = {
             null: defaultLocalizedStrings["NullValue"],
             true: defaultLocalizedStrings["BooleanTrue"],
             false: defaultLocalizedStrings["BooleanFalse"],
@@ -255,27 +265,43 @@ module powerbi.extensibility.utils.formatting {
         }
 
         export function setLocaleOptions(options: ValueFormatterLocalizationOptions): void {
-            locale = options;
+            localizationOptions = options;
 
             DefaultDisplayUnitSystem.reset();
             WholeUnitsDisplayUnitSystem.reset();
         }
 
-        export function createDefaultFormatter(formatString: string, allowFormatBeautification: boolean = false): IValueFormatter {
-            let formatBeaut: string = allowFormatBeautification ? locale.beautify(formatString) : formatString;
+        export function createDefaultFormatter(
+            formatString: string,
+            allowFormatBeautification?: boolean,
+            cultureSelector?: string): IValueFormatter {
+
+            const formatBeautified: string = allowFormatBeautification
+                ? localizationOptions.beautify(formatString)
+                : formatString;
+
             return {
                 format: function (value: any): string {
-                    if (value == null)
-                        return locale.null;
+                    if (value == null) {
+                        return localizationOptions.null;
+                    }
 
-                    return formatCore(value, formatBeaut);
+                    return formatCore({
+                        value,
+                        cultureSelector,
+                        format: formatBeautified
+                    });
                 }
             };
         }
 
         /** Creates an IValueFormatter to be used for a range of values. */
         export function create(options: ValueFormatterOptions): IValueFormatter {
-            let format = !!options.allowFormatBeautification ? locale.beautify(options.format) : options.format;
+            const format: string = !!options.allowFormatBeautification
+                ? localizationOptions.beautify(options.format)
+                : options.format;
+
+            const { cultureSelector } = options;
 
             if (shouldUseNumericDisplayUnits(options)) {
                 let displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
@@ -296,16 +322,32 @@ module powerbi.extensibility.utils.formatting {
                 return {
                     format: function (value: any): string {
                         let formattedValue: string = getStringFormat(value, true /*nullsAreBlank*/);
-                        if (!StringExtensions.isNullOrUndefinedOrWhiteSpaceString(formattedValue))
+                        if (!StringExtensions.isNullOrUndefinedOrWhiteSpaceString(formattedValue)) {
                             return formattedValue;
+                        }
 
                         // Round to Double.DEFAULT_PRECISION
-                        if (value && !displayUnitSystem.isScalingUnit() && Math.abs(value) < MaxValueForDisplayUnitRounding && !forcePrecision)
-                            value = Double.roundToPrecision(value);
+                        if (value
+                            && !displayUnitSystem.isScalingUnit()
+                            && Math.abs(value) < MaxValueForDisplayUnitRounding
+                            && !forcePrecision) {
 
-                        return singleValueFormattingMode ?
-                            displayUnitSystem.formatSingleValue(value, format, decimals, forcePrecision) :
-                            displayUnitSystem.format(value, format, decimals, forcePrecision);
+                            value = Double.roundToPrecision(value);
+                        }
+
+                        return singleValueFormattingMode
+                            ? displayUnitSystem.formatSingleValue(
+                                value,
+                                format,
+                                decimals,
+                                forcePrecision,
+                                cultureSelector)
+                            : displayUnitSystem.format(
+                                value,
+                                format,
+                                decimals,
+                                forcePrecision,
+                                cultureSelector);
                     },
                     displayUnit: displayUnitSystem.displayUnit,
                     options: options
@@ -313,30 +355,51 @@ module powerbi.extensibility.utils.formatting {
             }
 
             if (shouldUseDateUnits(options.value, options.value2, options.tickCount)) {
-                let unit = DateTimeSequence.getIntervalUnit(options.value /* minDate */, options.value2 /* maxDate */, options.tickCount);
+                const unit: DateTimeUnit = DateTimeSequence.getIntervalUnit(
+                    options.value /* minDate */,
+                    options.value2 /* maxDate */,
+                    options.tickCount);
 
                 return {
                     format: function (value: any): string {
-                        if (value == null)
-                            return locale.null;
+                        if (value == null) {
+                            return localizationOptions.null;
+                        }
 
-                        let formatString = formattingService.dateFormatString(unit);
-                        return formatCore(value, formatString);
+                        let formatString: string = formattingService.dateFormatString(unit);
+
+                        return formatCore({
+                            value,
+                            cultureSelector,
+                            format: formatString,
+                        });
                     },
                     options: options
                 };
             }
 
-            return createDefaultFormatter(format);
+            return createDefaultFormatter(format, false, cultureSelector);
         }
 
-        export function format(value: any, format?: string, allowFormatBeautification?: boolean): string {
-            if (value == null)
-                return locale.null;
+        export function format(
+            value: any,
+            format?: string,
+            allowFormatBeautification?: boolean,
+            cultureSelector?: string): string {
 
-            return formatCore(
+            if (value == null) {
+                return localizationOptions.null;
+            }
+
+            const formatString: string = !!allowFormatBeautification
+                ? localizationOptions.beautify(format)
+                : format;
+
+            return formatCore({
                 value,
-                !!allowFormatBeautification ? locale.beautify(format) : format);
+                cultureSelector,
+                format: formatString
+            });
         }
 
         /**
@@ -348,33 +411,51 @@ module powerbi.extensibility.utils.formatting {
          * @param {boolean} nullsAreBlank? Whether to show "(Blank)" instead of empty string for null values
          * @returns Formatted value
          */
-        export function formatVariantMeasureValue(value: any, column: DataViewMetadataColumn, formatStringProp: DataViewObjectPropertyIdentifier, nullsAreBlank?: boolean): string {
+        export function formatVariantMeasureValue(
+            value: any,
+            column: DataViewMetadataColumn,
+            formatStringProp: DataViewObjectPropertyIdentifier,
+            nullsAreBlank?: boolean,
+            cultureSelector?: string): string {
             // If column type is not datetime, but the value is of time datetime,
             // then use the default date format string
             if (!(column && column.type && column.type.dateTime) && value instanceof Date) {
-                let valueFormat = getFormatString(DateTimeMetadataColumn, null, false);
-                return formatCore(value, valueFormat, nullsAreBlank);
+                const valueFormat: string = getFormatString(DateTimeMetadataColumn, null, false);
+
+                return formatCore({
+                    value,
+                    nullsAreBlank,
+                    cultureSelector,
+                    format: valueFormat
+                });
             }
             else {
-                return formatCore(value, getFormatString(column, formatStringProp), nullsAreBlank);
+                const valueFormat: string = getFormatString(column, formatStringProp);
+
+                return formatCore({
+                    value,
+                    nullsAreBlank,
+                    cultureSelector,
+                    format: valueFormat
+                });
             }
         }
 
         export function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSystemType): DisplayUnitSystem {
             if (displayUnitSystemType == null)
-                return new DefaultDisplayUnitSystem(locale.describe);
+                return new DefaultDisplayUnitSystem(localizationOptions.describe);
 
             switch (displayUnitSystemType) {
                 case DisplayUnitSystemType.Default:
-                    return new DefaultDisplayUnitSystem(locale.describe);
+                    return new DefaultDisplayUnitSystem(localizationOptions.describe);
                 case DisplayUnitSystemType.WholeUnits:
-                    return new WholeUnitsDisplayUnitSystem(locale.describe);
+                    return new WholeUnitsDisplayUnitSystem(localizationOptions.describe);
                 case DisplayUnitSystemType.Verbose:
                     return new NoDisplayUnitSystem();
                 case DisplayUnitSystemType.DataLabels:
-                    return new DataLabelsDisplayUnitSystem(locale.describe);
+                    return new DataLabelsDisplayUnitSystem(localizationOptions.describe);
                 default:
-                    return new DefaultDisplayUnitSystem(locale.describe);
+                    return new DefaultDisplayUnitSystem(localizationOptions.describe);
             }
         }
 
@@ -447,17 +528,24 @@ module powerbi.extensibility.utils.formatting {
                 }
 
                 if (!suppressTypeFallback) {
-                    let columnType = column.type;
+                    let columnType: ValueTypeDescriptor = column.type;
+
                     if (columnType) {
-                        if (columnType.dateTime)
+                        if (columnType.dateTime) {
                             return DefaultDateFormat;
+                        }
+
                         if (columnType.integer) {
-                            if (columnType.temporal && columnType.temporal.year)
+                            if (columnType.temporal && columnType.temporal.year) {
                                 return "0";
+                            }
+
                             return DefaultIntegerFormat;
                         }
-                        if (columnType.numeric)
+
+                        if (columnType.numeric) {
                             return DefaultNumericFormat;
+                        }
                     }
                 }
             }
@@ -478,7 +566,7 @@ module powerbi.extensibility.utils.formatting {
                 let lastIndex = length - 1;
                 for (let i = 1, len = lastIndex; i < len; i++) {
                     let value = strings[i];
-                    result = StringExtensions.format(locale.restatementComma, result, value);
+                    result = StringExtensions.format(localizationOptions.restatementComma, result, value);
                 }
 
                 if (length > 1) {
@@ -495,41 +583,57 @@ module powerbi.extensibility.utils.formatting {
 
         /** The returned string will look like 'A, B, ..., and C'  */
         export function formatListAnd(strings: string[]): string {
-            return formatListCompound(strings, locale.restatementCompoundAnd);
+            return formatListCompound(strings, localizationOptions.restatementCompoundAnd);
         }
 
         /** The returned string will look like 'A, B, ..., or C' */
         export function formatListOr(strings: string[]): string {
-            return formatListCompound(strings, locale.restatementCompoundOr);
+            return formatListCompound(strings, localizationOptions.restatementCompoundOr);
         }
 
-        function formatCore(value: any, format: string, nullsAreBlank?: boolean): string {
-            let formattedValue = getStringFormat(value, nullsAreBlank ? nullsAreBlank : false /*nullsAreBlank*/);
+        function formatCore(options: CoreFormattingOptions): string {
+            const {
+                value,
+                format,
+                nullsAreBlank,
+                cultureSelector
+            } = options;
 
-            if (!StringExtensions.isNullOrUndefinedOrWhiteSpaceString(formattedValue))
+            let formattedValue: string = getStringFormat(
+                value,
+                nullsAreBlank ? nullsAreBlank : false);
+
+            if (!StringExtensions.isNullOrUndefinedOrWhiteSpaceString(formattedValue)) {
                 return formattedValue;
+            }
 
-            return formattingService.formatValue(value, format);
+            return formattingService.formatValue(value, format, cultureSelector);
         }
 
         function getStringFormat(value: any, nullsAreBlank: boolean): string {
-            if (value == null && nullsAreBlank)
-                return locale.null;
+            if (value == null && nullsAreBlank) {
+                return localizationOptions.null;
+            }
 
-            if (value === true)
-                return locale.true;
+            if (value === true) {
+                return localizationOptions.true;
+            }
 
-            if (value === false)
-                return locale.false;
+            if (value === false) {
+                return localizationOptions.false;
+            }
 
-            if (typeof value === "number" && isNaN(value))
-                return locale.NaN;
+            if (typeof value === "number" && isNaN(value)) {
+                return localizationOptions.NaN;
+            }
 
-            if (value === Number.NEGATIVE_INFINITY)
-                return locale.negativeInfinity;
+            if (value === Number.NEGATIVE_INFINITY) {
+                return localizationOptions.negativeInfinity;
+            }
 
-            if (value === Number.POSITIVE_INFINITY)
-                return locale.infinity;
+            if (value === Number.POSITIVE_INFINITY) {
+                return localizationOptions.infinity;
+            }
 
             return "";
         }

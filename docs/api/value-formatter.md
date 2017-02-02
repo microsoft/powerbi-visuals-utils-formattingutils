@@ -90,6 +90,24 @@ iValueFormatter.format(1234567891236);
 // returns: 1.234568E+012
 ```
 
+### The culture selector
+
+```typescript
+import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+
+let valueFormatterUK = valueFormatter.create({ cultureSelector: "en-GB" });
+
+valueFormatterUK.format(new Date(2007, 2, 3, 17, 42, 42));
+
+// returns: 03/03/2007 17:42:42
+
+let valueFormatterUSA = valueFormatter.create({ cultureSelector: "en-US" });
+
+valueFormatterUSA.format(new Date(2007, 2, 3, 17, 42, 42));
+
+// returns: 3/3/2007 5:42:42 PM
+```
+
 #### The percentage format
 
 ```typescript
@@ -161,12 +179,14 @@ interface ValueFormatterOptions {
     formatSingleValues?: boolean;
     /** True if we want to trim off unnecessary zeroes after the decimal and remove a space before the % symbol */
     allowFormatBeautification?: boolean;
-    /** Specifies the maximum number of decimal places to show */
+    /** Specifies the maximum number of decimal places to show*/
     precision?: number;
     /** Detect axis precision based on value */
     detectAxisPrecision?: boolean;
     /** Specifies the column type of the data value */
     columnType?: ValueTypeDescriptor;
+    /** Specifies the culture */
+    cultureSelector?: string;
 }
 ```
 
