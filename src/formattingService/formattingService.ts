@@ -318,7 +318,9 @@ module powerbi.extensibility.utils.formatting {
             else
                 format = output.format;
             // need to revisit when globalization is enabled
-            culture = Globalize.culture("en-US");
+            if (!culture) {
+                culture = Globalize.culture("en-US");
+            }
             return Globalize.format(output.value, format, culture);
         }
 

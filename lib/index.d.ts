@@ -460,7 +460,7 @@ declare module powerbi.extensibility.utils.formatting.font {
         /**
          * Gets the first font "wf_" font family since it will always be loaded.
          */
-        family: string;
+        readonly family: string;
         /**
         * Gets the first font family that matches regex (if provided).
         * Default regex looks for "wf_" fonts which are always loaded.
@@ -469,7 +469,7 @@ declare module powerbi.extensibility.utils.formatting.font {
         /**
          * Gets the CSS string for the "font-family" CSS attribute.
          */
-        css: string;
+        readonly css: string;
         /**
          * Gets the CSS string for the "font-family" CSS attribute.
          */
@@ -551,7 +551,7 @@ declare module powerbi.extensibility.utils.formatting {
      * formatting expressions for numeric types including custom formats.
      */
     module numberFormat {
-        const NumberFormatComponentsDelimeter: string;
+        const NumberFormatComponentsDelimeter = ";";
         interface NumericFormatMetadata {
             format: string;
             hasLiterals: boolean;
@@ -627,7 +627,7 @@ declare module powerbi.extensibility.utils.formatting {
         private unitBaseValue;
         protected static UNSUPPORTED_FORMATS: RegExp;
         constructor(units?: DisplayUnit[]);
-        title: string;
+        readonly title: string;
         update(value: number): void;
         private findApplicableDisplayUnit(value);
         format(value: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
@@ -770,9 +770,9 @@ declare module powerbi.extensibility.utils.formatting {
         restatementCompoundOr: string;
     }
     module valueFormatter {
-        const DefaultIntegerFormat: string;
-        const DefaultNumericFormat: string;
-        const DefaultDateFormat: string;
+        const DefaultIntegerFormat = "g";
+        const DefaultNumericFormat = "#,0.00";
+        const DefaultDateFormat = "d";
         function getLocalizedString(stringId: string): string;
         function getFormatMetadata(format: string): NumberFormat.NumericFormatMetadata;
         function setLocaleOptions(options: ValueFormatterLocalizationOptions): void;

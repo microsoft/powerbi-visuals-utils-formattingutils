@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "FormattingUtils",
   "main": "lib/index.js",
   "repository": {
@@ -41,7 +41,7 @@
     "less": "2.7.1",
     "powerbi-visuals-tools": "1.2.1",
     "tslint": "3.15.1",
-    "typescript": "1.8.10",
+    "typescript": "2.1.4",
     "typings": "2.0.0",
     "coveralls": "2.11.15",
     "karma-coverage": "1.1.1",
