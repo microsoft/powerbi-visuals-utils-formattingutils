@@ -196,7 +196,7 @@ textMeasurementService.measureSvgTextElementWidth(textElement.node());
 This function fetches the text measurement properties of the given DOM element.
 
 ```typescript
-function getMeasurementProperties(element: JQuery): TextProperties;
+function getMeasurementProperties(element: Element): TextProperties;
 ```
 
 ### Example
@@ -218,7 +218,7 @@ element.css({
     "white-space": "nowrap"
 });
 
-textMeasurementService.getMeasurementProperties(element);
+textMeasurementService.getMeasurementProperties(element.get(0));
 
 /* returns: {
     fontFamily:"sans-serif",
@@ -291,7 +291,7 @@ let svg: Element = d3.select("body")
     })
     .node();
 
-textMeasurementService.getDivElementWidth($(svg))
+textMeasurementService.getDivElementWidth(svg)
 
 // returns: 150px
 ```

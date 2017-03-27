@@ -34,6 +34,4 @@ interface GlobalizeStatic {
     findClosestCulture(cultureSelector: string): GlobalizeCulture;
 }
 
-/* tslint:disable:no-var-keyword */
-var Globalize: GlobalizeStatic = Globalize || window["Globalize"];
-/* tslint:enable */
+declare var Globalize: GlobalizeStatic;

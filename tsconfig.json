@@ -1,15 +1,14 @@
 {
     "compilerOptions": {
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
+        "alwaysStrict": true,
+        "emitDecoratorMetadata": false,
+        "experimentalDecorators": false,
         "target": "ES5",
         "declaration": true,
-        "outFile": "./lib/index.js",
-        "sourceMap": true
+        "outFile": "./lib/index.js"
     },
     "files": [
-        "src/typings/globalize.ts",
-        "typings/index.d.ts",
+        "src/typings/globalize.d.ts",
         "node_modules/powerbi-visuals-tools/templates/visuals/.api/v1.2.0/PowerBI-visuals.d.ts",
         "node_modules/powerbi-visuals-utils-typeutils/lib/index.d.ts",
         "node_modules/powerbi-visuals-utils-svgutils/lib/index.d.ts",

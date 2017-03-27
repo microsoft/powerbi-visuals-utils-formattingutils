@@ -49,7 +49,7 @@ module powerbi.extensibility.utils.formatting.test {
                     expectedAmountOfDates: number = 18,
                     baseMinDate: Date = new Date(2016, 11, 18),
                     baseMaxDate: Date = new Date(2017, 0, 5),
-                    minDate: Date = new Date(2016, 09, 18),
+                    minDate: Date = new Date(2016, 9, 18),
                     maxDate: Date = new Date(2017, 0, 18),
                     dateTimeSequence: DateTimeSequence = createDateTimeSequence();
 
@@ -70,7 +70,7 @@ module powerbi.extensibility.utils.formatting.test {
                     expectedAmountOfDates: number = 63,
                     baseMinDate: Date = new Date(2015, 11, 18),
                     baseMaxDate: Date = new Date(2017, 0, 5),
-                    minDate: Date = new Date(2016, 09, 18),
+                    minDate: Date = new Date(2016, 9, 18),
                     maxDate: Date = new Date(2017, 0, 18),
                     dateTimeSequence: DateTimeSequence = createDateTimeSequence();
 

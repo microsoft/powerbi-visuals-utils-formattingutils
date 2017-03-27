@@ -1,32 +1,3 @@
-interface GlobalizeCulture {
-    name: string;
-    calendar: GlobalizeCalendar;
-    calendars: CalendarDictionary;
-    numberFormat: GlobalizeNumberFormat;
-}
-interface GlobalizeCalendar {
-    patterns: any;
-    firstDay: number;
-}
-interface CalendarDictionary {
-    [key: string]: GlobalizeCalendar;
-}
-interface GlobalizeNumberFormat {
-    decimals: number;
-    groupSizes: number[];
-    negativeInfinity: string;
-    positiveInfinity: string;
-}
-interface GlobalizeStatic {
-    culture(cultureSelector?: string): GlobalizeCulture;
-    format(value: any, format: string, culture?: any): any;
-    parseInt(value: string, culture?: any): number;
-    parseFloat(value: string, culture?: any): number;
-    parseDate(value: string, formats: string[], culture?: any): Date;
-    cultures: any;
-    findClosestCulture(cultureSelector: string): GlobalizeCulture;
-}
-declare var Globalize: GlobalizeStatic;
 declare module powerbi.extensibility.utils.formatting {
     interface IStorageService {
         getData(key: string): any;
@@ -290,7 +261,7 @@ declare module powerbi.extensibility.utils.formatting {
          * This method fetches the text measurement properties of the given DOM element.
          * @param element The selector for the DOM Element.
          */
-        function getMeasurementProperties(element: JQuery): TextProperties;
+        function getMeasurementProperties(element: Element): TextProperties;
         /**
          * This method fetches the text measurement properties of the given SVG text element.
          * @param svgElement The SVGTextElement to be measured.
@@ -300,7 +271,7 @@ declare module powerbi.extensibility.utils.formatting {
          * This method returns the width of a div element.
          * @param element The div element.
          */
-        function getDivElementWidth(element: JQuery): string;
+        function getDivElementWidth(element: Element): string;
         /**
          * Compares labels text size to the available size and renders ellipses when the available size is smaller.
          * @param textProperties The text properties (including text content) to use for text measurement.
@@ -455,12 +426,12 @@ declare module powerbi.extensibility.utils.formatting {
 }
 declare module powerbi.extensibility.utils.formatting.font {
     class FamilyInfo {
-        families: string[];
-        constructor(families: string[]);
+        families: Array<string>;
+        constructor(families: Array<string>);
         /**
          * Gets the first font "wf_" font family since it will always be loaded.
          */
-        family: string;
+        readonly family: string;
         /**
         * Gets the first font family that matches regex (if provided).
         * Default regex looks for "wf_" fonts which are always loaded.
@@ -469,7 +440,7 @@ declare module powerbi.extensibility.utils.formatting.font {
         /**
          * Gets the CSS string for the "font-family" CSS attribute.
          */
-        css: string;
+        readonly css: string;
         /**
          * Gets the CSS string for the "font-family" CSS attribute.
          */
@@ -551,7 +522,7 @@ declare module powerbi.extensibility.utils.formatting {
      * formatting expressions for numeric types including custom formats.
      */
     module numberFormat {
-        const NumberFormatComponentsDelimeter: string;
+        const NumberFormatComponentsDelimeter = ";";
         interface NumericFormatMetadata {
             format: string;
             hasLiterals: boolean;
@@ -591,7 +562,7 @@ declare module powerbi.extensibility.utils.formatting {
          */
         function getCustomFormatMetadata(format: string, calculatePrecision?: boolean, calculateScale?: boolean, calculatePartsPerScale?: boolean): NumericFormatMetadata;
     }
-    var formattingService: IFormattingService;
+    const formattingService: IFormattingService;
 }
 declare module powerbi.extensibility.utils.formatting {
     /** The system used to determine display units used during formatting */
@@ -627,7 +598,7 @@ declare module powerbi.extensibility.utils.formatting {
         private unitBaseValue;
         protected static UNSUPPORTED_FORMATS: RegExp;
         constructor(units?: DisplayUnit[]);
-        title: string;
+        readonly title: string;
         update(value: number): void;
         private findApplicableDisplayUnit(value);
         format(value: number, format: string, decimals?: number, trailingZeros?: boolean, cultureSelector?: string): string;
@@ -770,9 +741,9 @@ declare module powerbi.extensibility.utils.formatting {
         restatementCompoundOr: string;
     }
     module valueFormatter {
-        const DefaultIntegerFormat: string;
-        const DefaultNumericFormat: string;
-        const DefaultDateFormat: string;
+        const DefaultIntegerFormat = "g";
+        const DefaultNumericFormat = "#,0.00";
+        const DefaultDateFormat = "d";
         function getLocalizedString(stringId: string): string;
         function getFormatMetadata(format: string): NumberFormat.NumericFormatMetadata;
         function setLocaleOptions(options: ValueFormatterLocalizationOptions): void;
