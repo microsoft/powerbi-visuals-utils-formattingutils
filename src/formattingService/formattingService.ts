@@ -247,7 +247,7 @@ module powerbi.extensibility.utils.formatting {
         }
 
         /**
-         *  Exposing this function for testability 
+         *  Exposing this function for testability
          */
         public getCurrentCulture(): string {
             let urlParam = this.getUrlParam("language");
@@ -1292,5 +1292,5 @@ module powerbi.extensibility.utils.formatting {
         }
     }
 
-    export var formattingService: IFormattingService = new FormattingService();
+    export let formattingService: IFormattingService = new FormattingService();
 }
