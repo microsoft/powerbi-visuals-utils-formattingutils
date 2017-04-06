@@ -2,7 +2,7 @@
  *  Power BI Visualizations
  *
  *  Copyright (c) Microsoft Corporation
- *  All rights reserved. 
+ *  All rights reserved.
  *  MIT License
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -11,14 +11,14 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *   
- *  The above copyright notice and this permission notice shall be included in 
+ *
+ *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
- *   
- *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ *
+ *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
@@ -38,7 +38,7 @@ module powerbi.extensibility.utils.formatting {
             return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
         }
 
-        /** 
+        /**
          * Returns number of days in the provided year/month.
          * @param year - year value
          * @param month - month value
@@ -67,7 +67,7 @@ module powerbi.extensibility.utils.formatting {
             return result;
         }
 
-        /** 
+        /**
          * Adds a specified number of months to the provided date.
          * @param date - date value
          * @param monthDelta - number of months to add
@@ -93,7 +93,7 @@ module powerbi.extensibility.utils.formatting {
             return result;
         }
 
-        /** 
+        /**
          * Adds a specified number of weeks to the provided date.
          * @param date - date value
          * @param weeks - number of weeks to add
@@ -102,7 +102,7 @@ module powerbi.extensibility.utils.formatting {
             return addDays(date, weeks * 7);
         }
 
-        /** 
+        /**
          * Adds a specified number of days to the provided date.
          * @param date - date value
          * @param days - number of days to add
@@ -134,7 +134,7 @@ module powerbi.extensibility.utils.formatting {
             return new Date(date.getTime() + minutes * 60000);
         }
 
-        /** 
+        /**
          * Adds a specified number of seconds to the provided date.
          * @param date - date value
          * @param seconds - number of seconds to add
@@ -143,7 +143,7 @@ module powerbi.extensibility.utils.formatting {
             return new Date(date.getTime() + seconds * 1000);
         }
 
-        /** 
+        /**
          * Adds a specified number of milliseconds to the provided date.
          * @param date - date value
          * @param milliseconds - number of milliseconds to add

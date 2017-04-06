@@ -39,7 +39,7 @@ module powerbi.extensibility.utils.formatting {
         format: string;
     }
 
-    /** 
+    /**
      * Translate .NET format into something supported by jQuery.Globalize.
      */
     export function findDateFormat(value: Date, format: string, cultureName: string): DateFormat {
@@ -55,7 +55,7 @@ module powerbi.extensibility.utils.formatting {
                 break;
             case "R":
             case "r":
-                // RFC1123 pattern - - time must be converted to UTC before formatting 
+                // RFC1123 pattern - - time must be converted to UTC before formatting
                 value = new Date(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate(), value.getUTCHours(), value.getUTCMinutes(), value.getUTCSeconds(), value.getUTCMilliseconds());
                 format = "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'";
                 break;
@@ -90,11 +90,11 @@ module powerbi.extensibility.utils.formatting {
         return { value: value, format: format };
     }
 
-    /** 
+    /**
      * Translates unsupported .NET custom format expressions to the custom expressions supported by JQuery.Globalize.
      */
     export function fixDateTimeFormat(format: string): string {
-        // Fix for the "K" format (timezone): 
+        // Fix for the "K" format (timezone):
         // T he js dates don't have a kind property so we'll support only local kind which is equavalent to zzz format.
         format = format.replace(/%K/g, "zzz");
         format = format.replace(/K/g, "zzz");
@@ -102,18 +102,18 @@ module powerbi.extensibility.utils.formatting {
         format = format.replace(/ffffff/g, "fff000");
         format = format.replace(/fffff/g, "fff00");
         format = format.replace(/ffff/g, "fff0");
-        // Fix for the 5 digit year: "yyyyy" format. 
+        // Fix for the 5 digit year: "yyyyy" format.
         // The Globalize doesn't support dates greater than 9999 so we replace the "yyyyy" with "0yyyy".
         format = format.replace(/yyyyy/g, "0yyyy");
-        // Fix for the 3 digit year: "yyy" format. 
+        // Fix for the 3 digit year: "yyy" format.
         // The Globalize doesn't support this formatting so we need to replace it with the 4 digit year "yyyy" format.
         format = format.replace(/(^y|^)yyy(^y|$)/g, "yyyy");
 
         if (!regexCache) {
-            // Creating Regexes for cases "Using single format specifier" 
+            // Creating Regexes for cases "Using single format specifier"
             // - http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx#UsingSingleSpecifiers
             // This is not supported from The Globalize.
-            // The case covers all single "%" lead specifier (like "%d" but not %dd) 
+            // The case covers all single "%" lead specifier (like "%d" but not %dd)
             // The cases as single "%d" are filtered in if the bellow.
             // (?!S) where S is the specifier make sure that we only one symbol for specifier.
             regexCache = ["d", "f", "F", "g", "h", "H", "K", "m", "M", "s", "t", "y", "z", ":", "/"].map((s) => {

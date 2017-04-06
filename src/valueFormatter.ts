@@ -112,9 +112,9 @@ module powerbi.extensibility.utils.formatting {
 
     /** Captures all locale-specific options used by the valueFormatter. */
     export interface ValueFormatterLocalizationOptions {
-        null: string;
-        true: string;
-        false: string;
+        nullValue: string;
+        trueValue: string;
+        falseValue: string;
         NaN: string;
         infinity: string;
         negativeInfinity: string;
@@ -237,9 +237,9 @@ module powerbi.extensibility.utils.formatting {
 
         // NOTE: Define default locale options, but these can be overriden by setLocaleOptions.
         let localizationOptions: ValueFormatterLocalizationOptions = {
-            null: defaultLocalizedStrings["NullValue"],
-            true: defaultLocalizedStrings["BooleanTrue"],
-            false: defaultLocalizedStrings["BooleanFalse"],
+            nullValue: defaultLocalizedStrings["NullValue"],
+            trueValue: defaultLocalizedStrings["BooleanTrue"],
+            falseValue: defaultLocalizedStrings["BooleanFalse"],
             NaN: defaultLocalizedStrings["NaNValue"],
             infinity: defaultLocalizedStrings["InfinityValue"],
             negativeInfinity: defaultLocalizedStrings["NegativeInfinityValue"],
@@ -283,7 +283,7 @@ module powerbi.extensibility.utils.formatting {
             return {
                 format: function (value: any): string {
                     if (value == null) {
-                        return localizationOptions.null;
+                        return localizationOptions.nullValue;
                     }
 
                     return formatCore({
@@ -363,7 +363,7 @@ module powerbi.extensibility.utils.formatting {
                 return {
                     format: function (value: any): string {
                         if (value == null) {
-                            return localizationOptions.null;
+                            return localizationOptions.nullValue;
                         }
 
                         let formatString: string = formattingService.dateFormatString(unit);
@@ -388,7 +388,7 @@ module powerbi.extensibility.utils.formatting {
             cultureSelector?: string): string {
 
             if (value == null) {
-                return localizationOptions.null;
+                return localizationOptions.nullValue;
             }
 
             const formatString: string = !!allowFormatBeautification
@@ -612,15 +612,15 @@ module powerbi.extensibility.utils.formatting {
 
         function getStringFormat(value: any, nullsAreBlank: boolean): string {
             if (value == null && nullsAreBlank) {
-                return localizationOptions.null;
+                return localizationOptions.nullValue;
             }
 
             if (value === true) {
-                return localizationOptions.true;
+                return localizationOptions.trueValue;
             }
 
             if (value === false) {
-                return localizationOptions.false;
+                return localizationOptions.falseValue;
             }
 
             if (typeof value === "number" && isNaN(value)) {
