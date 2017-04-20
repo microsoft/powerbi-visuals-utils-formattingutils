@@ -755,9 +755,9 @@ declare module powerbi.extensibility.utils.formatting {
     }
     /** Captures all locale-specific options used by the valueFormatter. */
     interface ValueFormatterLocalizationOptions {
-        null: string;
-        true: string;
-        false: string;
+        nullValue: string;
+        trueValue: string;
+        falseValue: string;
         NaN: string;
         infinity: string;
         negativeInfinity: string;

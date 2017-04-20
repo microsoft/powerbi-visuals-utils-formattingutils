@@ -115,7 +115,7 @@ module powerbi.extensibility.utils.formatting.test {
 
             it("special chars in literals", () => {
                 // try to confuse formatter with special characters in a literal
-                let format = "\\#\\,\\0\\.\\0\\0\\% #,0.00% '#,0.00%'";
+                let format = `\\#\\,\\0\\.\\0\\0\\% #,0.00% '#,0.00%'`;
                 let value = 987654.32198;
                 let expected = "#,0.00% 98,765,432.20% #,0.00%";
 

@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "0.4.0",
+  "version": "1.0.1",
   "description": "FormattingUtils",
   "main": "lib/index.js",
   "repository": {
@@ -20,42 +20,43 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc",
     "build:map": "tsc --sourceMap",
+    "build": "tsc",
     "postbuild": "npm run lessc",
     "test": "karma start",
     "pretest": "npm run build:map",
-    "lint": "tslint \"+(src|test)/**/*.ts\"",
+    "lint": "tslint -r \"node_modules/tslint-microsoft-contrib\"  \"+(src|test)/**/*.ts\"",
     "lessc": "lessc src/styles/style.less lib/index.css"
   },
   "devDependencies": {
     "@types/d3": "3.5.36",
-    "@types/jasmine": "2.5.37",
-    "@types/jquery": "^2.0.41",
+    "@types/jasmine": "2.5.47",
+    "@types/jquery": "2.0.41",
     "@types/lodash": "4.14.55",
-    "coveralls": "2.12.0",
+    "coveralls": "2.13.0",
     "jasmine": "2.5.3",
     "jasmine-jquery": "2.1.1",
-    "jquery": "^3.1.1",
-    "karma": "1.5.0",
+    "jquery": "3.2.1",
+    "karma": "1.6.0",
     "karma-chrome-launcher": "2.0.0",
     "karma-coverage": "1.1.1",
     "karma-jasmine": "1.1.0",
-    "karma-remap-istanbul": "0.6.0",
+    "karma-remap-istanbul": "0.4.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-typescript-preprocessor": "0.3.1",
     "less": "2.7.2",
     "powerbi-visuals-tools": "1.2.1",
-    "powerbi-visuals-utils-testutils": "0.2.2",
+    "powerbi-visuals-utils-testutils": "1.0.0",
     "tslint": "4.5.1",
+    "tslint-microsoft-contrib": "4.0.1",
     "typescript": "2.1.4"
   },
   "dependencies": {
     "d3": "3.5.5",
-    "lodash": "4.16.2",
     "globalize": "0.1.0-a2",
-    "powerbi-visuals-utils-dataviewutils": "1.0.1",
-    "powerbi-visuals-utils-svgutils": "0.2.1",
-    "powerbi-visuals-utils-typeutils": "0.2.1"
+    "lodash": "4.16.2",
+    "powerbi-visuals-utils-dataviewutils": "1.1.1",
+    "powerbi-visuals-utils-svgutils": "1.0.0",
+    "powerbi-visuals-utils-typeutils": "1.0.0"
   }
 }

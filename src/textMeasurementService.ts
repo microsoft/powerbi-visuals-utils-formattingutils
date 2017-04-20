@@ -415,12 +415,12 @@ module powerbi.extensibility.utils.formatting {
             // Append a span for each word broken section
             let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
             let spanItem = d3.select(textElement)
-                .selectAll(OverflowingText.selector)
+                .selectAll(OverflowingText.selectorName)
                 .data(words);
             spanItem
                 .enter()
                 .append("span")
-                .classed(OverflowingText.class, true)
+                .classed(OverflowingText.className, true)
                 .text((d: string) => d)
                 .style("width", PixelConverter.toString(maxWidth));
         }
