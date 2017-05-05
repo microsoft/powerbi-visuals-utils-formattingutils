@@ -455,8 +455,8 @@ declare module powerbi.extensibility.utils.formatting {
 }
 declare module powerbi.extensibility.utils.formatting.font {
     class FamilyInfo {
-        families: Array<string>;
-        constructor(families: Array<string>);
+        families: string[];
+        constructor(families: string[]);
         /**
          * Gets the first font "wf_" font family since it will always be loaded.
          */
