@@ -1292,5 +1292,5 @@ module powerbi.extensibility.utils.formatting {
         }
     }
 
-    export let formattingService: IFormattingService = new FormattingService();
+    export const formattingService: IFormattingService = new FormattingService();
 }

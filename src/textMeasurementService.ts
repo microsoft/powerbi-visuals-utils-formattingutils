@@ -71,7 +71,7 @@ module powerbi.extensibility.utils.formatting {
         const ellipsis = "...";
         const OverflowingText = createClassAndSelector("overflowingText");
 
-        let spanElement: JQuery;
+        let spanElement: HTMLElement;
         let svgTextElement: d3.Selection<any>;
         let canvasCtx: CanvasContext;
         let fallbackFontFamily: string;
@@ -84,10 +84,10 @@ module powerbi.extensibility.utils.formatting {
                 return;
             }
 
-            spanElement = $("<span/>");
-            $("body").append(spanElement);
+            spanElement = document.createElement("span");
+            document.body.appendChild(spanElement);
             // The style hides the svg element from the canvas, preventing canvas from scrolling down to show svg black square.
-            svgTextElement = d3.select($("body").get(0))
+            svgTextElement = d3.select(document.body)
                 .append("svg")
                 .style({
                     "height": "0px",
@@ -95,7 +95,8 @@ module powerbi.extensibility.utils.formatting {
                     "position": "absolute"
                 })
                 .append("text");
-            canvasCtx = (<CanvasElement>$("<canvas/>").get(0)).getContext("2d");
+            let canvasElement: CanvasElement = document.createElement("canvas");
+            canvasCtx = canvasElement.getContext("2d");
             let style = window.getComputedStyle(<SVGTextElement>svgTextElement.node());
             if (style) {
                 fallbackFontFamily = style.fontFamily;
@@ -232,15 +233,16 @@ module powerbi.extensibility.utils.formatting {
          * This method fetches the text measurement properties of the given DOM element.
          * @param element The selector for the DOM Element.
          */
-        export function getMeasurementProperties(element: JQuery): TextProperties {
+        export function getMeasurementProperties(element: Element): TextProperties {
+            const style = getComputedStyle(element);
             return {
-                text: element.val() || element.text(),
-                fontFamily: element.css("font-family"),
-                fontSize: element.css("font-size"),
-                fontWeight: element.css("font-weight"),
-                fontStyle: element.css("font-style"),
-                fontVariant: element.css("font-variant"),
-                whiteSpace: element.css("white-space")
+                text: (<HTMLInputElement>element).value || element.textContent,
+                fontFamily: style.fontFamily,
+                fontSize: style.fontSize,
+                fontWeight: style.fontWeight,
+                fontStyle: style.fontStyle,
+                fontVariant: style.fontVariant,
+                whiteSpace: style.whiteSpace
             };
         }
 
@@ -273,8 +275,8 @@ module powerbi.extensibility.utils.formatting {
          * This method returns the width of a div element.
          * @param element The div element.
          */
-        export function getDivElementWidth(element: JQuery): string {
-            let style = getComputedStyle(element[0]);
+        export function getDivElementWidth(element: Element): string {
+            const style = getComputedStyle(element);
             if (style)
                 return style.width;
             else
@@ -413,13 +415,12 @@ module powerbi.extensibility.utils.formatting {
             // Append a span for each word broken section
             let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
             let spanItem = d3.select(textElement)
-                .selectAll(OverflowingText.selector)
-                .data(words, (d: String) => $.inArray(d, words).toString());
-
+                .selectAll(OverflowingText.selectorName)
+                .data(words);
             spanItem
                 .enter()
                 .append("span")
-                .classed(OverflowingText.class, true)
+                .classed(OverflowingText.className, true)
                 .text((d: string) => d)
                 .style("width", PixelConverter.toString(maxWidth));
         }

@@ -184,7 +184,7 @@ module powerbi.extensibility.utils.formatting.test {
                 });
             attachToDom(element);
 
-            let properties = textMeasurementService.getMeasurementProperties(element);
+            let properties = textMeasurementService.getMeasurementProperties(element.get(0));
             let expectedProperties: TextProperties = {
                 fontFamily: "Arial",
                 fontSize: "11px",

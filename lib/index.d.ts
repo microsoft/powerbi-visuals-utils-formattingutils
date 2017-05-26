@@ -290,7 +290,7 @@ declare module powerbi.extensibility.utils.formatting {
          * This method fetches the text measurement properties of the given DOM element.
          * @param element The selector for the DOM Element.
          */
-        function getMeasurementProperties(element: JQuery): TextProperties;
+        function getMeasurementProperties(element: Element): TextProperties;
         /**
          * This method fetches the text measurement properties of the given SVG text element.
          * @param svgElement The SVGTextElement to be measured.
@@ -300,7 +300,7 @@ declare module powerbi.extensibility.utils.formatting {
          * This method returns the width of a div element.
          * @param element The div element.
          */
-        function getDivElementWidth(element: JQuery): string;
+        function getDivElementWidth(element: Element): string;
         /**
          * Compares labels text size to the available size and renders ellipses when the available size is smaller.
          * @param textProperties The text properties (including text content) to use for text measurement.
@@ -591,7 +591,7 @@ declare module powerbi.extensibility.utils.formatting {
          */
         function getCustomFormatMetadata(format: string, calculatePrecision?: boolean, calculateScale?: boolean, calculatePartsPerScale?: boolean): NumericFormatMetadata;
     }
-    var formattingService: IFormattingService;
+    const formattingService: IFormattingService;
 }
 declare module powerbi.extensibility.utils.formatting {
     /** The system used to determine display units used during formatting */
@@ -755,9 +755,9 @@ declare module powerbi.extensibility.utils.formatting {
     }
     /** Captures all locale-specific options used by the valueFormatter. */
     interface ValueFormatterLocalizationOptions {
-        null: string;
-        true: string;
-        false: string;
+        nullValue: string;
+        trueValue: string;
+        falseValue: string;
         NaN: string;
         infinity: string;
         negativeInfinity: string;
