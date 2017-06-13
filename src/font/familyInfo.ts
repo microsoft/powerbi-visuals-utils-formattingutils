@@ -26,7 +26,7 @@
 
 module powerbi.extensibility.utils.formatting.font {
     export class FamilyInfo {
-        constructor(public families: string[]) { };
+        constructor(public families: string[]) { }
 
         /**
          * Gets the first font "wf_" font family since it will always be loaded.
