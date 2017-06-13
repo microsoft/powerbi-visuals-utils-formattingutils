@@ -571,7 +571,7 @@ module powerbi.extensibility.utils.formatting {
 
             if (formatCount > 1) {
                 if (literals.length !== 0)
-                    signSpecificFormats = _.map(signSpecificFormats, signSpecificFormat => formattingEncoder.restoreLiterals(signSpecificFormat, literals));
+                    signSpecificFormats = signSpecificFormats.map((signSpecificFormat: string) => formattingEncoder.restoreLiterals(signSpecificFormat, literals));
 
                 signFormat.hasNegative = true;
 

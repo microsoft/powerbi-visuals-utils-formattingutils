@@ -43,8 +43,14 @@ module powerbi.extensibility.utils.formatting.font {
             if (!this.families) {
                 return null;
             }
-
-            return regex ? _.find(this.families, (fontFamily) => regex.test(fontFamily)) : this.families[0];
+            if (regex) {
+                for (let fontFamily of this.families) {
+                    if (regex.test(fontFamily)) {
+                        return fontFamily;
+                    }
+                }
+            }
+            return this.families[0];
         }
 
         /**
