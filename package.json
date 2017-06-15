@@ -56,7 +56,7 @@
     "d3": "3.5.5",
     "globalize": "0.1.0-a2",
     "powerbi-visuals-utils-dataviewutils": "1.2.0",
-    "powerbi-visuals-utils-svgutils": "1.0.0",
-    "powerbi-visuals-utils-typeutils": "1.0.0"
+    "powerbi-visuals-utils-svgutils": "1.1.0",
+    "powerbi-visuals-utils-typeutils": "1.1.0"
   }
 }
