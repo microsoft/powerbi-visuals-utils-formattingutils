@@ -26,7 +26,7 @@
 
 module powerbi.extensibility.utils.formatting.font {
     export class FamilyInfo {
-        constructor(public families: string[]) { };
+        constructor(public families: string[]) { }
 
         /**
          * Gets the first font "wf_" font family since it will always be loaded.
@@ -43,8 +43,14 @@ module powerbi.extensibility.utils.formatting.font {
             if (!this.families) {
                 return null;
             }
-
-            return regex ? _.find(this.families, (fontFamily) => regex.test(fontFamily)) : this.families[0];
+            if (regex) {
+                for (let fontFamily of this.families) {
+                    if (regex.test(fontFamily)) {
+                        return fontFamily;
+                    }
+                }
+            }
+            return this.families[0];
         }
 
         /**
