@@ -428,7 +428,7 @@ module powerbi.extensibility.utils.formatting.test {
 
         function createSvgTextElement(text: string): SVGTextElement {
             let svg = $("<svg>");
-            let element = d3.select($("<text>").get(0)).text(text);
+            let element = $("<text>").text(text);
             svg.append(element as any);
 
             return element[0] as any;
