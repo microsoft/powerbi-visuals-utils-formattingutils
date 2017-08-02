@@ -330,7 +330,7 @@ declare module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        function wordBreakOverflowingText(textElement: any, maxWidth: number, maxHeight: number, linePadding?: number): void;
+        function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding?: number): void;
     }
 }
 declare module powerbi.extensibility.utils.formatting {

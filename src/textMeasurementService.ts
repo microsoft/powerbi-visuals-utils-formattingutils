@@ -72,7 +72,7 @@ module powerbi.extensibility.utils.formatting {
         const OverflowingText = createClassAndSelector("overflowingText");
 
         let spanElement: HTMLElement;
-        let svgTextElement: d3.Selection<any>;
+        let svgTextElement: SVGTextElement;
         let canvasCtx: CanvasContext;
         let fallbackFontFamily: string;
 
@@ -87,17 +87,16 @@ module powerbi.extensibility.utils.formatting {
             spanElement = document.createElement("span");
             document.body.appendChild(spanElement);
             // The style hides the svg element from the canvas, preventing canvas from scrolling down to show svg black square.
-            svgTextElement = d3.select(document.body)
-                .append("svg")
-                .style({
-                    "height": "0px",
-                    "width": "0px",
-                    "position": "absolute"
-                })
-                .append("text");
+            const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svgElement.setAttribute("height", "0");
+            svgElement.setAttribute("width", "0");
+            svgElement.setAttribute("position", "absolute");
+            svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            svgElement.appendChild(svgTextElement);
+            document.body.appendChild(svgElement);
             let canvasElement: CanvasElement = document.createElement("canvas");
             canvasCtx = canvasElement.getContext("2d");
-            let style = window.getComputedStyle(<SVGTextElement>svgTextElement.node());
+            let style = window.getComputedStyle(svgTextElement);
             if (style) {
                 fallbackFontFamily = style.fontFamily;
             } else {
@@ -142,22 +141,20 @@ module powerbi.extensibility.utils.formatting {
         export function measureSvgTextRect(textProperties: TextProperties, text?: string): SVGRect {
             ensureDOM();
 
-            svgTextElement.style(null);
-            svgTextElement
-                .text(text || textProperties.text)
-                .attr({
-                    "visibility": "hidden",
-                    "font-family": textProperties.fontFamily || fallbackFontFamily,
-                    "font-variant": textProperties.fontVariant,
-                    "font-size": textProperties.fontSize,
-                    "font-weight": textProperties.fontWeight,
-                    "font-style": textProperties.fontStyle,
-                    "white-space": textProperties.whiteSpace || "nowrap"
-                });
+            svgTextElement.setAttribute("style", null);
+
+            svgTextElement.setAttribute("visibility", "hidden");
+            svgTextElement.setAttribute("font-family", textProperties.fontFamily || fallbackFontFamily);
+            svgTextElement.setAttribute("font-variant", textProperties.fontVariant);
+            svgTextElement.setAttribute("font-size", textProperties.fontSize);
+            svgTextElement.setAttribute("font-weight", textProperties.fontWeight);
+            svgTextElement.setAttribute("font-style", textProperties.fontStyle);
+            svgTextElement.setAttribute("white-space", textProperties.whiteSpace || "nowrap");
+            svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
             // We're expecting the browser to give a synchronous measurement here
             // We're using SVGTextElement because it works across all browsers
-            return (<SVGTextElement>svgTextElement.node()).getBBox();
+            return (svgTextElement).getBBox();
         }
 
         /**
@@ -368,13 +365,12 @@ module powerbi.extensibility.utils.formatting {
          * @param linePadding - (optional) padding to add to line height
          */
         export function wordBreak(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
-            let properties = getSvgMeasurementProperties(textElement);
-            let height = estimateSvgTextHeight(properties) + linePadding;
-            let maxNumLines = Math.max(1, Math.floor(maxHeight / height));
-            let node = d3.select(textElement);
+            let properties: TextProperties = getSvgMeasurementProperties(textElement);
+            let height: number = estimateSvgTextHeight(properties) + linePadding;
+            let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
             // Save y of parent textElement to apply as first tspan dy
-            let firstDY = node.attr("y");
+            let firstDY = textElement.getAttribute("y");
 
             // Store and clear text content
             let labelText = textElement.textContent;
@@ -382,17 +378,17 @@ module powerbi.extensibility.utils.formatting {
 
             // Append a tspan for each word broken section
             let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
+            const fragment: DocumentFragment = document.createDocumentFragment();
             for (let i = 0, ilen = words.length; i < ilen; i++) {
+                const dy = i === 0 ? firstDY : height;
                 properties.text = words[i];
-                node
-                    .append("tspan")
-                    .attr({
-                        "x": 0,
-                        "dy": i === 0 ? firstDY : height,
-                    })
-                    // Truncate
-                    .text(getTailoredTextOrDefault(properties, maxWidth));
+                const textElement: SVGTSpanElement = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                textElement.setAttribute("x", "0");
+                textElement.setAttribute("dy", dy ? dy.toString() : null);
+                textElement.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
+                fragment.appendChild(textElement);
             }
+            textElement.appendChild(fragment);
         }
 
         /**
@@ -403,26 +399,27 @@ module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        export function wordBreakOverflowingText(textElement: any, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
-            let properties = getSvgMeasurementProperties(<SVGTextElement>textElement);
-            let height = estimateSvgTextHeight(properties) + linePadding;
-            let maxNumLines = Math.max(1, Math.floor(maxHeight / height));
+        export function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
+            const properties: TextProperties = getSvgMeasurementProperties(textElement);
+            let height: number = estimateSvgTextHeight(properties) + linePadding;
+            let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
             // Store and clear text content
-            let labelText = textElement.textContent;
+            const labelText: string = textElement.textContent;
             textElement.textContent = null;
 
             // Append a span for each word broken section
-            let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
-            let spanItem = d3.select(textElement)
-                .selectAll(OverflowingText.selectorName)
-                .data(words);
-            spanItem
-                .enter()
-                .append("span")
-                .classed(OverflowingText.className, true)
-                .text((d: string) => d)
-                .style("width", PixelConverter.toString(maxWidth));
+            const words: string[] = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
+            const frangment: DocumentFragment = document.createDocumentFragment();
+            for (let i = 0; i < words.length; i++) {
+                const span: HTMLSpanElement = document.createElement("span");
+                span.classList.add(OverflowingText.className);
+                span.style.width = PixelConverter.toString(maxWidth);
+                span.appendChild(document.createTextNode(words[i]));
+                span.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
+                frangment.appendChild(span);
+            }
+            textElement.appendChild(frameElement);
         }
     }
 }
