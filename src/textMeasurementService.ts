@@ -25,10 +25,6 @@
  */
 
 module powerbi.extensibility.utils.formatting {
-    // powerbi.extensibility.utils.svgs
-    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
-    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
-
     // powerbi.extensibility.utils.type
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
     import Prototype = powerbi.extensibility.utils.type.Prototype;
@@ -69,7 +65,6 @@ module powerbi.extensibility.utils.formatting {
 
     export module textMeasurementService {
         const ellipsis = "...";
-        const OverflowingText = createClassAndSelector("overflowingText");
 
         let spanElement: HTMLElement;
         let svgTextElement: SVGTextElement;
@@ -413,7 +408,7 @@ module powerbi.extensibility.utils.formatting {
             const frangment: DocumentFragment = document.createDocumentFragment();
             for (let i = 0; i < words.length; i++) {
                 const span: HTMLSpanElement = document.createElement("span");
-                span.classList.add(OverflowingText.className);
+                span.classList.add("overflowingText");
                 span.style.width = PixelConverter.toString(maxWidth);
                 span.appendChild(document.createTextNode(words[i]));
                 span.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
