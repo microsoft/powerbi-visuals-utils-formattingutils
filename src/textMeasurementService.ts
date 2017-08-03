@@ -149,7 +149,7 @@ module powerbi.extensibility.utils.formatting {
 
             // We're expecting the browser to give a synchronous measurement here
             // We're using SVGTextElement because it works across all browsers
-            return (svgTextElement).getBBox();
+            return svgTextElement.getBBox();
         }
 
         /**
@@ -405,16 +405,16 @@ module powerbi.extensibility.utils.formatting {
 
             // Append a span for each word broken section
             const words: string[] = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
-            const frangment: DocumentFragment = document.createDocumentFragment();
+            const fragment: DocumentFragment = document.createDocumentFragment();
             for (let i = 0; i < words.length; i++) {
                 const span: HTMLSpanElement = document.createElement("span");
                 span.classList.add("overflowingText");
                 span.style.width = PixelConverter.toString(maxWidth);
                 span.appendChild(document.createTextNode(words[i]));
                 span.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
-                frangment.appendChild(span);
+                fragment.appendChild(span);
             }
-            textElement.appendChild(frameElement);
+            textElement.appendChild(fragment);
         }
     }
 }

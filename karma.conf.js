@@ -60,7 +60,6 @@ module.exports = (config) => {
         files: [
             'node_modules/jquery/dist/jquery.min.js',
             'node_modules/lodash/lodash.min.js',
-            'node_modules/d3/d3.min.js',
             "node_modules/globalize/lib/globalize.js",
             "node_modules/globalize/lib/cultures/globalize.cultures.js",
             'node_modules/jasmine-jquery/lib/jasmine-jquery.js',

@@ -274,8 +274,7 @@ module powerbi.extensibility.utils.formatting.test {
             it("with ellipsis", () => {
                 let element = createSvgTextElement("PowerBI rocks!");
                 attachToDom(element);
-
-                textMeasurementService.svgEllipsis(<any>element[0], 20);
+                textMeasurementService.svgEllipsis(element, 20);
 
                 let text = $(element).text();
                 expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
@@ -285,7 +284,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement("PowerBI rocks!");
                 attachToDom(element);
 
-                textMeasurementService.svgEllipsis(<any>element[0], 100);
+                textMeasurementService.svgEllipsis(element, 100);
 
                 let text = $(element).text();
                 expect(text).toEqual("PowerBI rocks!");
@@ -298,7 +297,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement(originalText);
                 attachToDom(element);
 
-                textMeasurementService.wordBreak(<any>element[0], 25 /* maxLength */, 20 * 1 /* maxHeight */);
+                textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 1 /* maxHeight */);
 
                 let text = $(element).text();
                 expect($(element).find("tspan").length).toBe(1);
@@ -310,7 +309,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement(originalText);
                 attachToDom(element);
 
-                textMeasurementService.wordBreak(<any>element[0], 25 /* maxLength */, 20 * 2 /* maxHeight */);
+                textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
                 let text = $(element).text();
                 expect($(element).find("tspan").length).toBe(2);
@@ -322,7 +321,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement(originalText);
                 attachToDom(element);
 
-                textMeasurementService.wordBreak(<any>element[0], 25 /* maxLength */, 20 * 1 /* maxHeight */);
+                textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 1 /* maxHeight */);
 
                 let text = $(element).text();
                 expect($(element).find("tspan").length).toBe(1);
@@ -334,7 +333,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement(originalText);
                 attachToDom(element);
 
-                textMeasurementService.wordBreak(<any>element[0], 25 /* maxLength */, 1 /* maxHeight */);
+                textMeasurementService.wordBreak(element, 25 /* maxLength */, 1 /* maxHeight */);
 
                 let text = $(element).text();
                 expect($(element).find("tspan").length).toBe(1);
@@ -346,7 +345,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement(originalText);
                 attachToDom(element);
 
-                textMeasurementService.wordBreak(<any>element[0], 75 /* maxLength */, 20 * 3 /* maxHeight */);
+                textMeasurementService.wordBreak(element, 75 /* maxLength */, 20 * 3 /* maxHeight */);
 
                 let text = $(element).text();
                 expect($(element).find("tspan").length).toBe(3);
@@ -427,11 +426,11 @@ module powerbi.extensibility.utils.formatting.test {
         }
 
         function createSvgTextElement(text: string): SVGTextElement {
-            let svg = $("<svg>");
-            let element = $("<text>").text(text);
-            svg.append(element as any);
-
-            return element[0] as any;
+            const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            const svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            svgTextElement.textContent = text;
+            svgElement.appendChild(svgTextElement);
+            return svgTextElement;
         }
 
         function createSpanElement(text: string): JQuery {
