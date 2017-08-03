@@ -285,7 +285,7 @@ declare module powerbi.extensibility.utils.formatting {
          * This method measures the width of the svgElement.
          * @param svgElement The SVGTextElement to be measured.
          */
-        function measureSvgTextElementWidth(svgElement: SVGTextElement): number;
+        function measureSvgTextElementWidth(svgElement: Element): number;
         /**
          * This method fetches the text measurement properties of the given DOM element.
          * @param element The selector for the DOM Element.
@@ -293,9 +293,9 @@ declare module powerbi.extensibility.utils.formatting {
         function getMeasurementProperties(element: Element): TextProperties;
         /**
          * This method fetches the text measurement properties of the given SVG text element.
-         * @param svgElement The SVGTextElement to be measured.
+         * @param element The SVGTextElement to be measured.
          */
-        function getSvgMeasurementProperties(svgElement: SVGTextElement): TextProperties;
+        function getSvgMeasurementProperties(element: Element): TextProperties;
         /**
          * This method returns the width of a div element.
          * @param element The div element.
@@ -312,7 +312,7 @@ declare module powerbi.extensibility.utils.formatting {
          * @param textElement The SVGTextElement containing the text to render.
          * @param maxWidth The maximum width available for rendering the text.
          */
-        function svgEllipsis(textElement: SVGTextElement, maxWidth: number): void;
+        function svgEllipsis(textElement: Element, maxWidth: number): void;
         /**
          * Word break textContent of <text> SVG element into <tspan>s
          * Each tspan will be the height of a single line of text
@@ -321,7 +321,7 @@ declare module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        function wordBreak(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding?: number): void;
+        function wordBreak(textElement: Element, maxWidth: number, maxHeight: number, linePadding?: number): void;
         /**
          * Word break textContent of span element into <span>s
          * Each span will be the height of a single line of text
@@ -330,7 +330,7 @@ declare module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        function wordBreakOverflowingText(textElement: any, maxWidth: number, maxHeight: number, linePadding?: number): void;
+        function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding?: number): void;
     }
 }
 declare module powerbi.extensibility.utils.formatting {

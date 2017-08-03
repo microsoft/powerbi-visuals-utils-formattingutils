@@ -25,10 +25,6 @@
  */
 
 module powerbi.extensibility.utils.formatting {
-    // powerbi.extensibility.utils.svgs
-    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
-    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
-
     // powerbi.extensibility.utils.type
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
     import Prototype = powerbi.extensibility.utils.type.Prototype;
@@ -69,10 +65,9 @@ module powerbi.extensibility.utils.formatting {
 
     export module textMeasurementService {
         const ellipsis = "...";
-        const OverflowingText = createClassAndSelector("overflowingText");
 
         let spanElement: HTMLElement;
-        let svgTextElement: d3.Selection<any>;
+        let svgTextElement: SVGTextElement;
         let canvasCtx: CanvasContext;
         let fallbackFontFamily: string;
 
@@ -87,17 +82,16 @@ module powerbi.extensibility.utils.formatting {
             spanElement = document.createElement("span");
             document.body.appendChild(spanElement);
             // The style hides the svg element from the canvas, preventing canvas from scrolling down to show svg black square.
-            svgTextElement = d3.select(document.body)
-                .append("svg")
-                .style({
-                    "height": "0px",
-                    "width": "0px",
-                    "position": "absolute"
-                })
-                .append("text");
+            const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svgElement.setAttribute("height", "0");
+            svgElement.setAttribute("width", "0");
+            svgElement.setAttribute("position", "absolute");
+            svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            svgElement.appendChild(svgTextElement);
+            document.body.appendChild(svgElement);
             let canvasElement: CanvasElement = document.createElement("canvas");
             canvasCtx = canvasElement.getContext("2d");
-            let style = window.getComputedStyle(<SVGTextElement>svgTextElement.node());
+            let style: CSSStyleDeclaration = window.getComputedStyle(svgTextElement);
             if (style) {
                 fallbackFontFamily = style.fontFamily;
             } else {
@@ -142,22 +136,20 @@ module powerbi.extensibility.utils.formatting {
         export function measureSvgTextRect(textProperties: TextProperties, text?: string): SVGRect {
             ensureDOM();
 
-            svgTextElement.style(null);
-            svgTextElement
-                .text(text || textProperties.text)
-                .attr({
-                    "visibility": "hidden",
-                    "font-family": textProperties.fontFamily || fallbackFontFamily,
-                    "font-variant": textProperties.fontVariant,
-                    "font-size": textProperties.fontSize,
-                    "font-weight": textProperties.fontWeight,
-                    "font-style": textProperties.fontStyle,
-                    "white-space": textProperties.whiteSpace || "nowrap"
-                });
+            svgTextElement.setAttribute("style", null);
+
+            svgTextElement.style.visibility = "hidden";
+            svgTextElement.style.fontFamily = textProperties.fontFamily || fallbackFontFamily;
+            svgTextElement.style.fontVariant = textProperties.fontVariant;
+            svgTextElement.style.fontSize = textProperties.fontSize;
+            svgTextElement.style.fontWeight = textProperties.fontWeight;
+            svgTextElement.style.fontStyle = textProperties.fontStyle;
+            svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
+            svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
             // We're expecting the browser to give a synchronous measurement here
             // We're using SVGTextElement because it works across all browsers
-            return (<SVGTextElement>svgTextElement.node()).getBBox();
+            return svgTextElement.getBBox();
         }
 
         /**
@@ -225,7 +217,7 @@ module powerbi.extensibility.utils.formatting {
          * This method measures the width of the svgElement.
          * @param svgElement The SVGTextElement to be measured.
          */
-        export function measureSvgTextElementWidth(svgElement: SVGTextElement): number {
+        export function measureSvgTextElementWidth(svgElement: Element): number {
             return measureSvgTextWidth(getSvgMeasurementProperties(svgElement));
         }
 
@@ -234,7 +226,7 @@ module powerbi.extensibility.utils.formatting {
          * @param element The selector for the DOM Element.
          */
         export function getMeasurementProperties(element: Element): TextProperties {
-            const style = getComputedStyle(element);
+            const style: CSSStyleDeclaration = window.getComputedStyle(element);
             return {
                 text: (<HTMLInputElement>element).value || element.textContent,
                 fontFamily: style.fontFamily,
@@ -248,13 +240,13 @@ module powerbi.extensibility.utils.formatting {
 
         /**
          * This method fetches the text measurement properties of the given SVG text element.
-         * @param svgElement The SVGTextElement to be measured.
+         * @param element The SVGTextElement to be measured.
          */
-        export function getSvgMeasurementProperties(svgElement: SVGTextElement): TextProperties {
-            let style = window.getComputedStyle(svgElement, null);
+        export function getSvgMeasurementProperties(element: Element): TextProperties {
+            let style: CSSStyleDeclaration = window.getComputedStyle(element);
             if (style) {
                 return {
-                    text: svgElement.textContent,
+                    text: element.textContent,
                     fontFamily: style.fontFamily,
                     fontSize: style.fontSize,
                     fontWeight: style.fontWeight,
@@ -264,7 +256,7 @@ module powerbi.extensibility.utils.formatting {
                 };
             } else {
                 return {
-                    text: svgElement.textContent,
+                    text: element.textContent,
                     fontFamily: "",
                     fontSize: "0",
                 };
@@ -276,7 +268,7 @@ module powerbi.extensibility.utils.formatting {
          * @param element The div element.
          */
         export function getDivElementWidth(element: Element): string {
-            const style = getComputedStyle(element);
+            const style: CSSStyleDeclaration = window.getComputedStyle(element);
             if (style)
                 return style.width;
             else
@@ -291,13 +283,13 @@ module powerbi.extensibility.utils.formatting {
         export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidth: number): string {
             ensureDOM();
 
-            let strLength = textProperties.text.length;
+            let strLength: number = textProperties.text.length;
 
             if (strLength === 0) {
                 return textProperties.text;
             }
 
-            let width = measureSvgTextWidth(textProperties);
+            let width: number = measureSvgTextWidth(textProperties);
 
             if (width < maxWidth) {
                 return textProperties.text;
@@ -349,10 +341,10 @@ module powerbi.extensibility.utils.formatting {
          * @param textElement The SVGTextElement containing the text to render.
          * @param maxWidth The maximum width available for rendering the text.
          */
-        export function svgEllipsis(textElement: SVGTextElement, maxWidth: number): void {
-            let properties = getSvgMeasurementProperties(textElement);
-            let originalText = properties.text;
-            let tailoredText = getTailoredTextOrDefault(properties, maxWidth);
+        export function svgEllipsis(textElement: Element, maxWidth: number): void {
+            let properties: TextProperties = getSvgMeasurementProperties(textElement);
+            let originalText: string = properties.text;
+            let tailoredText: string = getTailoredTextOrDefault(properties, maxWidth);
 
             if (originalText !== tailoredText) {
                 textElement.textContent = tailoredText;
@@ -367,32 +359,31 @@ module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        export function wordBreak(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
-            let properties = getSvgMeasurementProperties(textElement);
-            let height = estimateSvgTextHeight(properties) + linePadding;
-            let maxNumLines = Math.max(1, Math.floor(maxHeight / height));
-            let node = d3.select(textElement);
+        export function wordBreak(textElement: Element, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
+            let properties: TextProperties = getSvgMeasurementProperties(textElement);
+            let height: number = estimateSvgTextHeight(properties) + linePadding;
+            let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
             // Save y of parent textElement to apply as first tspan dy
-            let firstDY = node.attr("y");
+            let firstDY: string = textElement ? textElement.getAttribute("y") : null;
 
             // Store and clear text content
-            let labelText = textElement.textContent;
+            let labelText = textElement ? textElement.textContent : null;
             textElement.textContent = null;
 
             // Append a tspan for each word broken section
             let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
+            const fragment: DocumentFragment = document.createDocumentFragment();
             for (let i = 0, ilen = words.length; i < ilen; i++) {
+                const dy = i === 0 ? firstDY : height;
                 properties.text = words[i];
-                node
-                    .append("tspan")
-                    .attr({
-                        "x": 0,
-                        "dy": i === 0 ? firstDY : height,
-                    })
-                    // Truncate
-                    .text(getTailoredTextOrDefault(properties, maxWidth));
+                const textElement: SVGTSpanElement = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                textElement.setAttribute("x", "0");
+                textElement.setAttribute("dy", dy ? dy.toString() : null);
+                textElement.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
+                fragment.appendChild(textElement);
             }
+            textElement.appendChild(fragment);
         }
 
         /**
@@ -403,26 +394,27 @@ module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        export function wordBreakOverflowingText(textElement: any, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
-            let properties = getSvgMeasurementProperties(<SVGTextElement>textElement);
-            let height = estimateSvgTextHeight(properties) + linePadding;
-            let maxNumLines = Math.max(1, Math.floor(maxHeight / height));
+        export function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
+            const properties: TextProperties = getSvgMeasurementProperties(textElement);
+            let height: number = estimateSvgTextHeight(properties) + linePadding;
+            let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
             // Store and clear text content
-            let labelText = textElement.textContent;
+            const labelText: string = textElement.textContent;
             textElement.textContent = null;
 
             // Append a span for each word broken section
-            let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
-            let spanItem = d3.select(textElement)
-                .selectAll(OverflowingText.selectorName)
-                .data(words);
-            spanItem
-                .enter()
-                .append("span")
-                .classed(OverflowingText.className, true)
-                .text((d: string) => d)
-                .style("width", PixelConverter.toString(maxWidth));
+            const words: string[] = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
+            const fragment: DocumentFragment = document.createDocumentFragment();
+            for (let i = 0; i < words.length; i++) {
+                const span: HTMLSpanElement = document.createElement("span");
+                span.classList.add("overflowingText");
+                span.style.width = PixelConverter.toString(maxWidth);
+                span.appendChild(document.createTextNode(words[i]));
+                span.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
+                fragment.appendChild(span);
+            }
+            textElement.appendChild(fragment);
         }
     }
 }
