@@ -284,7 +284,7 @@ module powerbi.extensibility.utils.formatting.test {
                 let element = createSvgTextElement("PowerBI rocks!");
                 attachToDom(element);
 
-                textMeasurementService.svgEllipsis(element, 100);
+                textMeasurementService.svgEllipsis(element, 200);
 
                 let text = $(element).text();
                 expect(text).toEqual("PowerBI rocks!");
@@ -312,8 +312,10 @@ module powerbi.extensibility.utils.formatting.test {
                 textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
                 let text = $(element).text();
+                console.log(text);
+                console.log(element);
                 expect($(element).find("tspan").length).toBe(2);
-                expect(text.match(RegExp(Ellipsis, "g")).length).toBe(3);
+                expect(text.match(RegExp(Ellipsis, "g")).length).toBe(2);
             });
 
             it("with breaks but forced to single line", () => {
