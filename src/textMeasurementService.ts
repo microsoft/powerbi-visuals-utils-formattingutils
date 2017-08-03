@@ -91,7 +91,7 @@ module powerbi.extensibility.utils.formatting {
             document.body.appendChild(svgElement);
             let canvasElement: CanvasElement = document.createElement("canvas");
             canvasCtx = canvasElement.getContext("2d");
-            let style = window.getComputedStyle(svgTextElement);
+            let style: CSSStyleDeclaration = window.getComputedStyle(svgTextElement);
             if (style) {
                 fallbackFontFamily = style.fontFamily;
             } else {
@@ -138,13 +138,13 @@ module powerbi.extensibility.utils.formatting {
 
             svgTextElement.setAttribute("style", null);
 
-            svgTextElement.setAttribute("visibility", "hidden");
-            svgTextElement.setAttribute("font-family", textProperties.fontFamily || fallbackFontFamily);
-            svgTextElement.setAttribute("font-variant", textProperties.fontVariant);
-            svgTextElement.setAttribute("font-size", textProperties.fontSize);
-            svgTextElement.setAttribute("font-weight", textProperties.fontWeight);
-            svgTextElement.setAttribute("font-style", textProperties.fontStyle);
-            svgTextElement.setAttribute("white-space", textProperties.whiteSpace || "nowrap");
+            svgTextElement.style.visibility = "hidden";
+            svgTextElement.style.fontFamily = textProperties.fontFamily || fallbackFontFamily;
+            svgTextElement.style.fontVariant = textProperties.fontVariant;
+            svgTextElement.style.fontSize = textProperties.fontSize;
+            svgTextElement.style.fontWeight = textProperties.fontWeight;
+            svgTextElement.style.fontStyle = textProperties.fontStyle;
+            svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
             svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
             // We're expecting the browser to give a synchronous measurement here
@@ -217,7 +217,7 @@ module powerbi.extensibility.utils.formatting {
          * This method measures the width of the svgElement.
          * @param svgElement The SVGTextElement to be measured.
          */
-        export function measureSvgTextElementWidth(svgElement: SVGTextElement): number {
+        export function measureSvgTextElementWidth(svgElement: Element): number {
             return measureSvgTextWidth(getSvgMeasurementProperties(svgElement));
         }
 
@@ -226,7 +226,7 @@ module powerbi.extensibility.utils.formatting {
          * @param element The selector for the DOM Element.
          */
         export function getMeasurementProperties(element: Element): TextProperties {
-            const style = getComputedStyle(element);
+            const style: CSSStyleDeclaration = window.getComputedStyle(element);
             return {
                 text: (<HTMLInputElement>element).value || element.textContent,
                 fontFamily: style.fontFamily,
@@ -240,13 +240,13 @@ module powerbi.extensibility.utils.formatting {
 
         /**
          * This method fetches the text measurement properties of the given SVG text element.
-         * @param svgElement The SVGTextElement to be measured.
+         * @param element The SVGTextElement to be measured.
          */
-        export function getSvgMeasurementProperties(svgElement: SVGTextElement): TextProperties {
-            let style = window.getComputedStyle(svgElement, null);
+        export function getSvgMeasurementProperties(element: Element): TextProperties {
+            let style: CSSStyleDeclaration = window.getComputedStyle(element);
             if (style) {
                 return {
-                    text: svgElement.textContent,
+                    text: element.textContent,
                     fontFamily: style.fontFamily,
                     fontSize: style.fontSize,
                     fontWeight: style.fontWeight,
@@ -256,7 +256,7 @@ module powerbi.extensibility.utils.formatting {
                 };
             } else {
                 return {
-                    text: svgElement.textContent,
+                    text: element.textContent,
                     fontFamily: "",
                     fontSize: "0",
                 };
@@ -268,7 +268,7 @@ module powerbi.extensibility.utils.formatting {
          * @param element The div element.
          */
         export function getDivElementWidth(element: Element): string {
-            const style = getComputedStyle(element);
+            const style: CSSStyleDeclaration = window.getComputedStyle(element);
             if (style)
                 return style.width;
             else
@@ -283,13 +283,13 @@ module powerbi.extensibility.utils.formatting {
         export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidth: number): string {
             ensureDOM();
 
-            let strLength = textProperties.text.length;
+            let strLength: number = textProperties.text.length;
 
             if (strLength === 0) {
                 return textProperties.text;
             }
 
-            let width = measureSvgTextWidth(textProperties);
+            let width: number = measureSvgTextWidth(textProperties);
 
             if (width < maxWidth) {
                 return textProperties.text;
@@ -341,10 +341,10 @@ module powerbi.extensibility.utils.formatting {
          * @param textElement The SVGTextElement containing the text to render.
          * @param maxWidth The maximum width available for rendering the text.
          */
-        export function svgEllipsis(textElement: SVGTextElement, maxWidth: number): void {
-            let properties = getSvgMeasurementProperties(textElement);
-            let originalText = properties.text;
-            let tailoredText = getTailoredTextOrDefault(properties, maxWidth);
+        export function svgEllipsis(textElement: Element, maxWidth: number): void {
+            let properties: TextProperties = getSvgMeasurementProperties(textElement);
+            let originalText: string = properties.text;
+            let tailoredText: string = getTailoredTextOrDefault(properties, maxWidth);
 
             if (originalText !== tailoredText) {
                 textElement.textContent = tailoredText;
@@ -359,16 +359,16 @@ module powerbi.extensibility.utils.formatting {
          * @param maxHeight - the maximum height available (defaults to single line)
          * @param linePadding - (optional) padding to add to line height
          */
-        export function wordBreak(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
+        export function wordBreak(textElement: Element, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
             let properties: TextProperties = getSvgMeasurementProperties(textElement);
             let height: number = estimateSvgTextHeight(properties) + linePadding;
             let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
             // Save y of parent textElement to apply as first tspan dy
-            let firstDY = textElement.getAttribute("y");
+            let firstDY: string = textElement ? textElement.getAttribute("y") : null;
 
             // Store and clear text content
-            let labelText = textElement.textContent;
+            let labelText = textElement ? textElement.textContent : null;
             textElement.textContent = null;
 
             // Append a tspan for each word broken section
