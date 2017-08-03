@@ -184,7 +184,7 @@ module powerbi.extensibility.utils.formatting.wordBreaker {
         }
 
         // Push remaining words onto result (if any)
-        if (!_.isEmpty(wordsInLine)) {
+        if (wordsInLine && wordsInLine.length) {
             result.push(truncate(wordsInLine.join(SPACE), properties, truncator, maxWidth));
         }
 
