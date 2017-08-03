@@ -1,4 +1,4 @@
-## 2.2.0
+## 3.0.0
 * Removed `d3` and `powerbi-visuals-utils-svgutils`
 * Updated dependencies
 
