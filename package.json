@@ -29,7 +29,6 @@
     "lessc": "lessc src/styles/style.less lib/index.css"
   },
   "devDependencies": {
-    "@types/d3": "3.5.36",
     "@types/jasmine": "2.5.52",
     "@types/jquery": "2.0.46",
     "@types/lodash": "4.14.55",
@@ -53,10 +52,8 @@
     "typescript": "2.1.4"
   },
   "dependencies": {
-    "d3": "3.5.5",
     "globalize": "0.1.0-a2",
     "powerbi-visuals-utils-dataviewutils": "1.2.0",
-    "powerbi-visuals-utils-svgutils": "1.1.0",
     "powerbi-visuals-utils-typeutils": "1.1.0"
   }
 }
