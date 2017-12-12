@@ -195,7 +195,13 @@ module powerbi.extensibility.utils.formatting.test {
                 text: "PowerBI rocks!",
             };
 
-            expect(properties).toEqual(expectedProperties);
+            expect(properties.fontFamily).toEqual(expectedProperties.fontFamily);
+            expect(properties.fontSize).toEqual(expectedProperties.fontSize);
+            expect([expectedProperties.fontWeight, "700"]).toContain(properties.fontWeight);
+            expect(properties.fontStyle).toEqual(expectedProperties.fontStyle);
+            expect(properties.whiteSpace).toEqual(expectedProperties.whiteSpace);
+            expect(properties.fontVariant).toEqual(expectedProperties.fontVariant);
+            expect(properties.text).toEqual(expectedProperties.text);
         });
 
         describe("getSvgMeasurementProperties", () => {
@@ -225,7 +231,13 @@ module powerbi.extensibility.utils.formatting.test {
                     text: "PowerBI rocks!",
                 };
 
-                expect(properties).toEqual(expectedProperties);
+                expect(properties.fontFamily).toEqual(expectedProperties.fontFamily);
+                expect(properties.fontSize).toEqual(expectedProperties.fontSize);
+                expect([expectedProperties.fontWeight, "700"]).toContain(properties.fontWeight);
+                expect(properties.fontStyle).toEqual(expectedProperties.fontStyle);
+                expect(properties.whiteSpace).toEqual(expectedProperties.whiteSpace);
+                expect(properties.fontVariant).toEqual(expectedProperties.fontVariant);
+                expect(properties.text).toEqual(expectedProperties.text);
             });
         });
 
