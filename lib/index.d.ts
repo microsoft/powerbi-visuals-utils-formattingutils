@@ -224,7 +224,7 @@ declare module powerbi.extensibility.utils.formatting {
         /** Gets a value indicating whether the specified format a standard numeric format specifier. */
         isStandardNumberFormat(format: string): boolean;
         /** Performs a custom format with a value override.  Typically used for custom formats showing scaled values. */
-        formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string): string;
+        formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string): string;
         /** Gets the format string to use for dates in particular units. */
         dateFormatString(unit: DateTimeUnit): string;
     }
