@@ -289,6 +289,18 @@ module powerbi.extensibility.utils.formatting.test {
         });
 
         describe("create", () => {
+            it("create with units and check point", () => {
+                let simpleFormatterSL = valueFormatter.create({ cultureSelector: "sl-SI" });
+                let unitsFormatterSL = valueFormatter.create({ value: 1e3, cultureSelector: "sl-SI" });
+                let simpleFormatterEN = valueFormatter.create({ cultureSelector: "en-US" });
+                let unitsFormatterEN = valueFormatter.create({ value: 1e3, cultureSelector: "en-US" });
+
+                expect(simpleFormatterSL.format(3.14159)).toBe("3,14159");
+                expect(unitsFormatterSL.format(314159)).toBe("314,16K");
+                expect(simpleFormatterEN.format(3.14159)).toBe("3.14159");
+                expect(unitsFormatterEN.format(314159)).toBe("314.16K");
+            });
+
             it("create basic format with invalid values", () => {
                 let scale = valueFormatter.create({ format: "0", value: 0 });
 

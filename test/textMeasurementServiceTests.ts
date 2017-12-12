@@ -312,8 +312,6 @@ module powerbi.extensibility.utils.formatting.test {
                 textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
                 let text = $(element).text();
-                console.log(text);
-                console.log(element);
                 expect($(element).find("tspan").length).toBe(2);
                 expect(text.match(RegExp(Ellipsis, "g")).length).toBe(2);
             });

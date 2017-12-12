@@ -198,7 +198,8 @@ module powerbi.extensibility.utils.formatting {
                 return formattingService.formatNumberWithCustomOverride(
                     value,
                     format,
-                    nonScientificFormat);
+                    nonScientificFormat,
+                    cultureSelector);
 
             if (!format) {
                 format = "G";
