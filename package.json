@@ -2,7 +2,8 @@
   "name": "powerbi-visuals-utils-formattingutils",
   "version": "3.0.0",
   "description": "FormattingUtils",
-  "main": "lib/index.js",
+  "main": "lib/index",
+  "types": "lib/index",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/powerbi-visuals-utils-formattingutils.git"
