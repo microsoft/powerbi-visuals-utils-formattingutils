@@ -23,30 +23,29 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import { IStorageService } from "./iStorageService";
 
-module powerbi.extensibility.utils.formatting {
-    export class LocalStorageService implements IStorageService {
-        public getData(key: string): any {
-            try {
-                if (localStorage) {
-                    let value = localStorage[key];
-                    if (value) {
-                        return JSON.parse(value);
-                    }
+export class LocalStorageService implements IStorageService {
+    public getData(key: string): any {
+        try {
+            if (localStorage) {
+                let value = localStorage[key];
+                if (value) {
+                    return JSON.parse(value);
                 }
             }
-            catch (exception) { }
-
-            return null;
         }
+        catch (exception) { }
 
-        public setData(key: string, data: any) {
-            try {
-                if (localStorage) {
-                    localStorage[key] = JSON.stringify(data);
-                }
+        return null;
+    }
+
+    public setData(key: string, data: any) {
+        try {
+            if (localStorage) {
+                localStorage[key] = JSON.stringify(data);
             }
-            catch (e) { }
         }
+        catch (e) { }
     }
 }

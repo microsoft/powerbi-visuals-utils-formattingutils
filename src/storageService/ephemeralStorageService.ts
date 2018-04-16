@@ -24,38 +24,37 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.utils.formatting {
-    export class EphemeralStorageService implements IStorageService {
-        private cache: { [key: string]: any } = {};
-        private clearCacheTimerId: number;
-        private clearCacheInterval: number;
-        public static defaultClearCacheInterval: number = (1000 * 60 * 60 * 24);  // 1 day
+import { IStorageService } from "./iStorageService";
 
-        constructor(clearCacheInterval?: number) {
-            this.clearCacheInterval = (clearCacheInterval != null)
-                ? clearCacheInterval
-                : EphemeralStorageService.defaultClearCacheInterval;
+export class EphemeralStorageService implements IStorageService {
+    private cache: { [key: string]: any } = {};
+    private clearCacheTimerId: number;
+    private clearCacheInterval: number;
+    public static defaultClearCacheInterval: number = (1000 * 60 * 60 * 24);  // 1 day
+    constructor(clearCacheInterval?: number) {
+        this.clearCacheInterval = (clearCacheInterval != null)
+            ? clearCacheInterval
+            : EphemeralStorageService.defaultClearCacheInterval;
 
-            this.clearCache();
-        }
+        this.clearCache();
+    }
 
-        public getData(key: string): any {
-            return this.cache[key];
-        }
+    public getData(key: string): any {
+        return this.cache[key];
+    }
 
-        public setData(key: string, data: any) {
-            this.cache[key] = data;
+    public setData(key: string, data: any) {
+        this.cache[key] = data;
 
-            if (this.clearCacheTimerId == null) {
-                this.clearCacheTimerId = setTimeout(() => this.clearCache(), this.clearCacheInterval);
-            }
-        }
-
-        private clearCache(): void {
-            this.cache = {};
-            this.clearCacheTimerId = undefined;
+        if (this.clearCacheTimerId == null) {
+            this.clearCacheTimerId = setTimeout(() => this.clearCache(), this.clearCacheInterval);
         }
     }
 
-    export const ephemeralStorageService: EphemeralStorageService = new EphemeralStorageService();
+    private clearCache(): void {
+        this.cache = {};
+        this.clearCacheTimerId = undefined;
+    }
 }
+
+export const ephemeralStorageService: EphemeralStorageService = new EphemeralStorageService();

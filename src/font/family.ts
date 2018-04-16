@@ -24,17 +24,17 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.utils.formatting.font {
-    export const fallbackFonts: string[] = ["helvetica", "arial", "sans-serif"];
+import { FamilyInfo } from "./familyInfo";
 
-    export const Family = {
-        light: new FamilyInfo(fallbackFonts),
-        semilight: new FamilyInfo(fallbackFonts),
-        regular: new FamilyInfo(fallbackFonts),
-        semibold: new FamilyInfo(fallbackFonts),
-        bold: new FamilyInfo(fallbackFonts),
-        lightSecondary: new FamilyInfo(fallbackFonts),
-        regularSecondary: new FamilyInfo(fallbackFonts),
-        boldSecondary: new FamilyInfo(fallbackFonts)
-    };
-}
+export const fallbackFonts: string[] = ["helvetica", "arial", "sans-serif"];
+
+export const Family = {
+    light: new FamilyInfo(fallbackFonts),
+    semilight: new FamilyInfo(fallbackFonts),
+    regular: new FamilyInfo(fallbackFonts),
+    semibold: new FamilyInfo(fallbackFonts),
+    bold: new FamilyInfo(fallbackFonts),
+    lightSecondary: new FamilyInfo(fallbackFonts),
+    regularSecondary: new FamilyInfo(fallbackFonts),
+    boldSecondary: new FamilyInfo(fallbackFonts)
+};
