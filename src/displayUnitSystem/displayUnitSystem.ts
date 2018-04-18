@@ -26,7 +26,7 @@
 
 import { numberFormat as NumberFormat, formattingService}  from "./../formattingService/formattingService";
 
-import Double = powerbi.extensibility.utils.type.Double;
+import { double as Double } from "powerbi-visuals-utils-typeutils";
 
 // Constants
 const maxExponent = 24;

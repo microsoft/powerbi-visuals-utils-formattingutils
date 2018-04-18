@@ -27,9 +27,9 @@
 import { dateUtils } from "./dateUtils";
 
 // powerbi.extensibility.utils.type
-import NumericSequenceRange = powerbi.extensibility.utils.type.NumericSequenceRange;
-import NumericSequence = powerbi.extensibility.utils.type.NumericSequence;
-import Double = powerbi.extensibility.utils.type.Double;
+import { numericSequence, numericSequenceRange, double as Double } from "powerbi-visuals-utils-typeutils";
+import  NumericSequence = numericSequence.NumericSequence;
+import  NumericSequenceRange = numericSequenceRange.NumericSequenceRange;
 
 // powerbi.extensibility.utils.formatting
 import { DateTimeUnit } from "./../formattingService/iFormattingService";

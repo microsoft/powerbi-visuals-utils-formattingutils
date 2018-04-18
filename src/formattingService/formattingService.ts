@@ -25,9 +25,8 @@
  */
 
 // powerbi.extensibility.utils.type
-import Double = powerbi.extensibility.utils.type.Double;
-import RegExpExtensions = powerbi.extensibility.utils.type.RegExpExtensions;
-
+import { double as Double, regExpExtensions } from "powerbi-visuals-utils-typeutils";
+import RegExpExtensions = regExpExtensions.RegExpExtensions;
 // powerbi.extensibility.utils.formatting
 import * as stringExtensions from "./../stringExtensions";
 

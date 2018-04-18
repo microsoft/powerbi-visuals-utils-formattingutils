@@ -31,6 +31,10 @@ import { DisplayUnit } from "./displayUnitSystem/displayUnitSystem";
 import * as stringExtensions from "./stringExtensions";
 import { numberFormat as NumberFormat, formattingService }  from "./formattingService/formattingService";
 import { DateTimeSequence } from "./date/dateTimeSequence";
+import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
+import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
+
+import DataViewObjects = dataViewObjects.DataViewObjects;
 
 // powerbi
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -38,12 +42,8 @@ import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifi
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 
 // powerbi.extensibility.utils.type
-import ValueType = powerbi.extensibility.utils.type.ValueType;
-import PrimitiveType = powerbi.extensibility.utils.type.PrimitiveType;
-import Double = powerbi.extensibility.utils.type.Double;
-
-// powerbi.extensibility.utils.dataview
-import DataViewObjects = powerbi.extensibility.utils.dataview.DataViewObjects;
+import ValueType = valueType.ValueType;
+import PrimitiveType = valueType.PrimitiveType;
 
 /**
  * Formats the value using provided format expression

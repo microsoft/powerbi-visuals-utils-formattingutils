@@ -25,8 +25,7 @@
 */
 
 // powerbi.extensibility.utils.type
-import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
-import Prototype = powerbi.extensibility.utils.type.Prototype;
+import { pixelConverter as PixelConverter, prototype as Prototype } from "powerbi-visuals-utils-typeutils";
 
 // powerbi.extensibility.utils.formatting
 import * as wordBreaker from "./wordBreaker";

@@ -1,3 +1,4 @@
+/// <reference types="powerbi-visuals-tools" />
 import { DisplayUnitSystem, DisplayUnitSystemNames } from "./displayUnitSystem/displayUnitSystem";
 import { DisplayUnitSystemType } from "./displayUnitSystem/displayUnitSystemType";
 import { DisplayUnit } from "./displayUnitSystem/displayUnitSystem";
