@@ -24,9 +24,7 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.utils.formatting {
-    export interface IStorageService {
-        getData(key: string): any;
-        setData(key: string, data: any): void;
-    }
+export interface IStorageService {
+    getData(key: string): any;
+    setData(key: string, data: any): void;
 }

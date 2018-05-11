@@ -30,6 +30,7 @@
     "lessc": "lessc src/styles/style.less lib/index.css"
   },
   "devDependencies": {
+    "@types/powerbi-visuals-tools": "1.11.0",
     "@types/jasmine": "2.5.52",
     "@types/jquery": "2.0.46",
     "@types/lodash": "4.14.55",
@@ -46,15 +47,15 @@
     "karma-typescript-preprocessor": "0.3.1",
     "less": "2.7.2",
     "lodash": "4.17.4",
-    "powerbi-visuals-tools": "1.6.6",
+    "powerbi-visuals-tools": "1.11.0",
     "powerbi-visuals-utils-testutils": "1.0.1",
     "tslint": "5.4.3",
     "tslint-microsoft-contrib": "5.0.0",
-    "typescript": "2.1.4"
+    "typescript": "2.3.3"
   },
   "dependencies": {
     "globalize": "0.1.0-a2",
-    "powerbi-visuals-utils-dataviewutils": "1.2.0",
-    "powerbi-visuals-utils-typeutils": "1.1.0"
+    "powerbi-visuals-utils-dataviewutils": "Microsoft/powerbi-visuals-utils-dataviewutils#es2015",
+    "powerbi-visuals-utils-typeutils": "Microsoft/powerbi-visuals-utils-typeutils#es2015"
   }
 }

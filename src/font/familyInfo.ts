@@ -24,47 +24,45 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.utils.formatting.font {
-    export class FamilyInfo {
-        constructor(public families: string[]) { }
+export class FamilyInfo {
+    constructor(public families: string[]) { }
 
-        /**
-         * Gets the first font "wf_" font family since it will always be loaded.
-         */
-        get family(): string {
-            return this.getFamily();
+    /**
+     * Gets the first font "wf_" font family since it will always be loaded.
+     */
+    get family(): string {
+        return this.getFamily();
+    }
+
+    /**
+    * Gets the first font family that matches regex (if provided).
+    * Default regex looks for "wf_" fonts which are always loaded.
+    */
+    getFamily(regex: RegExp = /^wf_/): string {
+        if (!this.families) {
+            return null;
         }
-
-        /**
-        * Gets the first font family that matches regex (if provided).
-        * Default regex looks for "wf_" fonts which are always loaded.
-        */
-        getFamily(regex: RegExp = /^wf_/): string {
-            if (!this.families) {
-                return null;
-            }
-            if (regex) {
-                for (let fontFamily of this.families) {
-                    if (regex.test(fontFamily)) {
-                        return fontFamily;
-                    }
+        if (regex) {
+            for (let fontFamily of this.families) {
+                if (regex.test(fontFamily)) {
+                    return fontFamily;
                 }
             }
-            return this.families[0];
         }
+        return this.families[0];
+    }
 
-        /**
-         * Gets the CSS string for the "font-family" CSS attribute.
-         */
-        get css(): string {
-            return this.getCSS();
-        }
+    /**
+     * Gets the CSS string for the "font-family" CSS attribute.
+     */
+    get css(): string {
+        return this.getCSS();
+    }
 
-        /**
-         * Gets the CSS string for the "font-family" CSS attribute.
-         */
-        getCSS(): string {
-            return this.families ? this.families.map((font => font.indexOf(" ") > 0 ? `'` + font + `'` : font)).join(", ") : null;
-        }
+    /**
+     * Gets the CSS string for the "font-family" CSS attribute.
+     */
+    getCSS(): string {
+        return this.families ? this.families.map((font => font.indexOf(" ") > 0 ? `'` + font + `'` : font)).join(", ") : null;
     }
 }
