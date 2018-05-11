@@ -32,6 +32,7 @@ import * as stringExtensions from "./../stringExtensions";
 
 import { findDateFormat, fixDateTimeFormat } from "./../formatting";
 import { IFormattingService, DateTimeUnit } from "./iFormattingService";
+import powerbi from "powerbi-visuals-tools";
 
 /** Culture interfaces. These match the Globalize library interfaces intentionally. */
 export interface Culture {

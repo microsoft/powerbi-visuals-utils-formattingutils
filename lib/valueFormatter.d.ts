@@ -3,6 +3,7 @@ import { DisplayUnitSystem, DisplayUnitSystemNames } from "./displayUnitSystem/d
 import { DisplayUnitSystemType } from "./displayUnitSystem/displayUnitSystemType";
 import { DisplayUnit } from "./displayUnitSystem/displayUnitSystem";
 import { numberFormat as NumberFormat } from "./formattingService/formattingService";
+import powerbi from "powerbi-visuals-tools";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
