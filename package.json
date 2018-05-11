@@ -30,7 +30,7 @@
     "lessc": "lessc src/styles/style.less lib/index.css"
   },
   "devDependencies": {
-    "@types/powerbi-visuals-tools": "https://github.com/zBritva/-types-powerbi-visuals-tools",
+    "@types/powerbi-visuals-tools": "1.11.0",
     "@types/jasmine": "2.5.52",
     "@types/jquery": "2.0.46",
     "@types/lodash": "4.14.55",
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "globalize": "0.1.0-a2",
-    "powerbi-visuals-utils-dataviewutils": "zBritva/powerbi-visuals-utils-dataviewutils#es2015",
-    "powerbi-visuals-utils-typeutils": "zBritva/powerbi-visuals-utils-typeutils#es2015"
+    "powerbi-visuals-utils-dataviewutils": "Microsoft/powerbi-visuals-utils-dataviewutils#es2015",
+    "powerbi-visuals-utils-typeutils": "Microsoft/powerbi-visuals-utils-typeutils#es2015"
   }
 }

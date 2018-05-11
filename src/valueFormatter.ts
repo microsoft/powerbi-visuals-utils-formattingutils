@@ -37,6 +37,7 @@ import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 import DataViewObjects = dataViewObjects.DataViewObjects;
 
 // powerbi
+import powerbi from "powerbi-visuals-tools";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
