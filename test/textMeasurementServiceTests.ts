@@ -28,16 +28,16 @@
 import { formattingService } from "./../src/formattingService/formattingService";
 import * as stringExtensions from "./../src/stringExtensions";
 import * as ephemeralStorageService from "./../src/storageService/ephemeralStorageService";
-import EphemeralStorageService = ephemeralStorageService.EphemeralStorageService;
+import EphemeralStorageService = ephemeralStorageService.ephemeralStorageService;
 import verifyEllipsisActive  from "./helpers";
 import * as tms from "./../src/textMeasurementService";
 import textMeasurementService = tms.textMeasurementService;
 import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./../src/textMeasurementService";
 import * as _ from "lodash";
+import * as $ from "jquery";
 
 // powerbi.extensibility.utils.test
-import testDom = powerbi.extensibility.utils.test.helpers.testDom;
-
+import { testDom } from "powerbi-visuals-utils-testutils";
 describe("Text measurement service", () => {
     let Ellipsis = "...";
 
@@ -178,7 +178,7 @@ describe("Text measurement service", () => {
             .css({
                 "font-family": "Arial",
                 "font-size": "11px",
-                "font-weight": "bold",
+                "font-weight": "700", // 700 is bold: https://developer.mozilla.org/en/docs/Web/CSS/font-weight
                 "font-style": "italic",
                 "font-variant": "normal",
                 "white-space": "nowrap",
@@ -189,7 +189,7 @@ describe("Text measurement service", () => {
         let expectedProperties: TextProperties = {
             fontFamily: "Arial",
             fontSize: "11px",
-            fontWeight: "bold",
+            fontWeight: "700",
             fontStyle: "italic",
             whiteSpace: "nowrap",
             fontVariant: "normal",
@@ -207,7 +207,7 @@ describe("Text measurement service", () => {
                 .css({
                     "font-family": "Arial",
                     "font-size": "11px",
-                    "font-weight": "bold",
+                    "font-weight": "700",
                     "font-style": "italic",
                     "font-variant": "normal",
                     "white-space": "nowrap",
@@ -219,7 +219,7 @@ describe("Text measurement service", () => {
             let expectedProperties: TextProperties = {
                 fontFamily: "Arial",
                 fontSize: "11px",
-                fontWeight: "bold",
+                fontWeight: "700",
                 fontStyle: "italic",
                 whiteSpace: "nowrap",
                 fontVariant: "normal",
@@ -235,7 +235,7 @@ describe("Text measurement service", () => {
             let properties: TextProperties = {
                 fontFamily: "Arial",
                 fontSize: "11px",
-                fontWeight: "bold",
+                fontWeight: "700",
                 fontStyle: "italic",
                 whiteSpace: "nowrap",
                 fontVariant: "normal",
@@ -254,7 +254,7 @@ describe("Text measurement service", () => {
             let properties: TextProperties = {
                 fontFamily: "Arial",
                 fontSize: "11px",
-                fontWeight: "bold",
+                fontWeight: "700",
                 fontStyle: "italic",
                 whiteSpace: "nowrap",
                 fontVariant: "normal",
