@@ -1,180 +1,178 @@
 /*
- *  Power BI Visualizations
- *
- *  Copyright (c) Microsoft Corporation
- *  All rights reserved.
- *  MIT License
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the ""Software""), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
+*  Power BI Visualizations
+*
+*  Copyright (c) Microsoft Corporation
+*  All rights reserved.
+*  MIT License
+*
+*  Permission is hereby granted, free of charge, to any person obtaining a copy
+*  of this software and associated documentation files (the ""Software""), to deal
+*  in the Software without restriction, including without limitation the rights
+*  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the Software is
+*  furnished to do so, subject to the following conditions:
+*
+*  The above copyright notice and this permission notice shall be included in
+*  all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+*  THE SOFTWARE.
+*/
 
-/// <reference path="../_references.ts" />
+// powerbi.extensibility.utils.formatting
+import {
+    DisplayUnit,
+    DisplayUnitSystem,
+    DisplayUnitSystemNames,
+    DataLabelsDisplayUnitSystem
+} from "./../../src/displayUnitSystem/displayUnitSystem";
 
-module powerbi.extensibility.utils.formatting.test {
-    // powerbi.extensibility.utils.formatting
-    import DisplayUnit = powerbi.extensibility.utils.formatting.DisplayUnit;
-    import DisplayUnitSystem = powerbi.extensibility.utils.formatting.DisplayUnitSystem;
-    import DisplayUnitSystemNames = powerbi.extensibility.utils.formatting.DisplayUnitSystemNames;
-    import DataLabelsDisplayUnitSystem = powerbi.extensibility.utils.formatting.DataLabelsDisplayUnitSystem;
+describe("DisplayUnit", () => {
+    describe("project", () => {
+        it("should return the value if the this.value is undefined", () => {
+            const expectedValue: number = 42,
+                displayUnit: DisplayUnit = createDisplayUnit();
 
-    describe("DisplayUnit", () => {
-        describe("project", () => {
-            it("should return the value if the this.value is undefined", () => {
-                const expectedValue: number = 42,
-                    displayUnit: DisplayUnit = createDisplayUnit();
+            const actualValue: number = displayUnit.project(expectedValue);
 
-                const actualValue: number = displayUnit.project(expectedValue);
-
-                expect(actualValue).toBe(expectedValue);
-            });
-        });
-
-        describe("reverseProject", () => {
-            it("should return the value if the this.value is undefined", () => {
-                const expectedValue: number = 42,
-                    displayUnit: DisplayUnit = createDisplayUnit();
-
-                const actualValue: number = displayUnit.reverseProject(expectedValue);
-
-                expect(actualValue).toBe(expectedValue);
-            });
-
-            it("should return 84 if the value is 42 and the this.value is 2", () => {
-                const internalValue: number = 2,
-                    expectedValue: number = 42,
-                    displayUnit: DisplayUnit = createDisplayUnit();
-
-                displayUnit.value = internalValue;
-
-                const actualValue: number = displayUnit.reverseProject(expectedValue);
-
-                expect(actualValue).toBe(expectedValue * internalValue);
-            });
+            expect(actualValue).toBe(expectedValue);
         });
     });
 
-    describe("DisplayUnitSystem", () => {
-        describe("constructor", () => {
-            it("the units  shouldn't be empty", () => {
-                const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
+    describe("reverseProject", () => {
+        it("should return the value if the this.value is undefined", () => {
+            const expectedValue: number = 42,
+                displayUnit: DisplayUnit = createDisplayUnit();
 
-                expect(displayUnitSystem.units).toBeDefined();
-            });
+            const actualValue: number = displayUnit.reverseProject(expectedValue);
+
+            expect(actualValue).toBe(expectedValue);
         });
 
-        describe("title", () => {
-            it("should return undefined if the displayUnit is undefined", () => {
-                const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
+        it("should return 84 if the value is 42 and the this.value is 2", () => {
+            const internalValue: number = 2,
+                expectedValue: number = 42,
+                displayUnit: DisplayUnit = createDisplayUnit();
 
-                const actualTitle: string = displayUnitSystem.title;
+            displayUnit.value = internalValue;
 
-                expect(actualTitle).toBeUndefined();
-            });
+            const actualValue: number = displayUnit.reverseProject(expectedValue);
 
-            it("should return title of the dispaly unit if the displayUnit is defined", () => {
-                const expectedTitle: string = "Power BI",
-                    displayUnit: DisplayUnit = createDisplayUnit(),
-                    displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
-
-                displayUnit.title = expectedTitle;
-                displayUnitSystem.displayUnit = displayUnit;
-
-                const actualTitle: string = displayUnitSystem.title;
-
-                expect(actualTitle).toBe(expectedTitle);
-            });
+            expect(actualValue).toBe(expectedValue * internalValue);
         });
+    });
+});
 
-        describe("update", () => {
-            it("shouldn't call findApplicableDisplayUnit if the value is undefined", () => {
-                const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
+describe("DisplayUnitSystem", () => {
+    describe("constructor", () => {
+        it("the units  shouldn't be empty", () => {
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
 
-                spyOn(displayUnitSystem, "findApplicableDisplayUnit").and.callThrough();
-
-                displayUnitSystem.update(undefined);
-
-                expect(displayUnitSystem["findApplicableDisplayUnit"]).not.toHaveBeenCalled();
-            });
+            expect(displayUnitSystem.units).toBeDefined();
         });
-
-        describe("isPercentageFormat", () => {
-            it("should return true if the format is percentage", () => {
-                const format: string = "%",
-                    displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
-
-                const actualResult: boolean = displayUnitSystem.isPercentageFormat(format);
-
-                expect(actualResult).toBeTruthy();
-            });
-        });
-
-        function createDisplayUnitSystem(units?: DisplayUnit[]): DisplayUnitSystem {
-            return new DisplayUnitSystem(units);
-        }
     });
 
-    describe("DataLabelsDisplayUnitSystem", () => {
-        describe("isFormatSupported", () => {
-            it("should return true if format is supported", () => {
-                const format: string = "%",
-                    systemNames: DisplayUnitSystemNames[] = createDisplayUnitSystemNames(),
-                    labelsUnitSystem: DataLabelsDisplayUnitSystem = createDataLabelsDisplayUnitSystem(systemNames);
+    describe("title", () => {
+        it("should return undefined if the displayUnit is undefined", () => {
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
 
-                const actualResult: boolean = labelsUnitSystem.isFormatSupported(format);
+            const actualTitle: string = displayUnitSystem.title;
 
-                expect(actualResult).toBeTruthy();
-            });
+            expect(actualTitle).toBeUndefined();
         });
 
-        describe("format", () => {
-            it("should return a value in percentage format", () => {
-                const expectedFormat: string = "%",
-                    systemNames: DisplayUnitSystemNames[] = createDisplayUnitSystemNames(),
-                    labelsUnitSystem: DataLabelsDisplayUnitSystem = createDataLabelsDisplayUnitSystem(systemNames);
+        it("should return title of the dispaly unit if the displayUnit is defined", () => {
+            const expectedTitle: string = "Power BI",
+                displayUnit: DisplayUnit = createDisplayUnit(),
+                displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
 
-                const actualValue: string = labelsUnitSystem.format(42, "%");
+            displayUnit.title = expectedTitle;
+            displayUnitSystem.displayUnit = displayUnit;
 
-                expect(actualValue).toBe(expectedFormat);
-            });
+            const actualTitle: string = displayUnitSystem.title;
+
+            expect(actualTitle).toBe(expectedTitle);
         });
-
-        function createDataLabelsDisplayUnitSystem(systemNames: DisplayUnitSystemNames[]): DataLabelsDisplayUnitSystem {
-            return new DataLabelsDisplayUnitSystem((exponent: number) => {
-                return systemNames[exponent] || systemNames[0];
-            });
-        }
-
-        function createDisplayUnitSystemNames(): DisplayUnitSystemNames[] {
-            return [
-                {
-                    title: "Percentage",
-                    format: "%"
-                },
-                {
-                    title: "Number",
-                    format: "d"
-                }
-            ];
-        }
     });
 
-    function createDisplayUnit(): DisplayUnit {
-        return new DisplayUnit();
+    describe("update", () => {
+        it("shouldn't call findApplicableDisplayUnit if the value is undefined", () => {
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
+
+            spyOn(displayUnitSystem, <any>"findApplicableDisplayUnit").and.callThrough();
+
+            displayUnitSystem.update(undefined);
+
+            expect(displayUnitSystem["findApplicableDisplayUnit"]).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("isPercentageFormat", () => {
+        it("should return true if the format is percentage", () => {
+            const format: string = "%",
+                displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
+
+            const actualResult: boolean = displayUnitSystem.isPercentageFormat(format);
+
+            expect(actualResult).toBeTruthy();
+        });
+    });
+
+    function createDisplayUnitSystem(units?: DisplayUnit[]): DisplayUnitSystem {
+        return new DisplayUnitSystem(units);
     }
+});
+
+describe("DataLabelsDisplayUnitSystem", () => {
+    describe("isFormatSupported", () => {
+        it("should return true if format is supported", () => {
+            const format: string = "%",
+                systemNames: DisplayUnitSystemNames[] = createDisplayUnitSystemNames(),
+                labelsUnitSystem: DataLabelsDisplayUnitSystem = createDataLabelsDisplayUnitSystem(systemNames);
+
+            const actualResult: boolean = labelsUnitSystem.isFormatSupported(format);
+
+            expect(actualResult).toBeTruthy();
+        });
+    });
+
+    describe("format", () => {
+        it("should return a value in percentage format", () => {
+            const expectedFormat: string = "%",
+                systemNames: DisplayUnitSystemNames[] = createDisplayUnitSystemNames(),
+                labelsUnitSystem: DataLabelsDisplayUnitSystem = createDataLabelsDisplayUnitSystem(systemNames);
+
+            const actualValue: string = labelsUnitSystem.format(42, "%");
+
+            expect(actualValue).toBe(expectedFormat);
+        });
+    });
+
+    function createDataLabelsDisplayUnitSystem(systemNames: DisplayUnitSystemNames[]): DataLabelsDisplayUnitSystem {
+        return new DataLabelsDisplayUnitSystem((exponent: number) => {
+            return systemNames[exponent] || systemNames[0];
+        });
+    }
+
+    function createDisplayUnitSystemNames(): DisplayUnitSystemNames[] {
+        return [
+            {
+                title: "Percentage",
+                format: "%"
+            },
+            {
+                title: "Number",
+                format: "d"
+            }
+        ];
+    }
+});
+
+function createDisplayUnit(): DisplayUnit {
+    return new DisplayUnit();
 }
