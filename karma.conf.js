@@ -26,6 +26,9 @@
 
 'use strict';
 
+const webpackConfig = require('./webpack.config.js');
+const tsconfig = require('./tsconfig.json');
+
 const testRecursivePath = 'test/**/*.ts'
     , srcOriginalRecursivePath = 'src/**/*.ts'
     , srcRecursivePath = 'lib/**/*.js'
@@ -57,16 +60,21 @@ module.exports = (config) => {
             'karma-remap-istanbul'
         ],
         singleRun: true,
+        plugins: [
+            'karma-remap-istanbul',
+            'karma-coverage',
+            'karma-typescript',
+            'karma-webpack',
+            'karma-jasmine',
+            'karma-sourcemap-loader',
+            'karma-chrome-launcher'
+        ],
         files: [
-            'node_modules/jquery/dist/jquery.min.js',
-            'node_modules/lodash/lodash.min.js',
-            "node_modules/globalize/lib/globalize.js",
+            "node_modules/globalize/lib/globalize.js", 
             "node_modules/globalize/lib/cultures/globalize.cultures.js",
-            'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
-            'node_modules/powerbi-visuals-utils-typeutils/lib/index.js',
-            'node_modules/powerbi-visuals-utils-svgutils/lib/index.js',
-            'node_modules/powerbi-visuals-utils-testutils/lib/index.js',
-            'node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js',
+            "node_modules/globalize/lib/cultures/globalize.culture.en-GB.js",
+            'node_modules/jquery/dist/jquery.min.js', 
+            'node_modules/jasmine-jquery/lib/jasmine-jquery.js', 
             srcCssRecursivePath,
             srcRecursivePath,
             testRecursivePath,
@@ -77,16 +85,11 @@ module.exports = (config) => {
             }
         ],
         preprocessors: {
-            [testRecursivePath]: ['typescript'],
-            [srcRecursivePath]: ['sourcemap', 'coverage']
+            [testRecursivePath]: ['webpack'],
+            [srcRecursivePath]: ['webpack', 'coverage']
         },
         typescriptPreprocessor: {
-            options: {
-                sourceMap: false,
-                target: 'ES5',
-                removeComments: false,
-                concatenateOutput: false
-            }
+            options: tsconfig.compilerOptions
         },
         coverageReporter: {
             dir: coverageFolder,
@@ -101,6 +104,13 @@ module.exports = (config) => {
                 html: coverageFolder,
                 'text-summary': null
             }
-        }
+        },
+        mime: {
+            'text/x-typescript': ['ts','tsx']
+        },
+        webpack: webpackConfig,
+        webpackMiddleware: {
+            stats: 'errors-only'
+          }
     });
 };

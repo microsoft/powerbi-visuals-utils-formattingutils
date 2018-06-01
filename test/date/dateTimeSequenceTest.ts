@@ -24,12 +24,10 @@
  *  THE SOFTWARE.
  */
 
-/// <reference path="../_references.ts" />
 
-module powerbi.extensibility.utils.formatting.test {
     // powerbi.extensibility.utils.formatting
-    import DateTimeUnit = powerbi.extensibility.utils.formatting.DateTimeUnit;
-    import DateTimeSequence = powerbi.extensibility.utils.formatting.DateTimeSequence;
+    import { DateTimeUnit } from "./../../src/formattingService/iFormattingService";
+    import { DateTimeSequence } from "./../../src/date/dateTimeSequence";
 
     describe("DateTimeSequence ", () => {
         describe("add", () => {
@@ -216,4 +214,3 @@ module powerbi.extensibility.utils.formatting.test {
             return new DateTimeSequence(DateTimeUnit.Day);
         }
     });
-}
