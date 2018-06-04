@@ -33,8 +33,11 @@ import * as stringExtensions from "./../stringExtensions";
 import { findDateFormat, fixDateTimeFormat } from "./../formatting";
 import { IFormattingService, DateTimeUnit } from "./iFormattingService";
 import powerbi from "powerbi-visuals-tools";
-import * as Globalize from "globalize";
+import * as Globalize from "globalize/lib/globalize";
 import * as Cultures from "globalize/lib/cultures/globalize.cultures";
+
+// to prevent removing loading globalize.cultures file by optimizer
+console.log(Cultures);
 
 /** Culture interfaces. These match the Globalize library interfaces intentionally. */
 export interface Culture {

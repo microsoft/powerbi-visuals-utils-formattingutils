@@ -70,9 +70,6 @@ module.exports = (config) => {
             'karma-chrome-launcher'
         ],
         files: [
-            "node_modules/globalize/lib/globalize.js", 
-            "node_modules/globalize/lib/cultures/globalize.cultures.js",
-            "node_modules/globalize/lib/cultures/globalize.culture.en-GB.js",
             'node_modules/jquery/dist/jquery.min.js', 
             'node_modules/jasmine-jquery/lib/jasmine-jquery.js', 
             srcCssRecursivePath,
