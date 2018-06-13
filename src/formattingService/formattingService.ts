@@ -33,11 +33,9 @@ import * as stringExtensions from "./../stringExtensions";
 import { findDateFormat, fixDateTimeFormat } from "./../formatting";
 import { IFormattingService, DateTimeUnit } from "./iFormattingService";
 import powerbi from "powerbi-visuals-tools";
-import * as Globalize from "globalize/lib/globalize";
-import * as Cultures from "globalize/lib/cultures/globalize.cultures";
 
-// to prevent removing loading globalize.cultures file by optimizer
-console.log(Cultures);
+import DateFormatter from "./../date/dateFormatter";
+import NumberFormatter from "./../number/numberFormatter";
 
 /** Culture interfaces. These match the Globalize library interfaces intentionally. */
 export interface Culture {
@@ -141,6 +139,127 @@ const ExponentialFormatChar = "E";
 const NumericPlaceholders = [ZeroPlaceholder, DigitPlaceholder];
 const NumericPlaceholderRegex = new RegExp(NumericPlaceholders.join("|"), "g");
 
+class Globalize {
+
+    static enUSCulture: any = {
+        name: "en",
+        numberFormat: {
+            negativeInfinity: "",
+            positiveInfinity: "",
+            pattern: [ "-n" ],
+            decimals: 2,
+            ",": ",",
+            ".": ".",
+            groupSizes: [ 3 ],
+            "+": "+",
+            "-": "-",
+            percent: {
+                pattern: ["-n %", "n %"],
+                decimals: 2,
+                groupSizes: [3],
+                ",": ",",
+                ".": ".",
+                symbol: "%"
+            },
+            currency: {
+                pattern: ["($n)", "$n"],
+                decimals: 2,
+                groupSizes: [3],
+                ",": ",",
+                ".": ".",
+                symbol: "$"
+            }
+        },
+        calendar: {
+            ":": ":",
+            days: {
+                // full day names
+                names: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                // abbreviated day names
+                namesAbbr: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                // shortest day names
+                namesShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+            },
+            months: {
+                // full month names (13 months for lunar calendards -- 13th month should be "" if not lunar)
+                names: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", ""],
+                // abbreviated month names
+                namesAbbr: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""]
+            },
+            // AM and PM designators in one of these forms:
+            // The usual view, and the upper and lower case versions
+            //   [ standard, lowercase, uppercase ]
+            // The culture does not use AM or PM (likely all standard date formats use 24 hour time)
+            //   null
+            AM: ["AM", "am", "AM"],
+            PM: ["PM", "pm", "PM"],
+            eras: [
+                // eras in reverse chronological order.
+                // name: the name of the era in this culture (e.g. A.D., C.E.)
+                // start: when the era starts in ticks (gregorian, gmt), null if it is the earliest supported era.
+                // offset: offset in years from gregorian calendar
+                {
+                    "name": "A.D.",
+                    "start": null,
+                    "offset": 0
+                }
+            ],
+            firstDay: 0,
+            patterns: {
+                d: "M/d/yyyy",
+                D: "dddd, MMMM dd, yyyy",
+                t: "h:mm tt",
+                T: "h:mm:ss tt",
+                f: "dddd, MMMM dd, yyyy h:mm tt",
+                F: "dddd, MMMM dd, yyyy h:mm:ss tt",
+                M: "MMMM dd",
+                Y: "yyyy MMMM",
+                S: "yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss"
+            }
+        },
+        calendars: {
+            standard: {
+                firstDay: 0,
+                patterns: {
+                    d: "M/d/yyyy",
+                    D: "dddd, MMMM dd, yyyy",
+                    t: "h:mm tt",
+                    T: "h:mm:ss tt",
+                    f: "dddd, MMMM dd, yyyy h:mm tt",
+                    F: "dddd, MMMM dd, yyyy h:mm:ss tt",
+                    M: "MMMM dd",
+                    Y: "yyyy MMMM",
+                    S: "yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss"
+                }
+            }
+        }
+    };
+
+    static format(value, format, culture: Culture = null) {
+        if (!culture) {
+            culture = Globalize.enUSCulture;
+        }
+        if ( value instanceof Date ) {
+            if (typeof format === "undefined") {
+                value = Intl.DateTimeFormat(culture.name).format(value);
+            }
+            else {
+                value = DateFormatter.format(value, format, false);
+            }
+        }
+        else if ( typeof value === "number" ) {
+            if (typeof format === "undefined") {
+                value = value.toLocaleString("en-US");
+            } else {
+                value = NumberFormatter.formatNumber(value, format, {
+                    numberFormat: NumberFormatter.numberFormat
+                });
+            }
+        }
+        return value;
+    }
+}
+
 /** Formatting Service */
 export class FormattingService implements IFormattingService {
     private _currentCultureSelector: string;
@@ -221,17 +340,7 @@ export class FormattingService implements IFormattingService {
      * Exposing this function for testability of unsupported cultures
      */
     public getCulture(cultureSelector?: string): Culture {
-        if (cultureSelector == null) {
-            if (this._currentCulture == null) {
-                this.initialize();
-            }
-            return this._currentCulture;
-        } else {
-            let culture = Globalize.findClosestCulture(cultureSelector);
-            if (!culture)
-                culture = Globalize.culture("en-US");
-            return culture;
-        }
+        return Globalize.enUSCulture;
     }
 
     /** By default the Globalization module initializes to the culture/calendar provided in the language/culture URL params */
@@ -263,7 +372,7 @@ export class FormattingService implements IFormattingService {
             return ((powerbi as any).common as any).cultureInfo;
         }
 
-        return (<any>window.navigator).userLanguage || window.navigator["language"] || Globalize.culture().name;
+        return (<any>window.navigator).userLanguage || window.navigator["language"] || "en-US";
     }
 
     /**
@@ -321,7 +430,7 @@ module dateTimeFormat {
             format = output.format;
         // need to revisit when globalization is enabled
         if (!culture) {
-            culture = Globalize.culture("en-US");
+            culture = this.getCurrentCulture();
         }
         return Globalize.format(output.value, format, culture);
     }
@@ -629,7 +738,7 @@ export module numberFormat {
     function formatNumberStandard(value: number, format: string, culture: Culture): string {
         let result: string;
         let precision = <number>(format.length > 1 ? parseInt(format.substr(1, format.length - 1), 10) : undefined);
-        let numberFormatInfo = culture.numberFormat;
+        let numberFormatInfo = Globalize.enUSCulture.numberFormat;
         let formatChar = format.charAt(0);
         switch (formatChar) {
             case "e":
@@ -705,7 +814,33 @@ export module numberFormat {
         culture: Culture,
         nonScientificOverrideFormat?: string): string {
         let result: string;
-        let numberFormatInfo = culture.numberFormat;
+        let numberFormatInfo = {
+            negativeInfinity: "",
+            positiveInfinity: "",
+            pattern: [ "-n" ],
+            decimals: 2,
+            ",": ",",
+            ".": ".",
+            groupSizes: [ 3 ],
+            "+": "+",
+            "-": "-",
+            percent: {
+                pattern: ["-n %", "n %"],
+                decimals: 2,
+                groupSizes: [3],
+                ",": ",",
+                ".": ".",
+                symbol: "%"
+            },
+            currency: {
+                pattern: ["($n)", "$n"],
+                decimals: 2,
+                groupSizes: [3],
+                ",": ",",
+                ".": ".",
+                symbol: "$"
+            }
+        };
         if (isFinite(value)) {
             // Split format by positive[;negative;zero] pattern
             let formatComponents = getComponents(format);
@@ -793,7 +928,7 @@ export module numberFormat {
                 else
                     valueFormatted = toNonScientific(value, precision);
 
-                result = fuseNumberWithCustomFormat(valueFormatted, format, numberFormatInfo, nonScientificOverrideFormat, isValueGlobalized);
+                result = fuseNumberWithCustomFormat(valueFormatted, format, <any>numberFormatInfo, nonScientificOverrideFormat, isValueGlobalized);
             }
             if (formatMeta.hasLiterals) {
                 result = formattingEncoder.restoreLiterals(result, literals, false);
@@ -995,7 +1130,7 @@ export module numberFormat {
         return result;
     }
 
-    function fuseNumberWithCustomFormat(value: string, format: string, numberFormatInfo: GlobalizeNumberFormat, nonScientificOverrideFormat?: string, isValueGlobalized?: boolean): string {
+    function fuseNumberWithCustomFormat(value: string, format: string, numberFormatInfo: any, nonScientificOverrideFormat?: string, isValueGlobalized?: boolean): string {
         let suppressModifyValue = !!nonScientificOverrideFormat;
         let formatParts = format.split(".", 2);
         if (formatParts.length === 2) {

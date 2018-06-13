@@ -380,7 +380,6 @@ export module valueFormatter {
         format?: string,
         allowFormatBeautification?: boolean,
         cultureSelector?: string): string {
-
         if (value == null) {
             return localizationOptions.nullValue;
         }
