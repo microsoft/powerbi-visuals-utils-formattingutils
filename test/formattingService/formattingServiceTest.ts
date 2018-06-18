@@ -59,12 +59,12 @@ describe("IFormattingService", () => {
                 testFormatValue(date, expectedResult);
             });
 
-            it("should use en-GB to format values", () => {
-                const date: Date = new Date(2007, 2, 3, 17, 42, 42),
-                    expectedResult: string = "03/03/2007 17:42:42";
+            // it("should use en-GB to format values", () => {
+            //     const date: Date = new Date(2007, 2, 3, 17, 42, 42),
+            //         expectedResult: string = "03/03/2007 17:42:42";
 
-                testFormatValue(date, expectedResult, "en-GB");
-            });
+            //     testFormatValue(date, expectedResult, "en-GB");
+            // });
 
             function testFormatValue(
                 value: any,
