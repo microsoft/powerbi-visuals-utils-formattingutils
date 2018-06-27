@@ -51,7 +51,7 @@
     "less": "2.7.2",
     "lodash": "4.17.10",
     "powerbi-visuals-tools": "1.11.0",
-    "powerbi-visuals-utils-testutils": "Microsoft/powerbi-visuals-utils-testutils#es2015",
+    "powerbi-visuals-utils-testutils": "^2.0.2",
     "ts-loader": "^3.5.0",
     "tslint": "5.4.3",
     "tslint-microsoft-contrib": "5.0.0",
@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "globalize": "0.1.0-a2",
-    "powerbi-visuals-utils-dataviewutils": "Microsoft/powerbi-visuals-utils-dataviewutils#es2015",
-    "powerbi-visuals-utils-typeutils": "Microsoft/powerbi-visuals-utils-typeutils#es2015"
+    "powerbi-visuals-utils-dataviewutils": "2.0.0",
+    "powerbi-visuals-utils-typeutils": "2.0.0"
   }
 }
