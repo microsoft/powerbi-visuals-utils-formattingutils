@@ -35,23 +35,10 @@ const testRecursivePath = 'test/**/*.ts'
     , srcCssRecursivePath = 'lib/**/*.css'
     , coverageFolder = 'coverage';
 
+process.env.CHROME_BIN = require("puppeteer").executablePath();
 module.exports = (config) => {
-    let browsers = [];
-
-    if (process.env.TRAVIS) {
-        browsers.push('ChromeTravisCI');
-    } else {
-        browsers.push('Chrome');
-    }
-
     config.set({
-        customLaunchers: {
-            ChromeTravisCI: {
-                base: 'Chrome',
-                flags: ['--no-sandbox']
-            }
-        },
-        browsers: browsers,
+        browsers: ["ChromeHeadless"],
         colors: true,
         frameworks: ['jasmine'],
         reporters: [

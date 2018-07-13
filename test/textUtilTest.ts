@@ -24,9 +24,6 @@
 *  THE SOFTWARE.
 */
 
-/// <reference path="_references.ts" />
-
-// powerbi.extensibility.utils.formatting
 import * as textUtil from "./../src/textUtil";
 
 describe("textUtil", () => {

@@ -23,7 +23,6 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
-// powerbi.extensibility.utils.formatting
 import { FamilyInfo } from "./../../src/font/familyInfo";
 
 describe("FamilyInfo", () => {

@@ -32,7 +32,7 @@ import * as stringExtensions from "./../stringExtensions";
 
 import { findDateFormat, fixDateTimeFormat } from "./../formatting";
 import { IFormattingService, DateTimeUnit } from "./iFormattingService";
-import powerbi from "powerbi-visuals-tools";
+import powerbi from "powerbi-visuals-api";
 
 import DateFormatter from "./../date/dateFormatter";
 import NumberFormatter from "./../number/numberFormatter";

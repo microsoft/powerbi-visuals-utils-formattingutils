@@ -24,8 +24,6 @@
 *  THE SOFTWARE.
 */
 
-/// <reference path="_references.ts" />
-
 // powerbi.extensibility.utils.formatting
 import { DateFormat, findDateFormat, fixDateTimeFormat } from "./../src/formatting";
 

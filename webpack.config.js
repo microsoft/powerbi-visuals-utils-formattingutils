@@ -18,7 +18,8 @@ module.exports = {
         ]
     },
     externals: {
-        "powerbi-visuals-tools": '{}'
+        "powerbi-visuals-tools": '{}',
+        "powerbi-visuals-api": '{}'
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js','.css']
@@ -27,9 +28,5 @@ module.exports = {
         path: path.resolve(__dirname, ".tmp/test")
     },
     plugins: [
-        new webpack.ProvidePlugin({
-            'powerbi-visuals-tools': null,
-            'Globalize': "globalize/lib/globalize"
-          })
     ]
 };
