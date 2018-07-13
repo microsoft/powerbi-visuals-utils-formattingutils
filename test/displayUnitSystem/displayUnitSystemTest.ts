@@ -24,7 +24,6 @@
 *  THE SOFTWARE.
 */
 
-// powerbi.extensibility.utils.formatting
 import {
     DisplayUnit,
     DisplayUnitSystem,

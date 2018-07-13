@@ -24,8 +24,6 @@
 *  THE SOFTWARE.
 */
 
-/// <reference path="_references.ts" />
-
 import * as stringExtensions from "./../src/stringExtensions";
 
 describe("stringExtensions", () => {

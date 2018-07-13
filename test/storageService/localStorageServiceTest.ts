@@ -24,9 +24,6 @@
 *  THE SOFTWARE.
 */
 
-/// <reference path="../_references.ts" />
-
-// powerbi.extensibility.utils.formatting
 import { IStorageService } from "./../../src/storageService/iStorageService";
 import { LocalStorageService } from "./../../src/storageService/localStorageService";
 

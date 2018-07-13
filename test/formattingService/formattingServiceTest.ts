@@ -24,7 +24,6 @@
 *  THE SOFTWARE.
 */
 
-// powerbi.extensibility.utils.formatting
 import { DateTimeUnit, IFormattingService } from "./../../src/formattingService/iFormattingService";
 import { FormattingService } from "./../../src/formattingService/formattingService";
 

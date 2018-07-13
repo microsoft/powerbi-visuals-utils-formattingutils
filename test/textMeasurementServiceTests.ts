@@ -24,8 +24,6 @@
 *  THE SOFTWARE.
 */
 
-// powerbi.extensibility.utils.formatting
-import { formattingService } from "./../src/formattingService/formattingService";
 import * as stringExtensions from "./../src/stringExtensions";
 import * as ephemeralStorageService from "./../src/storageService/ephemeralStorageService";
 import EphemeralStorageService = ephemeralStorageService.ephemeralStorageService;
