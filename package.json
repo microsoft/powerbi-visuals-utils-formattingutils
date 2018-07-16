@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "FormattingUtils",
   "main": "lib/index",
   "types": "lib/index",
