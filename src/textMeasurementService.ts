@@ -135,6 +135,11 @@ export module textMeasurementService {
     export function measureSvgTextRect(textProperties: TextProperties, text?: string): SVGRect {
         ensureDOM();
 
+        // Removes DOM elements faster than innerHTML
+        while (svgTextElement.firstChild) {
+            svgTextElement.removeChild(svgTextElement.firstChild);
+        }
+
         svgTextElement.setAttribute("style", null);
 
         svgTextElement.style.visibility = "hidden";

@@ -155,19 +155,26 @@ describe("Text measurement service", () => {
         expect(getTextHeight(10)).toBeLessThan(getTextHeight(12));
     });
 
-    it("measureSvgTextRect", () => {
-        let getTextRect = (fontSize: number) => {
-            let textProperties = getTextProperties(fontSize);
-            return textMeasurementService.measureSvgTextRect(textProperties);
-        };
+    describe("measureSvgTextRect", () => {
+        it("small text should be less than greater one", () => {
+            const smallRect: SVGRect = textMeasurementService.measureSvgTextRect(getTextProperties(10));
+            const largeRect: SVGRect = textMeasurementService.measureSvgTextRect(getTextProperties(14));
 
-        let smallRect = getTextRect(10);
-        let largeRect = getTextRect(14);
+            expect(smallRect.height).toBeLessThan(largeRect.height);
+            // the y point of the rect is at the top of the rect, the y point of the text is (almost) at the bottom of the text.
+            // both y will be less than 0, testing the absolute y value.
+            expect(Math.abs(smallRect.y)).toBeLessThan(Math.abs(largeRect.y));
+        });
 
-        expect(smallRect.height).toBeLessThan(largeRect.height);
-        // the y point of the rect is at the top of the rect, the y point of the text is (almost) at the bottom of the text.
-        // both y will be less than 0, testing the absolute y value.
-        expect(Math.abs(smallRect.y)).toBeLessThan(Math.abs(largeRect.y));
+        it("should return the same SVGRect for the same configuration", () => {
+            const firstCall: SVGRect = textMeasurementService.measureSvgTextRect(getTextProperties());
+            const secondCall: SVGRect = textMeasurementService.measureSvgTextRect(getTextProperties());
+
+            expect(secondCall.width).toBe(firstCall.width);
+            expect(secondCall.height).toBe(firstCall.height);
+            expect(secondCall.x).toBe(firstCall.x);
+            expect(secondCall.y).toBe(firstCall.y);
+        });
     });
 
     it("getMeasurementProperties", () => {
@@ -441,7 +448,11 @@ describe("Text measurement service", () => {
         return element;
     }
 
-    function getTextProperties(fontSize: number, text?: string, fontFamily?: string): TextProperties {
+    function getTextProperties(
+            fontSize: number = 10,
+            text: string = "PowerBI rocks!",
+            fontFamily: string = "Arial"
+        ): TextProperties {
         return {
             fontFamily: fontFamily ? fontFamily : "Arial",
             fontSize: fontSize + "px",
