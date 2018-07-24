@@ -52,7 +52,6 @@ module.exports = (config) => {
             "node_modules/globalize/lib/cultures/globalize.cultures.js",
             'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
             'node_modules/powerbi-visuals-utils-typeutils/lib/index.js',
-            'node_modules/powerbi-visuals-utils-svgutils/lib/index.js',
             'node_modules/powerbi-visuals-utils-testutils/lib/index.js',
             'node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js',
             srcCssRecursivePath,
