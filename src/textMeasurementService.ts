@@ -136,6 +136,11 @@ module powerbi.extensibility.utils.formatting {
         export function measureSvgTextRect(textProperties: TextProperties, text?: string): SVGRect {
             ensureDOM();
 
+            // Removes DOM elements faster than innerHTML
+            while (svgTextElement.firstChild) {
+                svgTextElement.removeChild(svgTextElement.firstChild);
+            }
+
             svgTextElement.setAttribute("style", null);
 
             svgTextElement.style.visibility = "hidden";
@@ -145,6 +150,7 @@ module powerbi.extensibility.utils.formatting {
             svgTextElement.style.fontWeight = textProperties.fontWeight;
             svgTextElement.style.fontStyle = textProperties.fontStyle;
             svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
+
             svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
             // We're expecting the browser to give a synchronous measurement here
