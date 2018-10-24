@@ -1,3 +1,6 @@
+## 3.1.0
+* Update packages to fix vulnerabilities
+
 ## 3.0.0
 * Removed `d3` and `powerbi-visuals-utils-svgutils`
 * Updated dependencies
