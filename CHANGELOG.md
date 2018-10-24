@@ -1,3 +1,6 @@
+## 3.1.0
+* Update packages to fix vulnerabilities
+
 ## 3.0.2
 * Fix: measureSvgTextRect used to return incorrect SVGRect for the second and further calls because it did not clear temp DOM element
 
