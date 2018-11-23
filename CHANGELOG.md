@@ -1,3 +1,6 @@
+# 4.1.1
+* Supports `MMMM` as `mmmm` date format
+
 ## 3.1.0
 * Update packages to fix vulnerabilities
 
