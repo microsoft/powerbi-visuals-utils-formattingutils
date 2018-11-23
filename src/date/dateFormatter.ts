@@ -78,6 +78,7 @@ export default class DateFormatter {
                 mm:   DateFormatter.pad(m),
                 mmm:  dF.i18n.monthNames[m],
                 mmmm: dF.i18n.monthNames[m + 12],
+                MMMM: dF.i18n.monthNames[m + 12],
                 MMM:  dF.i18n.monthNames[M],
                 yy:   String(y).slice(2),
                 yyyy: y,
