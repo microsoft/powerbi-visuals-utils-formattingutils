@@ -1,3 +1,6 @@
+# 4.1.2
+* Changed mmm, mmmm and MMMM flag to use the month index value (M) instead of minutes (m) to return correct month names.
+
 # 4.1.1
 * Supports `MMMM` as `mmmm` date format
 
