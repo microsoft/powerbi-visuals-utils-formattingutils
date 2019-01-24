@@ -141,9 +141,6 @@ export module valueFormatter {
     export const DefaultNumericFormat = "#,0.00";
     export const DefaultDateFormat = "d";
 
-    export const PrecisionMinimum: number = 0;
-    export const PrecisionMaximum: number = 17;
-
     const defaultLocalizedStrings = {
         "NullValue": "(Blank)",
         "BooleanTrue": "True",
@@ -292,6 +289,23 @@ export module valueFormatter {
         };
     }
 
+    export function checkValueInBounds(
+        targetNum: number,
+        min: number,
+        max: number,
+        lessMinReplacement: number = min,
+        greaterMaxReplacement: number = max) {
+
+        if (max !== undefined && max !== null) {
+            targetNum = targetNum <= max ? targetNum : greaterMaxReplacement;
+        }
+        if (min !== undefined && min !== null) {
+            targetNum = targetNum > min ? targetNum : lessMinReplacement;
+        }
+
+        return targetNum;
+    }
+
     /** Creates an IValueFormatter to be used for a range of values. */
     export function create(options: ValueFormatterOptions): IValueFormatter {
         const format: string = !!options.allowFormatBeautification
@@ -312,7 +326,7 @@ export module valueFormatter {
             let decimals: number;
 
             if (forcePrecision)
-                decimals = -Math.max(Math.min(options.precision, PrecisionMaximum), PrecisionMinimum);
+                decimals = -options.precision;
             else if (displayUnitSystem.displayUnit && displayUnitSystem.displayUnit.value > 1)
                 decimals = -MaxScaledDecimalPlaces;
 

@@ -40,6 +40,50 @@ import { valueFormatter } from "./../src/valueFormatter";
 
 describe("ValueFormatter", () => {
 
+    describe("checkValueInBounds", () => {
+        it("target is greater than bounds", () => {
+            const res = valueFormatter.checkValueInBounds(5, -4, 4);
+            expect(res).toBe(4);
+        });
+
+        it("target inside bounds", () => {
+            const res = valueFormatter.checkValueInBounds(3, 0, 14);
+            expect(res).toBe(3);
+        });
+
+        it("target is lesser that bounds", () => {
+            const res = valueFormatter.checkValueInBounds(-3, 0, 14);
+            expect(res).toBe(0);
+        });
+
+        it("target is lesser that bounds with lessMinReplacement as null", () => {
+            const res = valueFormatter.checkValueInBounds(-3, 0, 14, null);
+            expect(res).toBeNull();
+        });
+
+        it("max is undefined", () => {
+            let res = valueFormatter.checkValueInBounds(5, -4, null);
+            expect(res).toBe(5);
+
+            res = valueFormatter.checkValueInBounds(5, -4, undefined);
+            expect(res).toBe(5);
+
+            res = valueFormatter.checkValueInBounds(-5, -4, null, null);
+            expect(res).toBeNull();
+        });
+
+        it("min is undefined", () => {
+            let res = valueFormatter.checkValueInBounds(5, null, 15);
+            expect(res).toBe(5);
+
+            res = valueFormatter.checkValueInBounds(5, undefined, 15);
+            expect(res).toBe(5);
+
+            res = valueFormatter.checkValueInBounds(-2, null, -3);
+            expect(res).toBe(-3);
+        });
+    });
+
     describe("format", () => {
         it("format null", () => {
             expect(valueFormatter.format(null)).toBe("(Blank)");
@@ -110,20 +154,6 @@ describe("ValueFormatter", () => {
             // override precision doesn't wipe out trailing literals
             formatter = valueFormatter.create({ format: "#,0 USD", precision: 3, value: 0 });
             expect(formatter.format(12345.6789)).toBe("12,345.679 USD");
-        });
-
-        it("maximum precision (17)", () => {
-            let formatter = valueFormatter.create({ format: "$#,0.000;($#,0.000);0.000", precision: 200, value: 0 });
-            expect(formatter.format(12345.678)).toBe("$12,345.67800000000000000");
-            expect(formatter.format(-12345.678)).toBe("($12,345.67800000000000000)");
-            expect(formatter.format(0)).toBe("0.00000000000000000");
-        });
-
-        it("minimum precision (0)", () => {
-            let formatter = valueFormatter.create({ format: "$#,0.000;($#,0.000);0.000", precision: -200, value: 0 });
-            expect(formatter.format(12345.678)).toBe("$12,346");
-            expect(formatter.format(-12345.678)).toBe("($12,346)");
-            expect(formatter.format(0)).toBe("0");
         });
 
         it("special chars in literals", () => {
