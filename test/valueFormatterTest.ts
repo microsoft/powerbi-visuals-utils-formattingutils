@@ -112,6 +112,20 @@ describe("ValueFormatter", () => {
             expect(formatter.format(12345.6789)).toBe("12,345.679 USD");
         });
 
+        it("maximum precision (17)", () => {
+            let formatter = valueFormatter.create({ format: "$#,0.000;($#,0.000);0.000", precision: 200, value: 0 });
+            expect(formatter.format(12345.678)).toBe("$12,345.67800000000000000");
+            expect(formatter.format(-12345.678)).toBe("($12,345.67800000000000000)");
+            expect(formatter.format(0)).toBe("0.00000000000000000");
+        });
+
+        it("minimum precision (0)", () => {
+            let formatter = valueFormatter.create({ format: "$#,0.000;($#,0.000);0.000", precision: -200, value: 0 });
+            expect(formatter.format(12345.678)).toBe("$12,346");
+            expect(formatter.format(-12345.678)).toBe("($12,346)");
+            expect(formatter.format(0)).toBe("0");
+        });
+
         it("special chars in literals", () => {
             // try to confuse formatter with special characters in a literal
             let format = `\\#\\,\\0\\.\\0\\0\\% #,0.00% '#,0.00%'`;

@@ -29,7 +29,7 @@ import { DisplayUnitSystem, DataLabelsDisplayUnitSystem, NoDisplayUnitSystem, Wh
 import { DisplayUnitSystemType } from "./displayUnitSystem/displayUnitSystemType";
 import { DisplayUnit } from "./displayUnitSystem/displayUnitSystem";
 import * as stringExtensions from "./stringExtensions";
-import { numberFormat as NumberFormat, formattingService }  from "./formattingService/formattingService";
+import { numberFormat as NumberFormat, formattingService } from "./formattingService/formattingService";
 import { DateTimeSequence } from "./date/dateTimeSequence";
 import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
@@ -140,6 +140,9 @@ export module valueFormatter {
     export const DefaultIntegerFormat = "g";
     export const DefaultNumericFormat = "#,0.00";
     export const DefaultDateFormat = "d";
+
+    export const PrecisionMinimum: number = 0;
+    export const PrecisionMaximum: number = 17;
 
     const defaultLocalizedStrings = {
         "NullValue": "(Blank)",
@@ -309,7 +312,7 @@ export module valueFormatter {
             let decimals: number;
 
             if (forcePrecision)
-                decimals = -options.precision;
+                decimals = -Math.max(Math.min(options.precision, PrecisionMaximum), PrecisionMinimum);
             else if (displayUnitSystem.displayUnit && displayUnitSystem.displayUnit.value > 1)
                 decimals = -MaxScaledDecimalPlaces;
 
