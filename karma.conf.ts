@@ -24,41 +24,48 @@
  *  THE SOFTWARE.
  */
 
-'use strict';
+"use strict";
 
-const webpackConfig = require('./webpack.config.js');
-const tsconfig = require('./tsconfig.json');
+const webpackConfig = require("./webpack.config.js");
+const tsconfig = require("./tsconfig.json");
 
-const testRecursivePath = 'test/**/*.ts'
-    , srcOriginalRecursivePath = 'src/**/*.ts'
-    , srcRecursivePath = 'lib/**/*.js'
-    , srcCssRecursivePath = 'lib/**/*.css'
-    , coverageFolder = 'coverage';
+import { Config, ConfigOptions } from "karma";
+
+const testRecursivePath = "test/**/*.ts";
+const srcOriginalRecursivePath = "src/**/*.ts";
+const srcRecursivePath = "lib/**/*.js";
+const srcCssRecursivePath = "lib/**/*.css";
+const coverageFolder = "coverage";
 
 process.env.CHROME_BIN = require("puppeteer").executablePath();
-module.exports = (config) => {
-    config.set({
+module.exports = (config: Config) => {
+    config.set(<ConfigOptions>{
         browsers: ["ChromeHeadless"],
         colors: true,
-        frameworks: ['jasmine'],
+        frameworks: ["jasmine"],
         reporters: [
-            'progress',
-            'coverage',
-            'karma-remap-istanbul'
+            "progress",
+            "coverage-istanbul"
         ],
+        coverageIstanbulReporter: {
+            reports: ["html", "lcovonly", "text-summary"],
+            combineBrowserReports: true,
+            fixWebpackSourcePaths: true
+        },
         singleRun: true,
         plugins: [
-            'karma-remap-istanbul',
-            'karma-coverage',
-            'karma-typescript',
-            'karma-webpack',
-            'karma-jasmine',
-            'karma-sourcemap-loader',
-            'karma-chrome-launcher'
+            "karma-remap-istanbul",
+            "karma-coverage",
+            "karma-typescript",
+            "karma-webpack",
+            "karma-jasmine",
+            "karma-sourcemap-loader",
+            "karma-chrome-launcher",
+            "karma-coverage-istanbul-reporter"
         ],
         files: [
-            'node_modules/jquery/dist/jquery.min.js', 
-            'node_modules/jasmine-jquery/lib/jasmine-jquery.js', 
+            "node_modules/jquery/dist/jquery.min.js",
+            "node_modules/jasmine-jquery/lib/jasmine-jquery.js",
             srcCssRecursivePath,
             srcRecursivePath,
             testRecursivePath,
@@ -69,8 +76,8 @@ module.exports = (config) => {
             }
         ],
         preprocessors: {
-            [testRecursivePath]: ['webpack'],
-            [srcRecursivePath]: ['webpack', 'coverage']
+            [testRecursivePath]: ["webpack"],
+            [srcRecursivePath]: ["webpack", "coverage"]
         },
         typescriptPreprocessor: {
             options: tsconfig.compilerOptions
@@ -78,23 +85,23 @@ module.exports = (config) => {
         coverageReporter: {
             dir: coverageFolder,
             reporters: [
-                { type: 'html' },
-                { type: 'lcov' }
+                { type: "html" },
+                { type: "lcov" }
             ]
         },
         remapIstanbulReporter: {
             reports: {
-                lcovonly: coverageFolder + '/lcov.info',
+                lcovonly: coverageFolder + "/lcov.info",
                 html: coverageFolder,
-                'text-summary': null
+                "text-summary": null
             }
         },
         mime: {
-            'text/x-typescript': ['ts','tsx']
+            "text/x-typescript": ["ts", "tsx"]
         },
         webpack: webpackConfig,
         webpackMiddleware: {
-            stats: 'errors-only'
-          }
+            stats: "errors-only"
+        }
     });
 };

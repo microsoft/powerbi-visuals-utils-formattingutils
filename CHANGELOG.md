@@ -1,10 +1,13 @@
 # 4.1.3
 * Was added checkValueInBounds function for formatter.
+* Update dataviewutils
+* Add jsnext:main
+* set sideEffects: false
 
-# 4.1.2
+## 4.1.2
 * Changed mmm, mmmm and MMMM flag to use the month index value (M) instead of minutes (m) to return correct month names.
 
-# 4.1.1
+## 4.1.1
 * Supports `MMMM` as `mmmm` date format
 
 ## 3.1.0
