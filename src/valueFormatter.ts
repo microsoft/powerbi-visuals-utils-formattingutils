@@ -289,6 +289,14 @@ export module valueFormatter {
         };
     }
 
+    /**
+     * Check that provided value is in provided bounds. If not -- replace it by minimal or maximal replacement value
+     * @param targetNum checking value
+     * @param min minimal bound of value
+     * @param max maximal bound of value
+     * @param lessMinReplacement value that will be returned if checking value is lesser than minimal
+     * @param greaterMaxReplacement value that will be returned if checking value is greater than maximal
+     */
     export function checkValueInBounds(
         targetNum: number,
         min: number,

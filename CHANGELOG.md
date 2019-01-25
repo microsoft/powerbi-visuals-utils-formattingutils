@@ -1,5 +1,5 @@
 # 4.1.3
-* Precision for formatter is now has bounds from 0 to 17 and will be adjusted corresponding peak values if it is out of bounds.
+* Was added checkValueInBounds function for formatter.
 
 # 4.1.2
 * Changed mmm, mmmm and MMMM flag to use the month index value (M) instead of minutes (m) to return correct month names.
