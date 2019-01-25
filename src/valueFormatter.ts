@@ -34,8 +34,6 @@ import { DateTimeSequence } from "./date/dateTimeSequence";
 import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 
-import DataViewObjects = dataViewObjects.DataViewObjects;
-
 // powerbi
 import powerbi from "powerbi-visuals-api";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -517,7 +515,7 @@ export module valueFormatter {
     export function getFormatString(column: DataViewMetadataColumn, formatStringProperty: DataViewObjectPropertyIdentifier, suppressTypeFallback?: boolean): string {
         if (column) {
             if (formatStringProperty) {
-                let propertyValue = DataViewObjects.getValue<string>(column.objects, formatStringProperty);
+                let propertyValue = dataViewObjects.getValue<string>(column.objects, formatStringProperty);
                 if (propertyValue)
                     return propertyValue;
             }
