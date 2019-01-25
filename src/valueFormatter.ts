@@ -29,7 +29,7 @@ import { DisplayUnitSystem, DataLabelsDisplayUnitSystem, NoDisplayUnitSystem, Wh
 import { DisplayUnitSystemType } from "./displayUnitSystem/displayUnitSystemType";
 import { DisplayUnit } from "./displayUnitSystem/displayUnitSystem";
 import * as stringExtensions from "./stringExtensions";
-import { numberFormat as NumberFormat, formattingService }  from "./formattingService/formattingService";
+import { numberFormat as NumberFormat, formattingService } from "./formattingService/formattingService";
 import { DateTimeSequence } from "./date/dateTimeSequence";
 import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
@@ -287,6 +287,31 @@ export module valueFormatter {
                 });
             }
         };
+    }
+
+    /**
+     * Check that provided value is in provided bounds. If not -- replace it by minimal or maximal replacement value
+     * @param targetNum checking value
+     * @param min minimal bound of value
+     * @param max maximal bound of value
+     * @param lessMinReplacement value that will be returned if checking value is lesser than minimal
+     * @param greaterMaxReplacement value that will be returned if checking value is greater than maximal
+     */
+    export function checkValueInBounds(
+        targetNum: number,
+        min: number,
+        max: number,
+        lessMinReplacement: number = min,
+        greaterMaxReplacement: number = max) {
+
+        if (max !== undefined && max !== null) {
+            targetNum = targetNum <= max ? targetNum : greaterMaxReplacement;
+        }
+        if (min !== undefined && min !== null) {
+            targetNum = targetNum > min ? targetNum : lessMinReplacement;
+        }
+
+        return targetNum;
     }
 
     /** Creates an IValueFormatter to be used for a range of values. */
