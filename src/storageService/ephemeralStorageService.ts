@@ -47,7 +47,7 @@ export class EphemeralStorageService implements IStorageService {
         this.cache[key] = data;
 
         if (this.clearCacheTimerId == null) {
-            this.clearCacheTimerId = setTimeout(() => this.clearCache(), this.clearCacheInterval);
+            this.clearCacheTimerId = <any>setTimeout(() => this.clearCache(), this.clearCacheInterval);
         }
     }
 

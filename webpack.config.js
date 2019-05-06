@@ -4,6 +4,11 @@ var webpack = require( "webpack" );
 module.exports = {
     entry: './src/index.ts',
     devtool: 'source-map',
+    mode: 'development',
+    optimization: {
+        minimize: false,
+        concatenateModules: false
+    },
     module: {
         rules: [
             {
