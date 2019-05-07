@@ -19,6 +19,6 @@
         "src/index.ts" 
     ],
     "include": [
-        "src/index.ts"
+        "globalize/**.js", "globalize/globalize.ts", "globalize/globalize.cultures.ts"
     ]
 }
