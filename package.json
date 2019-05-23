@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "FormattingUtils",
   "main": "lib/src/index.js",
   "module": "lib//src/index.js",
@@ -56,9 +56,9 @@
     "karma-webpack": "^3.0.5",
     "less": "^3.8.1",
     "lodash": "^4.17.11",
-    "powerbi-visuals-api": "1.13.0",
-    "powerbi-visuals-utils-testutils": "^2.1.4",
-    "puppeteer": "^1.15.0",
+    "powerbi-visuals-api": "2.6.0",
+    "powerbi-visuals-utils-testutils": "2.2.0",
+    "puppeteer": "1.16.0",
     "ts-loader": "5.4.5",
     "ts-node": "8.0.1",
     "tslint": "5.4.3",
@@ -67,7 +67,7 @@
     "webpack": "4.30.0"
   },
   "dependencies": {
-    "powerbi-visuals-utils-dataviewutils": "^2.1.1",
-    "powerbi-visuals-utils-typeutils": "^2.1.1"
+    "powerbi-visuals-utils-dataviewutils": "2.2.0",
+    "powerbi-visuals-utils-typeutils": "2.2.0"
   }
 }

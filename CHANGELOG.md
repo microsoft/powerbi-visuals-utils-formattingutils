@@ -1,3 +1,10 @@
+## 4.3.0
+* Update packages to fix vulnerabilities
+* Update powerbi-visual-api to 2.6.0
+
+## 4.2.0
+* Add full globalize.js library
+
 # 4.1.3
 * Was added checkValueInBounds function for formatter.
 * Update dataviewutils
