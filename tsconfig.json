@@ -1,4 +1,3 @@
-
 {
     "compilerOptions": {
         "allowJs": false,
@@ -15,10 +14,6 @@
         "outDir": "./lib"
     },
     "files": [
-        "src/typings/globalize.ts",
         "src/index.ts" 
-    ],
-    "include": [
-        "globalize/**.js", "globalize/globalize.ts", "globalize/globalize.cultures.ts"
     ]
 }
