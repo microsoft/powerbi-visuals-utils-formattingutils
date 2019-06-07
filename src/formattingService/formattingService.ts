@@ -23,7 +23,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-import { Globalize } from "./../../globalize/globalize";
+import { Globalize, GlobalizeCalendar, GlobalizeNumberFormat } from "./../../globalize/globalize";
 import injectCultures from "./../../globalize/globalize.cultures";
 injectCultures(Globalize);
 

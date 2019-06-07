@@ -1,3 +1,6 @@
+## 4.3.1
+* Fix typings path
+
 ## 4.3.0
 * Update packages to fix vulnerabilities
 * Update powerbi-visual-api to 2.6.0

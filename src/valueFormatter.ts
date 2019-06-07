@@ -352,19 +352,21 @@ export module valueFormatter {
                         value = Double.roundToPrecision(value);
                     }
 
-                    return singleValueFormattingMode
-                        ? displayUnitSystem.formatSingleValue(
-                            value,
-                            format,
-                            decimals,
-                            forcePrecision,
-                            cultureSelector)
-                        : displayUnitSystem.format(
+                    if (singleValueFormattingMode) {
+                        return displayUnitSystem.formatSingleValue(
                             value,
                             format,
                             decimals,
                             forcePrecision,
                             cultureSelector);
+                    } else {
+                        return displayUnitSystem.format(
+                            value,
+                            format,
+                            decimals,
+                            forcePrecision,
+                            cultureSelector);
+                    }
                 },
                 displayUnit: displayUnitSystem.displayUnit,
                 options: options
