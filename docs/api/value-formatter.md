@@ -1,7 +1,7 @@
 # valueFormatter
 > The ```valueFormatter``` provides the simplest way to format numbers, strings and dates.
 
-The ```powerbi.extensibility.utils.formatting.valueFormatter``` module provides the following functions, interfaces and classes:
+The internal module ```import { valueFormatter } from "powerbi-visuals-utils-formattingutils"``` provides the following functions, interfaces and classes:
 
 * [IValueFormatter](#ivalueformatter)
   * [format](#ivalueformatterformat)
@@ -33,7 +33,7 @@ function format(value: any, format?: string, allowFormatBeautification?: boolean
 #### The thousand format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ value: 1001 });
 
@@ -45,7 +45,7 @@ iValueFormatter.format(5678);
 #### The million format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ value: 1e6 });
 
@@ -57,7 +57,7 @@ iValueFormatter.format(1234567890);
 #### The billion format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ value: 1e9 });
 
@@ -69,7 +69,7 @@ iValueFormatter.format(1234567891236);
 #### The trillion format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ value: 1e12 });
 
@@ -81,7 +81,7 @@ iValueFormatter.format(1234567891236);
 #### The exponent format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ format: "E" });
 
@@ -93,7 +93,7 @@ iValueFormatter.format(1234567891236);
 ### The culture selector
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let valueFormatterUK = valueFormatter.create({ cultureSelector: "en-GB" });
 
@@ -111,7 +111,7 @@ valueFormatterUSA.format(new Date(2007, 2, 3, 17, 42, 42));
 #### The percentage format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ format: "0.00 %;-0.00 %;0.00 %" });
 
@@ -123,7 +123,7 @@ iValueFormatter.format(0.54);
 #### The dates format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let date = new Date(2016, 10, 28, 15, 36, 0),
     iValueFormatter = valueFormatter.create({});
@@ -136,7 +136,7 @@ iValueFormatter.format(date);
 #### The boolean format
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({});
 
@@ -148,7 +148,7 @@ iValueFormatter.format(true);
 #### The customized precision
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 let iValueFormatter = valueFormatter.create({ value: 0, precision: 3 });
 
@@ -161,9 +161,12 @@ You can take a look at the example code of the custom visual [here](https://gith
 
 ## ValueFormatterOptions
 
-This interface describes options of the IValueFormatter.
+This interface describes `options` of the IValueFormatter and options of 'create' function.
 
 ```typescript
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
+import ValueFormatterOptions = valueFormatter.ValueFormatterOptions;
+
 interface ValueFormatterOptions {
     /** The format string to use. */
     format?: string;
@@ -195,13 +198,16 @@ interface ValueFormatterOptions {
 This method creates an instance of IValueFormatter.
 
 ```typescript
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
+import create = valueFormatter.create;
+
 function create(options: ValueFormatterOptions): IValueFormatter;
 ```
 
 ### Example
 
 ```typescript
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 valueFormatter.create({});
 

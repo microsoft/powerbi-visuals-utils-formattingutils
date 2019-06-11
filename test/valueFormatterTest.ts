@@ -36,7 +36,7 @@ import PrimitiveType = valueType.PrimitiveType;
 
 // powerbi.extensibility.utils.formatting
 import { DisplayUnitSystemType } from "./../src/displayUnitSystem/displayUnitSystemType";
-import { valueFormatter } from "./../src/valueFormatter";
+import { valueFormatter } from "./../src/index";
 
 describe("ValueFormatter", () => {
 
