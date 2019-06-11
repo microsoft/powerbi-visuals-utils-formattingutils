@@ -1,3 +1,7 @@
+## 4.4.0
+* Remove unnecessary internal module `valueFormatter`
+* Update documentation
+
 ## 4.3.1
 * Fix typings path
 
