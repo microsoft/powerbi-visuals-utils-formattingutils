@@ -706,33 +706,7 @@ export module numberFormat {
         culture: Culture,
         nonScientificOverrideFormat?: string): string {
         let result: string;
-        let numberFormatInfo = {
-            negativeInfinity: "",
-            positiveInfinity: "",
-            pattern: [ "-n" ],
-            decimals: 2,
-            ",": ",",
-            ".": ".",
-            groupSizes: [ 3 ],
-            "+": "+",
-            "-": "-",
-            percent: {
-                pattern: ["-n %", "n %"],
-                decimals: 2,
-                groupSizes: [3],
-                ",": ",",
-                ".": ".",
-                symbol: "%"
-            },
-            currency: {
-                pattern: ["($n)", "$n"],
-                decimals: 2,
-                groupSizes: [3],
-                ",": ",",
-                ".": ".",
-                symbol: "$"
-            }
-        };
+        let numberFormatInfo = culture.numberFormat;
         if (isFinite(value)) {
             // Split format by positive[;negative;zero] pattern
             let formatComponents = getComponents(format);
