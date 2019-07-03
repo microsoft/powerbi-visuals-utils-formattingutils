@@ -85,6 +85,11 @@ export module textMeasurementService {
         svgElement.setAttribute("height", "0");
         svgElement.setAttribute("width", "0");
         svgElement.setAttribute("position", "absolute");
+        svgElement.style.top = "0px";
+        svgElement.style.left = "0px";
+        svgElement.style.position = "absolute";
+        svgElement.style.height = "0px";
+        svgElement.style.width = "0px";
         svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
         svgElement.appendChild(svgTextElement);
         document.body.appendChild(svgElement);
