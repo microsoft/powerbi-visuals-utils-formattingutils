@@ -1,4 +1,7 @@
 ## 4.4.0
+* Fix text measurement for iOS devices. Move fake SVG element to upper-left corner.
+
+## 4.4.0
 * Remove unnecessary internal module `valueFormatter`
 * Update documentation
 
