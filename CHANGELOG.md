@@ -1,4 +1,4 @@
-## 4.4.0
+## 4.4.1
 * Fix text measurement for iOS devices. Move fake SVG element to upper-left corner.
 
 ## 4.4.0
