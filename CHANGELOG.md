@@ -1,5 +1,8 @@
+## 4.4.2
+* Packages update
+
 ## 4.4.1
-* Fix text measurement for iOS devices. Move fake SVG element to upper-left corner.
+* Fix text measurement for iOS devices. Move fake SVG element to upper-left corner
 
 ## 4.4.0
 * Remove unnecessary internal module `valueFormatter`
@@ -16,13 +19,13 @@
 * Add full globalize.js library
 
 # 4.1.3
-* Was added checkValueInBounds function for formatter.
+* Was added checkValueInBounds function for formatter
 * Update dataviewutils
 * Add jsnext:main
 * set sideEffects: false
 
 ## 4.1.2
-* Changed mmm, mmmm and MMMM flag to use the month index value (M) instead of minutes (m) to return correct month names.
+* Changed mmm, mmmm and MMMM flag to use the month index value (M) instead of minutes (m) to return correct month names
 
 ## 4.1.1
 * Supports `MMMM` as `mmmm` date format

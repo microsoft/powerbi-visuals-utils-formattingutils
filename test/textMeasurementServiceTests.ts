@@ -134,7 +134,7 @@ describe("Text measurement service", () => {
                 y: 0,
                 width: 0,
                 height: 0,
-            });
+            } as any);
 
             let wrongHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
             expect(wrongHeight).toBe(0);
@@ -318,8 +318,6 @@ describe("Text measurement service", () => {
             textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
             let text = $(element).text();
-            console.log(text);
-            console.log(element);
             expect($(element).find("tspan").length).toBe(2);
             expect(text.match(RegExp(Ellipsis, "g")).length).toBe(2);
         });
