@@ -31,8 +31,8 @@ import verifyEllipsisActive  from "./helpers";
 import * as tms from "./../src/textMeasurementService";
 import textMeasurementService = tms.textMeasurementService;
 import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./../src/textMeasurementService";
-import * as _ from "lodash";
 import * as $ from "jquery";
+import cloneDeep from "lodash.clonedeep";
 
 // powerbi.extensibility.utils.test
 import { testDom } from "powerbi-visuals-utils-testutils";
@@ -248,7 +248,7 @@ describe("Text measurement service", () => {
             };
 
             // Back up the original properties to make sure the service doesn't change them.
-            let originalProperties = _.cloneDeep(properties);
+            let originalProperties = cloneDeep(properties);
             let text = textMeasurementService.getTailoredTextOrDefault(properties, 100);
 
             expect(text).toEqual("PowerBI rocks!");
@@ -267,7 +267,7 @@ describe("Text measurement service", () => {
             };
 
             // Back up the original properties to make sure the service doesn't change them.
-            let originalProperties = _.cloneDeep(properties);
+            let originalProperties = cloneDeep(properties);
             let text = textMeasurementService.getTailoredTextOrDefault(properties, 45);
 
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();

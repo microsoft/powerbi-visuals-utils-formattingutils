@@ -24,9 +24,12 @@
 *  THE SOFTWARE.
 */
 
-import * as _ from "lodash";
 import * as wordBreaker from "./../src/wordBreaker";
 import { TextProperties, ITextAsSVGMeasurer, ITextTruncator, textMeasurementService } from "./../src/textMeasurementService";
+import every from "lodash.every";
+import range from "lodash.range";
+import * as _ from "lodash";
+
 describe("WordBreaker", () => {
 
     describe("finds word when", () => {
@@ -37,17 +40,14 @@ describe("WordBreaker", () => {
         let content = "abcd efgh\nijkl mnop";
 
         function getWordBreakerResultsBetweenIndeces(content: string, start: number, end: number): wordBreaker.WordBreakerResult[] {
-            return _
-                .chain(_.range(start, end))
-                .map((index) => {
-                    return wordBreaker.find(index, content);
-                })
-                .value();
+            return range(start, end).map((index) => {
+                return wordBreaker.find(index, content);
+            });
         }
 
         function areAllSame(results: wordBreaker.WordBreakerResult[]): boolean {
             let result = results[0];
-            return _.every(results, {
+            return every(results, {
                 start: result.start,
                 end: result.end
             });
