@@ -31,8 +31,8 @@ import verifyEllipsisActive  from "./helpers";
 import * as tms from "./../src/textMeasurementService";
 import textMeasurementService = tms.textMeasurementService;
 import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./../src/textMeasurementService";
-import * as _ from "lodash";
 import * as $ from "jquery";
+import cloneDeep from "lodash.clonedeep";
 
 // powerbi.extensibility.utils.test
 import { testDom } from "powerbi-visuals-utils-testutils";
@@ -134,7 +134,7 @@ describe("Text measurement service", () => {
                 y: 0,
                 width: 0,
                 height: 0,
-            });
+            } as any);
 
             let wrongHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
             expect(wrongHeight).toBe(0);
@@ -248,7 +248,7 @@ describe("Text measurement service", () => {
             };
 
             // Back up the original properties to make sure the service doesn't change them.
-            let originalProperties = _.cloneDeep(properties);
+            let originalProperties = cloneDeep(properties);
             let text = textMeasurementService.getTailoredTextOrDefault(properties, 100);
 
             expect(text).toEqual("PowerBI rocks!");
@@ -267,7 +267,7 @@ describe("Text measurement service", () => {
             };
 
             // Back up the original properties to make sure the service doesn't change them.
-            let originalProperties = _.cloneDeep(properties);
+            let originalProperties = cloneDeep(properties);
             let text = textMeasurementService.getTailoredTextOrDefault(properties, 45);
 
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
@@ -318,8 +318,6 @@ describe("Text measurement service", () => {
             textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
             let text = $(element).text();
-            console.log(text);
-            console.log(element);
             expect($(element).find("tspan").length).toBe(2);
             expect(text.match(RegExp(Ellipsis, "g")).length).toBe(2);
         });
