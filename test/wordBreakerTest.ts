@@ -28,7 +28,6 @@ import * as wordBreaker from "./../src/wordBreaker";
 import { TextProperties, ITextAsSVGMeasurer, ITextTruncator, textMeasurementService } from "./../src/textMeasurementService";
 import lodashEvery from "lodash.every";
 import lodashRange from "lodash.range";
-import * as _ from "lodash";
 
 describe("WordBreaker", () => {
 
