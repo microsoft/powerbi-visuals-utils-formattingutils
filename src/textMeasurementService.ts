@@ -81,6 +81,7 @@ export module textMeasurementService {
         spanElement = document.createElement("span");
         document.body.appendChild(spanElement);
         // The style hides the svg element from the canvas, preventing canvas from scrolling down to show svg black square.
+        // tslint:disable-next-line
         const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svgElement.setAttribute("height", "0");
         svgElement.setAttribute("width", "0");
@@ -90,6 +91,7 @@ export module textMeasurementService {
         svgElement.style.position = "absolute";
         svgElement.style.height = "0px";
         svgElement.style.width = "0px";
+        // tslint:disable-next-line
         svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
         svgElement.appendChild(svgTextElement);
         document.body.appendChild(svgElement);
@@ -215,7 +217,7 @@ export module textMeasurementService {
     export function estimateSvgTextHeight(textProperties: TextProperties, tightFightForNumeric: boolean = false): number {
         let height = estimateSvgTextRect(textProperties).height;
 
-        // TODO: replace it with new baseline calculation
+        // replace it with new baseline calculation
         if (tightFightForNumeric)
             height *= 0.7;
 
@@ -386,6 +388,7 @@ export module textMeasurementService {
         for (let i = 0, ilen = words.length; i < ilen; i++) {
             const dy = i === 0 ? firstDY : height;
             properties.text = words[i];
+            // tslint:disable-next-line
             const textElement: SVGTSpanElement = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
             textElement.setAttribute("x", "0");
             textElement.setAttribute("dy", dy ? dy.toString() : null);

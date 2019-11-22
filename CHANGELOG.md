@@ -1,3 +1,8 @@
+## 4.5.0
+* Get default number formats from culture
+* Apply default tslint rules
+* Fix globalize cultures loading.
+
 ## 4.4.2
 * Packages update
 

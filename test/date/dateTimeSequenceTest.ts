@@ -88,7 +88,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2016, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount);
@@ -101,15 +101,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateYears").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_YEARS").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Year);
 
-            expect(DateTimeSequence.calculateYears).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_YEARS).toHaveBeenCalled();
         });
 
         it("should call the calculateWeeks if unit is a week", () => {
@@ -117,15 +117,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateWeeks").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_WEEKS").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Week);
 
-            expect(DateTimeSequence.calculateWeeks).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_WEEKS).toHaveBeenCalled();
         });
 
         it("should call the calculateDays if unit is a day", () => {
@@ -133,15 +133,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateDays").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_DAYS").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Day);
 
-            expect(DateTimeSequence.calculateDays).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_DAYS).toHaveBeenCalled();
         });
 
         it("should call the calculateHours if unit is a day", () => {
@@ -149,15 +149,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateHours").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_HOURS").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Hour);
 
-            expect(DateTimeSequence.calculateHours).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_HOURS).toHaveBeenCalled();
         });
 
         it("should call the calculateMinutes if unit is a minute", () => {
@@ -165,15 +165,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateMinutes").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_MINUTES").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Minute);
 
-            expect(DateTimeSequence.calculateMinutes).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_MINUTES).toHaveBeenCalled();
         });
 
         it("should call the calculateMinutes if unit is a second", () => {
@@ -181,15 +181,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateSeconds").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_SECONDS").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Second);
 
-            expect(DateTimeSequence.calculateSeconds).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_SECONDS).toHaveBeenCalled();
         });
 
         it("should call the calculateMinutes if unit is a millisecond", () => {
@@ -197,15 +197,15 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "calculateMilliseconds").and.callThrough();
+            spyOn(DateTimeSequence, "CALCULATE_MILLISECONDS").and.callThrough();
 
-            const dateTimeSequence: DateTimeSequence = DateTimeSequence.calculate(
+            const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
                 maxDate,
                 expectedCount,
                 DateTimeUnit.Millisecond);
 
-            expect(DateTimeSequence.calculateMilliseconds).toHaveBeenCalled();
+            expect(DateTimeSequence.CALCULATE_MILLISECONDS).toHaveBeenCalled();
         });
     });
 
