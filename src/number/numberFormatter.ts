@@ -1,31 +1,5 @@
 export default class NumberFormatter {
 
-    static numberFormat: {
-        pattern: ["-n"],
-        decimals: 2,
-        ",": ",",
-        ".": ".",
-        groupSizes: [3],
-        "+": "+",
-        "-": "-",
-        percent: {
-            pattern: ["-n %", "n %"],
-            decimals: 2,
-            groupSizes: [3],
-            ",": ",",
-            ".": ".",
-            symbl: "%"
-        },
-        currency: {
-            pattern: ["($n)", "$n"],
-            decimals: 2,
-            groupSizes: [3],
-            ",": ",",
-            ".": ".",
-            symbl: "$"
-        }
-    };
-
     static  expandNumber( number_, precision, formatInfo ) {
         let groupSizes = formatInfo.groupSizes,
             curSize = groupSizes[ 0 ],
@@ -103,7 +77,7 @@ export default class NumberFormatter {
         }
         format = format || "D";
 
-        let nf = NumberFormatter.numberFormat,
+        let numberFormat = culture.numberFormat,
             number_: any = Math.abs( value ),
             precision = -1,
             pattern;
@@ -121,13 +95,13 @@ export default class NumberFormatter {
                 if ( value < 0 ) number_ = -number_;
                 break;
             case "N":
-                formatInfo = nf;
+                formatInfo = numberFormat;
                 // fall through
             case "C":
-                formatInfo = formatInfo || nf.currency;
+                formatInfo = formatInfo || numberFormat.currency;
                 // fall through
             case "P":
-                formatInfo = formatInfo || nf.percent;
+                formatInfo = formatInfo || numberFormat.percent;
                 pattern = value < 0 ? formatInfo.pattern[ 0 ] : ( formatInfo.pattern[1] || "n" );
                 if ( precision === -1 ) precision = formatInfo.decimals;
                 number_ = NumberFormatter.expandNumber( number_ * (current === "P" ? 100 : 1), precision, formatInfo );
@@ -153,16 +127,16 @@ export default class NumberFormatter {
                     ret += number_;
                     break;
                 case "$":
-                    ret += nf.currency.symbl;
+                    ret += numberFormat.currency.symbl;
                     break;
                 case "-":
                     // don't make 0 negative
                     if ( /[1-9]/.test(number_.toString()) ) {
-                        ret += nf[ "-" ];
+                        ret += numberFormat[ "-" ];
                     }
                     break;
                 case "%":
-                    ret += nf.percent.symbl;
+                    ret += numberFormat.percent.symbl;
                     break;
             }
         }
