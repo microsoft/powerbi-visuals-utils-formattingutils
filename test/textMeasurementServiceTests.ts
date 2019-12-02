@@ -30,7 +30,7 @@ import ephemeralStorageService = ephemeralStorage.ephemeralStorageService;
 import verifyEllipsisActive from "./verifyEllipsisActive";
 import * as tms from "./../src/textMeasurementService";
 import textMeasurementService = tms.textMeasurementService;
-import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./../src/textMeasurementService";
+import { TextProperties } from "../src/interfaces";
 import * as $ from "jquery";
 import lodashClonedeep from "lodash.clonedeep";
 

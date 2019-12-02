@@ -31,27 +31,7 @@ import { pixelConverter as PixelConverter, prototype as Prototype } from "powerb
 import * as wordBreaker from "./wordBreaker";
 import { ephemeralStorageService } from "./storageService/ephemeralStorageService";
 
-export interface ITextMeasurer {
-    (textElement: SVGTextElement): number;
-}
-
-export interface ITextAsSVGMeasurer {
-    (textProperties: TextProperties): number;
-}
-
-export interface ITextTruncator {
-    (properties: TextProperties, maxWidth: number): string;
-}
-
-export interface TextProperties {
-    text?: string;
-    fontFamily: string;
-    fontSize: string;
-    fontWeight?: string;
-    fontStyle?: string;
-    fontVariant?: string;
-    whiteSpace?: string;
-}
+import { TextProperties } from "./interfaces";
 
 interface CanvasContext {
     font: string;
