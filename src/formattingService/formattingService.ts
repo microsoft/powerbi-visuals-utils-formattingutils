@@ -24,6 +24,7 @@
  *  THE SOFTWARE.
  */
 import { Globalize, GlobalizeCalendar, GlobalizeNumberFormat } from "./../../globalize/globalize";
+// tslint:disable-next-line
 import injectCultures from "./../../globalize/globalize.cultures";
 injectCultures(Globalize);
 
@@ -35,12 +36,10 @@ import * as stringExtensions from "./../stringExtensions";
 
 import { findDateFormat, fixDateTimeFormat } from "./../formatting";
 import { IFormattingService, DateTimeUnit } from "./iFormattingService";
+// tslint:disable-next-line
 import powerbi from "powerbi-visuals-api";
 
-import DateFormatter from "./../date/dateFormatter";
-import NumberFormatter from "./../number/numberFormatter";
-
-/** Culture interfaces. These match the Globalize library interfaces intentionally. */
+// Culture interfaces. These match the Globalize library interfaces intentionally.
 export interface Culture {
     name: string;
     calendar: Calendar;
@@ -64,7 +63,7 @@ export interface NumberFormatInfo {
     positiveInfinity: string;
 }
 
-/** Formatting Encoder */
+// Formatting Encoder
 module formattingEncoder {
     // quoted and escaped literal patterns
     // NOTE: the final three cases match .NET behavior
@@ -142,7 +141,7 @@ const ExponentialFormatChar = "E";
 const NumericPlaceholders = [ZeroPlaceholder, DigitPlaceholder];
 const NumericPlaceholderRegex = new RegExp(NumericPlaceholders.join("|"), "g");
 
-/** Formatting Service */
+// Formatting Service
 export class FormattingService implements IFormattingService {
     private _currentCultureSelector: string;
     private _currentCulture: Culture;
@@ -172,7 +171,7 @@ export class FormattingService implements IFormattingService {
         if (!formatWithIndexedTokens) {
             return "";
         }
-        let result = formatWithIndexedTokens.replace(IndexedTokensRegex, (match: string, left: string, right: string, argToken: string) => {
+        return formatWithIndexedTokens.replace(IndexedTokensRegex, (match: string, left: string, right: string, argToken: string) => {
             if (left) {
                 return "{";
             } else if (right) {
@@ -184,8 +183,6 @@ export class FormattingService implements IFormattingService {
                 return this.formatValue(args[argIndex], argFormat, culture);
             }
         });
-
-        return result;
     }
 
     public isStandardNumberFormat(format: string): boolean {
@@ -235,7 +232,7 @@ export class FormattingService implements IFormattingService {
         }
     }
 
-    /** By default the Globalization module initializes to the culture/calendar provided in the language/culture URL params */
+    // By default the Globalization module initializes to the culture/calendar provided in the language/culture URL params
     private initialize() {
         let cultureName = this.getCurrentCulture();
         this.setCurrentCulture(cultureName);
@@ -259,9 +256,9 @@ export class FormattingService implements IFormattingService {
             return urlParam;
         }
 
-        if (powerbi && (powerbi as any).common && ((powerbi as any).common as any).cultureInfo) {
+        if (powerbi && (<any>powerbi).common && (<any>(<any>powerbi).common).cultureInfo) {
             // Get cultureInfo set in powerbi
-            return ((powerbi as any).common as any).cultureInfo;
+            return (<any>(<any>powerbi).common).cultureInfo;
         }
 
         return (<any>window.navigator).userLanguage || window.navigator["language"] || "en-US";
@@ -287,13 +284,12 @@ module dateTimeFormat {
     let _currentCachedFormat: string;
     let _currentCachedProcessedFormat: string;
 
-    /** Evaluates if the value can be formatted using the NumberFormat */
+    // Evaluates if the value can be formatted using the NumberFormat
     export function canFormat(value: any) {
-        let result = value instanceof Date;
-        return result;
+        return value instanceof Date;
     }
 
-    /** Formats the date using provided format and culture */
+    // Formats the date using provided format and culture
     export function format(value: Date, format: string, culture: Culture): string {
         format = format || "G";
         let isStandard = format.length === 1;
@@ -308,7 +304,7 @@ module dateTimeFormat {
         }
     }
 
-    /** Formats the date using standard format expression */
+    // Formats the date using standard format expression
     function formatDateStandard(value: Date, format: string, culture: Culture) {
         // In order to provide parity with .NET we have to support additional set of DateTime patterns.
         let patterns = culture.calendar.patterns;
@@ -327,7 +323,7 @@ module dateTimeFormat {
         return Globalize.format(output.value, format, culture);
     }
 
-    /** Formats the date using custom format expression */
+    // Formats the date using custom format expression
     function formatDateCustom(value: Date, format: string, culture: Culture): string {
         let result: string;
         let literals: string[] = [];
@@ -360,7 +356,7 @@ module dateTimeFormat {
         return result;
     }
 
-    /** Translates unsupported .NET custom format expressions to the custom expressions supported by JQuery.Globalize */
+    // Translates unsupported .NET custom format expressions to the custom expressions supported by JQuery.Globalize
     function processCustomDateTimeFormat(format: string): string {
         if (format === _currentCachedFormat) {
             return _currentCachedProcessedFormat;
@@ -371,7 +367,7 @@ module dateTimeFormat {
         return format;
     }
 
-    /** Localizes the time separator symbol */
+    // Localizes the time separator symbol
     function localize(value: string, dictionary: any): string {
         let timeSeparator = dictionary[":"];
         if (timeSeparator === ":") {
@@ -590,17 +586,16 @@ export module numberFormat {
 
     let _lastCustomFormatMeta: NumericFormatMetadata;
 
-    /** Evaluates if the value can be formatted using the NumberFormat */
+    // Evaluates if the value can be formatted using the NumberFormat
     export function canFormat(value: any) {
-        let result = typeof (value) === "number";
-        return result;
+        return typeof (value) === "number";
     }
 
     export function isStandardFormat(format: string): boolean {
         return StandardFormatRegex.test(format);
     }
 
-    /** Formats the number using specified format expression and culture */
+    // Formats the number using specified format expression and culture
     export function format(
         value: number,
         format: string,
@@ -616,7 +611,7 @@ export module numberFormat {
         }
     }
 
-    /** Performs a custom format with a value override.  Typically used for custom formats showing scaled values. */
+    // Performs a custom format with a value override.  Typically used for custom formats showing scaled values.
     export function formatWithCustomOverride(
         value: number,
         format: string,
@@ -626,7 +621,7 @@ export module numberFormat {
         return formatNumberCustom(value, format, culture, nonScientificOverrideFormat);
     }
 
-    /** Formats the number using standard format expression */
+    // Formats the number using standard format expression
     function formatNumberStandard(value: number, format: string, culture: Culture): string {
         let result: string;
         let precision = <number>(format.length > 1 ? parseInt(format.substr(1, format.length - 1), 10) : undefined);
@@ -699,7 +694,7 @@ export module numberFormat {
         return result;
     }
 
-    /** Formats the number using custom format expression */
+    // Formats the number using custom format expression
     function formatNumberCustom(
         value: number,
         format: string,
@@ -710,7 +705,6 @@ export module numberFormat {
         if (isFinite(value)) {
             // Split format by positive[;negative;zero] pattern
             let formatComponents = getComponents(format);
-
             // Pick a format based on the sign of value
             if (value > 0) {
                 format = formatComponents.positive;
@@ -726,7 +720,6 @@ export module numberFormat {
 
             // Get format metadata
             let formatMeta = getCustomFormatMetadata(format, true /*calculatePrecision*/);
-
             // Preserve literals and escaped chars
             let literals: string[] = [];
             if (formatMeta.hasLiterals) {
@@ -807,7 +800,7 @@ export module numberFormat {
         return result;
     }
 
-    /** Returns string with the fixed point respresentation of the number */
+    // Returns string with the fixed point respresentation of the number
     function toNonScientific(value: number, precision: number): string {
         let result = "";
         let precisionZeros = 0;
@@ -972,7 +965,7 @@ export module numberFormat {
         return result;
     }
 
-    /** Returns the scale factor of the format based on the "%" and scaling "," chars in the format */
+    // Returns the scale factor of the format based on the "%" and scaling "," chars in the format
     function getCustomFormatScale(format: string, formatMeta: NumericFormatMetadata): number {
         if (formatMeta.scale > -1) {
             return formatMeta.scale;
@@ -1210,7 +1203,7 @@ export module numberFormat {
 
 }
 
-/** DateTimeScaleFormatInfo is used to calculate and keep the Date formats used for different units supported by the DateTimeScaleModel */
+// DateTimeScaleFormatInfo is used to calculate and keep the Date formats used for different units supported by the DateTimeScaleModel
 class DateTimeScaleFormatInfo {
 
     // Fields

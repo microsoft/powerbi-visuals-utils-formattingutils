@@ -24,6 +24,7 @@
 *  THE SOFTWARE.
 */
 
+// tslint:disable-next-line
 import powerbi from "powerbi-visuals-api";
 // powerbi
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;

@@ -23,7 +23,7 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
-import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./textMeasurementService";
+import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./interfaces";
 
 export interface WordBreakerResult {
     start: number;

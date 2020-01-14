@@ -1,3 +1,4 @@
+/* tslint:disable */
 export interface GlobalizeCulture {
     name: string;
     calendar: GlobalizeCalendar;
@@ -30,7 +31,6 @@ export interface GlobalizeStatic {
     cultures: any;
     findClosestCulture(cultureSelector: string): GlobalizeCulture;
 }
-
 
 /*!
  * Globalize

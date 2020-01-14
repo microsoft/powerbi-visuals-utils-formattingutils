@@ -35,6 +35,7 @@ import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 
 // powerbi
+// tslint:disable-next-line
 import powerbi from "powerbi-visuals-api";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
@@ -62,37 +63,37 @@ export interface ICustomValueColumnFormatter {
 }
 
 export interface ValueFormatterOptions {
-    /** The format string to use. */
+    // The format string to use.
     format?: string;
 
-    /** The data value. */
+    // The data value.
     value?: any;
 
-    /** The data value. */
+    // The data value.
     value2?: any;
 
-    /** The number of ticks. */
+    // The number of ticks.
     tickCount?: any;
 
-    /** The display unit system to use */
+    // The display unit system to use
     displayUnitSystemType?: DisplayUnitSystemType;
 
-    /** True if we are formatting single values in isolation (e.g. card), as opposed to multiple values with a common base (e.g. chart axes) */
+    // True if we are formatting single values in isolation (e.g. card), as opposed to multiple values with a common base (e.g. chart axes)
     formatSingleValues?: boolean;
 
-    /** True if we want to trim off unnecessary zeroes after the decimal and remove a space before the % symbol */
+    // True if we want to trim off unnecessary zeroes after the decimal and remove a space before the % symbol
     allowFormatBeautification?: boolean;
 
-    /** Specifies the maximum number of decimal places to show*/
+    // Specifies the maximum number of decimal places to show
     precision?: number;
 
-    /** Detect axis precision based on value */
+    // Detect axis precision based on value
     detectAxisPrecision?: boolean;
 
-    /** Specifies the column type of the data value */
+    // Specifies the column type of the data value
     columnType?: ValueTypeDescriptor;
 
-    /** Specifies the culture */
+    // Specifies the culture
     cultureSelector?: string;
 }
 
@@ -102,7 +103,7 @@ export interface IValueFormatter {
     options?: ValueFormatterOptions;
 }
 
-/** Captures all locale-specific options used by the valueFormatter. */
+// Captures all locale-specific options used by the valueFormatter.
 export interface ValueFormatterLocalizationOptions {
     nullValue: string;
     trueValue: string;
@@ -111,10 +112,10 @@ export interface ValueFormatterLocalizationOptions {
     infinity: string;
     negativeInfinity: string;
 
-    /** Returns a beautified form the given format string. */
+    // Returns a beautified form the given format string.
     beautify(format: string): string;
 
-    /** Returns an object describing the given exponent in the current language. */
+    // Returns an object describing the given exponent in the current language.
     describe(exponent: number): DisplayUnitSystemNames;
     restatementComma: string;
     restatementCompoundAnd: string;
@@ -258,8 +259,8 @@ export function getFormatMetadata(format: string): NumberFormat.NumericFormatMet
 export function setLocaleOptions(options: ValueFormatterLocalizationOptions): void {
     localizationOptions = options;
 
-    DefaultDisplayUnitSystem.reset();
-    WholeUnitsDisplayUnitSystem.reset();
+    DefaultDisplayUnitSystem.RESET();
+    WholeUnitsDisplayUnitSystem.RESET();
 }
 
 export function createDefaultFormatter(
@@ -272,7 +273,7 @@ export function createDefaultFormatter(
         : formatString;
 
     return {
-        format: function (value: any): string {
+        format: (value: any): string => {
             if (value == null) {
                 return localizationOptions.nullValue;
             }
@@ -311,7 +312,7 @@ export function checkValueInBounds(
     return targetNum;
 }
 
-/** Creates an IValueFormatter to be used for a range of values. */
+// Creates an IValueFormatter to be used for a range of values.
 export function create(options: ValueFormatterOptions): IValueFormatter {
     const format: string = !!options.allowFormatBeautification
         ? localizationOptions.beautify(options.format)
@@ -336,7 +337,7 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
             decimals = -MaxScaledDecimalPlaces;
 
         return {
-            format: function (value: any): string {
+            format: (value: any): string => {
                 let formattedValue: string = getStringFormat(value, true /*nullsAreBlank*/);
                 if (!StringExtensions.isNullOrUndefinedOrWhiteSpaceString(formattedValue)) {
                     return formattedValue;
@@ -373,13 +374,13 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
     }
 
     if (shouldUseDateUnits(options.value, options.value2, options.tickCount)) {
-        const unit: DateTimeUnit = DateTimeSequence.getIntervalUnit(
+        const unit: DateTimeUnit = DateTimeSequence.GET_INTERVAL_UNIT(
             options.value /* minDate */,
             options.value2 /* maxDate */,
             options.tickCount);
 
         return {
-            format: function (value: any): string {
+            format: (value: any): string => {
                 if (value == null) {
                     return localizationOptions.nullValue;
                 }
@@ -598,12 +599,12 @@ function formatListCompound(strings: string[], conjunction: string): string {
     return result;
 }
 
-/** The returned string will look like 'A, B, ..., and C'  */
+// The returned string will look like 'A, B, ..., and C'
 export function formatListAnd(strings: string[]): string {
     return formatListCompound(strings, localizationOptions.restatementCompoundAnd);
 }
 
-/** The returned string will look like 'A, B, ..., or C' */
+// The returned string will look like 'A, B, ..., or C'
 export function formatListOr(strings: string[]): string {
     return formatListCompound(strings, localizationOptions.restatementCompoundOr);
 }

@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 
-/** dateUtils module provides DateTimeSequence with set of additional date manipulation routines */
+// dateUtils module provides DateTimeSequence with set of additional date manipulation routines
 export module dateUtils {
     let MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let MonthDaysLeap = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
