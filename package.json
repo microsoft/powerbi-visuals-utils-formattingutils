@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "4.4.2",
+  "version": "4.5.0",
   "description": "FormattingUtils",
   "main": "lib/src/index.js",
   "module": "lib//src/index.js",
@@ -29,7 +29,7 @@
     "postbuild": "npm run lessc",
     "test": "karma start",
     "pretest": "npm run lint",
-    "lint": "tslint -r \"node_modules/tslint-microsoft-contrib\"  \"+(src|test)/**/*.ts\"",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
     "lintfix": "tslint -r \"node_modules/tslint-microsoft-contrib\"  \"+(src|test)/**/*.ts\" --fix",
     "lessc": "lessc src/styles/style.less lib/index.css"
   },
@@ -62,7 +62,7 @@
     "puppeteer": "1.19.0",
     "ts-loader": "6.0.4",
     "ts-node": "8.3.0",
-    "tslint": "5.18.0",
+    "tslint": "5.20.1",
     "tslint-microsoft-contrib": "6.2.0",
     "typescript": "3.5.3",
     "webpack": "4.39.2"

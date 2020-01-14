@@ -101,7 +101,7 @@ export default class DateFormatter {
                 S:    ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : <any>(d % 100 - d % 10 !== 10) * d % 10]
             };
 
-        return mask.replace(DateFormatter.token, function ($0) {
+        return mask.replace(DateFormatter.token, ($0) => {
             return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
         });
     }

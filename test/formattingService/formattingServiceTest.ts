@@ -99,7 +99,7 @@ describe("IFormattingService", () => {
 
             formattingService.dateFormatString(DateTimeUnit.Year);
 
-            expect((formattingService as FormattingService)["initialize"]).toHaveBeenCalled();
+            expect((<FormattingService>formattingService)["initialize"]).toHaveBeenCalled();
         });
     });
 });

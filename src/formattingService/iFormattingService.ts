@@ -24,7 +24,7 @@
 *  THE SOFTWARE.
 */
 
-/** Enumeration of DateTimeUnits */
+// Enumeration of DateTimeUnits
 export enum DateTimeUnit {
     Year,
     Month,
@@ -52,12 +52,12 @@ export interface IFormattingService {
      */
     format(formatWithIndexedTokens: string, args: any[], culture?: string): string;
 
-    /** Gets a value indicating whether the specified format a standard numeric format specifier. */
+    // Gets a value indicating whether the specified format a standard numeric format specifier.
     isStandardNumberFormat(format: string): boolean;
 
-    /** Performs a custom format with a value override.  Typically used for custom formats showing scaled values. */
+    // Performs a custom format with a value override.  Typically used for custom formats showing scaled values.
     formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string): string;
 
-    /** Gets the format string to use for dates in particular units. */
+    // Gets the format string to use for dates in particular units.
     dateFormatString(unit: DateTimeUnit): string;
 }

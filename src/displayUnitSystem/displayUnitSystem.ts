@@ -214,7 +214,7 @@ export class DisplayUnitSystem {
         return formattingService.format(nonScientificFormat, [text]);
     }
 
-    /** Formats a single value by choosing an appropriate base for the DisplayUnitSystem before formatting. */
+    //  Formats a single value by choosing an appropriate base for the DisplayUnitSystem before formatting.
     public formatSingleValue(
         value: number,
         format: string,
@@ -282,7 +282,7 @@ export class DisplayUnitSystem {
     }
 }
 
-/** Provides a unit system that is defined by formatting in the model, and is suitable for visualizations shown in single number visuals in explore mode. */
+// Provides a unit system that is defined by formatting in the model, and is suitable for visualizations shown in single number visuals in explore mode.
 export class NoDisplayUnitSystem extends DisplayUnitSystem {
     // Constructor
     constructor() {
@@ -313,7 +313,7 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
         return super.format(data, format, decimals, trailingZeros, cultureSelector);
     }
 
-    public static reset(): void {
+    public static RESET(): void {
         DefaultDisplayUnitSystem.units = null;
     }
 
@@ -346,7 +346,7 @@ export class WholeUnitsDisplayUnitSystem extends DisplayUnitSystem {
         super(WholeUnitsDisplayUnitSystem.getUnits(unitLookup));
     }
 
-    public static reset(): void {
+    public static RESET(): void {
         WholeUnitsDisplayUnitSystem.units = null;
     }
 

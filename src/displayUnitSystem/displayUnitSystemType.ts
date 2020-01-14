@@ -24,12 +24,12 @@
  *  THE SOFTWARE.
  */
 
-/** The system used to determine display units used during formatting */
+// The system used to determine display units used during formatting
 export enum DisplayUnitSystemType {
-    /** Default display unit system, which saves space by using units such as K, M, bn with PowerView rules for when to pick a unit. Suitable for chart axes. */
+    // Default display unit system, which saves space by using units such as K, M, bn with PowerView rules for when to pick a unit. Suitable for chart axes.
     Default,
 
-    /** A verbose display unit system that will only respect the formatting defined in the model. Suitable for explore mode single-value cards. */
+    // A verbose display unit system that will only respect the formatting defined in the model. Suitable for explore mode single-value cards.
     Verbose,
 
     /**
@@ -38,6 +38,6 @@ export enum DisplayUnitSystemType {
      */
     WholeUnits,
 
-    /**A display unit system that also contains Auto and None units for data labels*/
+    // A display unit system that also contains Auto and None units for data labels
     DataLabels,
 }

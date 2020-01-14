@@ -62,7 +62,7 @@ export function startsWith(a: string, b: string): boolean {
     return a.indexOf(b) === 0;
 }
 
-/** Determines whether a string contains a specified substring (by case-sensitive comparison). */
+// Determines whether a string contains a specified substring (by case-sensitive comparison).
 export function contains(source: string, substring: string): boolean {
     if (source == null)
         return false;
@@ -70,7 +70,7 @@ export function contains(source: string, substring: string): boolean {
     return source.indexOf(substring) !== -1;
 }
 
-/** Determines whether a string contains a specified substring (while ignoring case). */
+// Determines whether a string contains a specified substring (while ignoring case).
 export function containsIgnoreCase(source: string, substring: string): boolean {
     if (source == null)
         return false;
@@ -276,7 +276,7 @@ export function stringifyAsPrettyJSON(object: any): string {
 
 /**
  * Derive a CLS-compliant name from a specified string.  If no allowed characters are present, return a fallback string instead.
- * TODO (6708134): this should have a fully Unicode-aware implementation
+ * (6708134): this should have a fully Unicode-aware implementation
  */
 export function deriveClsCompliantName(input: string, fallback: string): string {
     let result = input.replace(/^[^A-Za-z]*/g, "").replace(/[ :\.\/\\\-\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]/g, "_").replace(/[\W]/g, "");
@@ -284,7 +284,7 @@ export function deriveClsCompliantName(input: string, fallback: string): string 
     return result.length > 0 ? result : fallback;
 }
 
-/** Performs cheap sanitization by stripping away HTML tag (<>) characters. */
+// Performs cheap sanitization by stripping away HTML tag (<>) characters.
 export function stripTagDelimiters(s: string): string {
     return s.replace(HtmlTagRegex, "");
 }

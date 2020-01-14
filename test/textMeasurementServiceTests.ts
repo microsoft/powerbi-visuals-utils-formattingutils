@@ -25,14 +25,14 @@
 */
 
 import * as stringExtensions from "./../src/stringExtensions";
-import * as ephemeralStorageService from "./../src/storageService/ephemeralStorageService";
-import EphemeralStorageService = ephemeralStorageService.ephemeralStorageService;
-import verifyEllipsisActive  from "./helpers";
+import * as ephemeralStorage from "./../src/storageService/ephemeralStorageService";
+import ephemeralStorageService = ephemeralStorage.ephemeralStorageService;
+import verifyEllipsisActive from "./verifyEllipsisActive";
 import * as tms from "./../src/textMeasurementService";
 import textMeasurementService = tms.textMeasurementService;
-import { TextProperties, ITextAsSVGMeasurer, ITextTruncator } from "./../src/textMeasurementService";
+import { TextProperties } from "../src/interfaces";
 import * as $ from "jquery";
-import cloneDeep from "lodash.clonedeep";
+import lodashClonedeep from "lodash.clonedeep";
 
 // powerbi.extensibility.utils.test
 import { testDom } from "powerbi-visuals-utils-testutils";
@@ -97,8 +97,8 @@ describe("Text measurement service", () => {
         let setDataSpy: jasmine.Spy;
 
         beforeEach(() => {
-            EphemeralStorageService["clearCache"]();
-            setDataSpy = spyOn(EphemeralStorageService, <any>"setData");
+            ephemeralStorageService["clearCache"]();
+            setDataSpy = spyOn(ephemeralStorageService, <any>"setData");
             setDataSpy.and.callThrough();
         });
 
@@ -129,12 +129,12 @@ describe("Text measurement service", () => {
 
             // Mock measureSvgTextRect() to mimic the behavior when the iframe is disconnected / hidden.
             let measureSvgTextRectSpy = spyOn(textMeasurementService, "measureSvgTextRect");
-            measureSvgTextRectSpy.and.returnValue({
+            measureSvgTextRectSpy.and.returnValue(<any>{
                 x: 0,
                 y: 0,
                 width: 0,
                 height: 0,
-            } as any);
+            });
 
             let wrongHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
             expect(wrongHeight).toBe(0);
@@ -248,7 +248,7 @@ describe("Text measurement service", () => {
             };
 
             // Back up the original properties to make sure the service doesn't change them.
-            let originalProperties = cloneDeep(properties);
+            let originalProperties = lodashClonedeep(properties);
             let text = textMeasurementService.getTailoredTextOrDefault(properties, 100);
 
             expect(text).toEqual("PowerBI rocks!");
@@ -267,7 +267,7 @@ describe("Text measurement service", () => {
             };
 
             // Back up the original properties to make sure the service doesn't change them.
-            let originalProperties = cloneDeep(properties);
+            let originalProperties = lodashClonedeep(properties);
             let text = textMeasurementService.getTailoredTextOrDefault(properties, 45);
 
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
@@ -432,7 +432,9 @@ describe("Text measurement service", () => {
     }
 
     function createSvgTextElement(text: string): SVGTextElement {
+        // tslint:disable-next-line
         const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        // tslint:disable-next-line
         const svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
         svgTextElement.textContent = text;
         svgElement.appendChild(svgTextElement);
