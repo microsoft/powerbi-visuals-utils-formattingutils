@@ -666,9 +666,15 @@ export function getDisplayUnits(displayUnitSystemType: DisplayUnitSystemType): D
  * @param {number} inputValue Value to be basement for precision calculation
  * @param {string} format Format that will be used for value formatting (to detect percentage values)
  * @param {number} displayUnits Dispaly units that will be used for value formatting (to correctly calculate precision)
+ * @param {number} digitsNum Number of visible digits, including digits before separator
  * @returns calculated precision
  */
-export function calculate3DigitsPrecision(inputValue: number, format: string, displayUnits: number): number {
+export function calculateExactDgitsPrecision(
+    inputValue: number,
+    format: string,
+    displayUnits: number,
+    digitsNum: number
+): number {
     if (!inputValue && inputValue !== 0) {
         return 0;
     }
@@ -677,19 +683,28 @@ export function calculate3DigitsPrecision(inputValue: number, format: string, di
     const inPercent: boolean = format && format.indexOf(`%`) !== -1;
     let value: number = inPercent ? inputValue * 100 : inputValue;
     value = displayUnits > 0 ? value / displayUnits : value;
-    const leftPartLength: number = parseInt(<any>value).toString().length;
+    let leftPartLength: number = parseInt(<any>value).toString().length;
 
-    if ((inPercent || displayUnits > 0) && leftPartLength >= 3) {
+    if ((inPercent || displayUnits > 0) && leftPartLength >= digitsNum) {
         return 0;
     }
 
-    const restOfDiv3: number = leftPartLength % 3;
-    if (restOfDiv3 === 1) {
-        precision = 2;
-    } else if (restOfDiv3 === 2) {
-        precision = 1;
-    } else {
+    // Auto units, calculate final value 
+    if (displayUnits === 0) {
+        let unitsDegree: number = Math.floor(leftPartLength / 3);
+        unitsDegree = unitsDegree > 0 ? unitsDegree - 1 : 0;
+        const divider: number = unitsDegree * 1000;
+        if (divider > 0) {
+        value = value / divider;
+        }
+    }
+
+    leftPartLength = parseInt(<any>value).toString().length;
+    const restOfDiv: number = leftPartLength % digitsNum;
+    if (restOfDiv === 0) {
         precision = 0;
+    } else {
+        precision = digitsNum - restOfDiv;
     }
 
     return precision;
