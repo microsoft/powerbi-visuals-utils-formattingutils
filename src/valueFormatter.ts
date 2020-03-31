@@ -669,7 +669,7 @@ export function getDisplayUnits(displayUnitSystemType: DisplayUnitSystemType): D
  * @param {number} digitsNum Number of visible digits, including digits before separator
  * @returns calculated precision
  */
-export function calculateExactDgitsPrecision(
+export function calculateExactDigitsPrecision(
     inputValue: number,
     format: string,
     displayUnits: number,
@@ -692,8 +692,8 @@ export function calculateExactDgitsPrecision(
     // Auto units, calculate final value 
     if (displayUnits === 0) {
         let unitsDegree: number = Math.floor(leftPartLength / 3);
-        unitsDegree = unitsDegree > 0 ? unitsDegree - 1 : 0;
-        const divider: number = unitsDegree * 1000;
+        unitsDegree = leftPartLength % 3 === 0 ? unitsDegree - 1 : unitsDegree;
+        const divider: number = Math.pow(1000, unitsDegree);
         if (divider > 0) {
         value = value / divider;
         }
