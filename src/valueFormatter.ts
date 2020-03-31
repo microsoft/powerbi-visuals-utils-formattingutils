@@ -660,3 +660,37 @@ export function getDisplayUnits(displayUnitSystemType: DisplayUnitSystemType): D
     let displayUnitSystem = createDisplayUnitSystem(displayUnitSystemType);
     return displayUnitSystem.units;
 }
+
+/**
+ * Precision calculating function to build values showing minimum 3 digits as 3.56 or 25.7 or 754 or 2345
+ * @param {number} inputValue Value to be basement for precision calculation
+ * @param {string} format Format that will be used for value formatting (to detect percentage values)
+ * @param {number} displayUnits Dispaly units that will be used for value formatting (to correctly calculate precision)
+ * @returns calculated precision
+ */
+export function calculate3DigitsPrecision(inputValue: number, format: string, displayUnits: number): number {
+    if (!inputValue && inputValue !== 0) {
+        return 0;
+    }
+
+    let precision: number = 0;
+    const inPercent: boolean = format && format.indexOf(`%`) !== -1;
+    let value: number = inPercent ? inputValue * 100 : inputValue;
+    value = displayUnits > 0 ? value / displayUnits : value;
+    const leftPartLength: number = parseInt(<any>value).toString().length;
+
+    if ((inPercent || displayUnits > 0) && leftPartLength >= 3) {
+        return 0;
+    }
+
+    const restOfDiv3: number = leftPartLength % 3;
+    if (restOfDiv3 === 1) {
+        precision = 2;
+    } else if (restOfDiv3 === 2) {
+        precision = 1;
+    } else {
+        precision = 0;
+    }
+
+    return precision;
+}
