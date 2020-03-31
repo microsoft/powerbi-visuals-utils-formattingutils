@@ -40,65 +40,90 @@ import { DisplayUnitSystemType } from "./../src/displayUnitSystem/displayUnitSys
 import { valueFormatter } from "./../src/index";
 
 describe("ValueFormatter", () => {
-    describe("calculate3DigitsPrecision", () => {
-        it("should return 0 if value is not valid", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(NaN, null, 0);
+    describe("calculateExactDgitsPrecision", () => {
+        it("should return 0 if value is not valid and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(NaN, null, 0, 3);
             expect(res).toBe(0);
         });
 
-        it("should return 1 for 12340 if display units are auto", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(12340, null, 0);
+        it("should return 1 for 12340 if display units are auto and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(12340, null, 0, 3);
             expect(res).toBe(1);
         });
 
-        it("should return 2 for 2340 if display units are auto", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(2340, null, 0);
+        it("should return 2 for 2340 if display units are auto and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(2340, null, 0, 3);
             expect(res).toBe(2);
         });
 
-        it("should return 0 for 123403 if display units are auto", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(123403, null, 0);
+        it("should return 0 for 123403 if display units are auto and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(123403, null, 0, 3);
             expect(res).toBe(0);
         });
 
-        it("should return 2 for 1234035 if display units are auto", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(1234035, null, 0);
+        it("should return 2 for 1234035 if display units are auto and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(1234035, null, 0, 3);
             expect(res).toBe(2);
         });
 
-        it("should return 0 for 1234035 if display units are thousands", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(1234035, null, 1000);
+        it("should return 0 for 1234035 if display units are thousands and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(1234035, null, 1000, 3);
             expect(res).toBe(0);
         });
 
-        it("should return 2 for 12.34312 if display units are thousand and format in percents", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(12.34312, "+0.00%;-0.00%;0.00%", 1000);
+        it("should return 2 for 12.34312 if display units are thousand and format in percents and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(12.34312, "+0.00%;-0.00%;0.00%", 1000, 3);
             expect(res).toBe(2);
         });
 
-        it("should return 0 for 1.012 if display units are auto and format in percents", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(1.0012, "+0.00%;-0.00%;0.00%", 0);
+        it("should return 0 for 1.012 if display units are auto and format in percents and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(1.0012, "+0.00%;-0.00%;0.00%", 0, 3);
             expect(res).toBe(0);
         });
 
-        it("should return 1 for 0.87712 if display units are auto and format in percents", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(0.87712, "+0.00%;-0.00%;0.00%", 0);
+        it("should return 1 for 0.87712 if display units are auto and format in percents and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(0.87712, "+0.00%;-0.00%;0.00%", 0, 3);
             expect(res).toBe(1);
         });
 
-        it("should return 2 for 0.0742712 if display units are auto and format in percents", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(0.0742712, "+0.00%;-0.00%;0.00%", 0);
+        it("should return 2 for 0.0742712 if display units are auto and format in percents and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(0.0742712, "+0.00%;-0.00%;0.00%", 0, 3);
             expect(res).toBe(2);
         });
 
-        it("should return 2 for -0.00293312 if display units are auto and format in percents", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(-0.000243312, "+0.00%;-0.00%;0.00%", 0);
+        it("should return 2 for -0.00293312 if display units are auto and format in percents and digits are 3", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(-0.000243312, "+0.00%;-0.00%;0.00%", 0, 3);
             expect(res).toBe(2);
         });
 
-        it("should return 0 for 1.3537905 if display units are auto and format in percents", () => {
-            const res = valueFormatter.calculate3DigitsPrecision(13.537905, "+0.00%;-0.00%;0.00%", 0);
+        it("should return 0 for 13.537905 if display units are auto and format in percents", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(13.537905, "+0.00%;-0.00%;0.00%", 0, 3);
             expect(res).toBe(0);
+        });
+
+        it("should return 1 for 1.3537905 if display units are auto and digits are 2", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(1.3537905, null, 0, 2);
+            expect(res).toBe(1);
+        });
+
+        it("should return 3 for 1.3537905 if display units are auto and digits are 4", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(1.3537905, null, 0, 4);
+            expect(res).toBe(3);
+        });
+
+        it("should return 1 for 345678 if display units are auto and digits are 4", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(345678, null, 0, 4);
+            expect(res).toBe(1);
+        });
+
+        it("should return 6 for 345678 if display units are thousands and digits are 9", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(345678, null, 1000, 9);
+            expect(res).toBe(6);
+        });
+
+        it("should return 8 for 5345345678 if display units are milliards and digits are 9", () => {
+            const res = valueFormatter.calculateExactDgitsPrecision(345345678, null, 1000000000, 9);
+            expect(res).toBe(8);
         });
     });
 

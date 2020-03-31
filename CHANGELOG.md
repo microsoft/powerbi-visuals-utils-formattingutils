@@ -1,6 +1,6 @@
 ## 4.6.0
 * Packages update
-* New function calculate3DigitsPrecision in valueFormatter
+* New function calculateExactDgitsPrecision in valueFormatter
 
 ## 4.5.0
 * Get default number formats from culture
