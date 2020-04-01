@@ -1,3 +1,7 @@
+## 4.6.0
+* Packages update
+* New function calculateExactDigitsPrecision in valueFormatter
+
 ## 4.5.0
 * Get default number formats from culture
 * Apply default tslint rules

@@ -660,3 +660,52 @@ export function getDisplayUnits(displayUnitSystemType: DisplayUnitSystemType): D
     let displayUnitSystem = createDisplayUnitSystem(displayUnitSystemType);
     return displayUnitSystem.units;
 }
+
+/**
+ * Precision calculating function to build values showing minimum 3 digits as 3.56 or 25.7 or 754 or 2345
+ * @param {number} inputValue Value to be basement for precision calculation
+ * @param {string} format Format that will be used for value formatting (to detect percentage values)
+ * @param {number} displayUnits Dispaly units that will be used for value formatting (to correctly calculate precision)
+ * @param {number} digitsNum Number of visible digits, including digits before separator
+ * @returns calculated precision
+ */
+export function calculateExactDigitsPrecision(
+    inputValue: number,
+    format: string,
+    displayUnits: number,
+    digitsNum: number
+): number {
+    if (!inputValue && inputValue !== 0) {
+        return 0;
+    }
+
+    let precision: number = 0;
+    const inPercent: boolean = format && format.indexOf(`%`) !== -1;
+    let value: number = inPercent ? inputValue * 100 : inputValue;
+    value = displayUnits > 0 ? value / displayUnits : value;
+    let leftPartLength: number = parseInt(<any>value).toString().length;
+
+    if ((inPercent || displayUnits > 0) && leftPartLength >= digitsNum) {
+        return 0;
+    }
+
+    // Auto units, calculate final value 
+    if (displayUnits === 0) {
+        let unitsDegree: number = Math.floor(leftPartLength / 3);
+        unitsDegree = leftPartLength % 3 === 0 ? unitsDegree - 1 : unitsDegree;
+        const divider: number = Math.pow(1000, unitsDegree);
+        if (divider > 0) {
+        value = value / divider;
+        }
+    }
+
+    leftPartLength = parseInt(<any>value).toString().length;
+    const restOfDiv: number = leftPartLength % digitsNum;
+    if (restOfDiv === 0) {
+        precision = 0;
+    } else {
+        precision = digitsNum - restOfDiv;
+    }
+
+    return precision;
+}
