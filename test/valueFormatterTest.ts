@@ -820,6 +820,7 @@ describe("ValueFormatter", () => {
             expect(valueFormatter.formatListAnd(null)).toBeNull();
             expect(valueFormatter.formatListAnd(undefined)).toBeNull();
         });
+
     });
 
     describe("formatListOr", () => {
