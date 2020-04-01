@@ -130,6 +130,7 @@ describe("ValueFormatter", () => {
             const res = valueFormatter.calculateExactDigitsPrecision(5345345678, null, 0, 9);
             expect(res).toBe(8);
         });
+        
     });
 
     describe("checkValueInBounds", () => {
