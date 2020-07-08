@@ -426,7 +426,7 @@ describe("Text measurement service", () => {
     });
 
     function attachToDom(element: JQuery | Element): JQuery {
-        let dom = testDom("100px", "100px");
+        let dom = $(testDom("100px", "100px"));
         dom.append([element]);
         return dom;
     }

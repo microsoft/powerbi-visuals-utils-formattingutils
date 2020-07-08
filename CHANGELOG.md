@@ -1,3 +1,8 @@
+## 4.7.0
+* Packages updates
+* Obsolete docs removed
+* Github actions added
+
 ## 4.6.0
 * Packages update
 * New function calculateExactDigitsPrecision in valueFormatter
