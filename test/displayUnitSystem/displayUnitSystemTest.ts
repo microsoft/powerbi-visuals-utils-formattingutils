@@ -123,7 +123,7 @@ describe("DisplayUnitSystem", () => {
     });
 
     function createDisplayUnitSystem(units?: DisplayUnit[]): DisplayUnitSystem {
-        return new DisplayUnitSystem(units);
+        return new DisplayUnitSystem(null, units);
     }
 });
 
@@ -155,7 +155,7 @@ describe("DataLabelsDisplayUnitSystem", () => {
     function createDataLabelsDisplayUnitSystem(systemNames: DisplayUnitSystemNames[]): DataLabelsDisplayUnitSystem {
         return new DataLabelsDisplayUnitSystem((exponent: number) => {
             return systemNames[exponent] || systemNames[0];
-        });
+        }, null);
     }
 
     function createDisplayUnitSystemNames(): DisplayUnitSystemNames[] {
