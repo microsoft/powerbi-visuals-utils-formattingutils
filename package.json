@@ -69,6 +69,9 @@
   },
   "dependencies": {
     "powerbi-visuals-utils-dataviewutils": "2.3.0",
-    "powerbi-visuals-utils-typeutils": "2.3.0"
+    "powerbi-visuals-utils-typeutils": "2.3.0",
+    "cldr-core": "^36.0.0",
+    "cldr-numbers-modern": "^36.0.0",
+    "cldrjs": "0.5.4"
   }
 }
