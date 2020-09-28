@@ -68,6 +68,9 @@
     "webpack": "4.43.0"
   },
   "dependencies": {
+    "cldr-core": "^36.0.0",
+    "cldr-numbers-modern": "^36.0.0",
+    "cldrjs": "0.5.4",
     "powerbi-visuals-utils-dataviewutils": "2.3.0",
     "powerbi-visuals-utils-typeutils": "2.3.0"
   }
