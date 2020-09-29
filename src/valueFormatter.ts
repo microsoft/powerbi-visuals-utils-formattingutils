@@ -293,20 +293,20 @@ function adjusteLocalizedStrings(cultureSelector: string) {
 
     // E3
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E3_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");
-  
+    localizedStrings["DisplayUnitSystem_E3_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
     // E6
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E6_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");
-  
+    localizedStrings["DisplayUnitSystem_E6_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
     // E9
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E9_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");  
+    localizedStrings["DisplayUnitSystem_E9_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
 
     // E12
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000000000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E12_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");
-  
+    localizedStrings["DisplayUnitSystem_E12_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
     return;
 
 }
@@ -320,12 +320,12 @@ export function createDefaultFormatter(
         ? localizationOptions.beautify(formatString)
         : formatString;
 
+    if (!(cultureSelector == null)) adjusteLocalizedStrings(cultureSelector);
     return {
         format: (value: any): string => {
             if (value == null) {
                 return localizationOptions.nullValue;
             }
-            adjusteLocalizedStrings(cultureSelector);
             return formatCore({
                 value,
                 cultureSelector,
@@ -368,7 +368,7 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
 
     const { cultureSelector } = options;
 
-    adjusteLocalizedStrings(cultureSelector);
+    if (!(cultureSelector == null)) adjusteLocalizedStrings(cultureSelector);
 
     if (shouldUseNumericDisplayUnits(options)) {
         let displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
@@ -401,7 +401,6 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
 
                     value = Double.roundToPrecision(value);
                 }
-
                 if (singleValueFormattingMode) {
                     return displayUnitSystem.formatSingleValue(
                         value,
@@ -745,7 +744,7 @@ export function calculateExactDigitsPrecision(
         unitsDegree = leftPartLength % 3 === 0 ? unitsDegree - 1 : unitsDegree;
         const divider: number = Math.pow(1000, unitsDegree);
         if (divider > 0) {
-        value = value / divider;
+            value = value / divider;
         }
     }
 
