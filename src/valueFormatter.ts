@@ -139,7 +139,7 @@ export const DefaultIntegerFormat = "g";
 export const DefaultNumericFormat = "#,0.00";
 export const DefaultDateFormat = "d";
 
-const defaultLocalizedStrings = {
+let localizedStrings = {
     "NullValue": "(Blank)",
     "BooleanTrue": "True",
     "BooleanFalse": "False",
@@ -209,37 +209,37 @@ const defaultLocalizedStrings = {
 function beautify(format: string): string {
     let key = BeautifiedFormat[format];
     if (key)
-        return defaultLocalizedStrings[key] || format;
+        return localizedStrings[key] || format;
     return format;
 }
 
 function describeUnit(exponent: number): DisplayUnitSystemNames {
     let exponentLookup = (exponent === -1) ? "Auto" : exponent.toString();
 
-    let title: string = defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
-    let format: string = (exponent <= 0) ? "{0}" : defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
+    let title: string = localizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
+    let format: string = (exponent <= 0) ? "{0}" : localizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
 
     if (title || format)
         return { title: title, format: format };
 }
 
 export function getLocalizedString(stringId: string): string {
-    return defaultLocalizedStrings[stringId];
+    return localizedStrings[stringId];
 }
 
 // NOTE: Define default locale options, but these can be overriden by setLocaleOptions.
 let localizationOptions: ValueFormatterLocalizationOptions = {
-    nullValue: defaultLocalizedStrings["NullValue"],
-    trueValue: defaultLocalizedStrings["BooleanTrue"],
-    falseValue: defaultLocalizedStrings["BooleanFalse"],
-    NaN: defaultLocalizedStrings["NaNValue"],
-    infinity: defaultLocalizedStrings["InfinityValue"],
-    negativeInfinity: defaultLocalizedStrings["NegativeInfinityValue"],
+    nullValue: localizedStrings["NullValue"],
+    trueValue: localizedStrings["BooleanTrue"],
+    falseValue: localizedStrings["BooleanFalse"],
+    NaN: localizedStrings["NaNValue"],
+    infinity: localizedStrings["InfinityValue"],
+    negativeInfinity: localizedStrings["NegativeInfinityValue"],
     beautify: format => beautify(format),
     describe: exponent => describeUnit(exponent),
-    restatementComma: defaultLocalizedStrings["RestatementComma"],
-    restatementCompoundAnd: defaultLocalizedStrings["RestatementCompoundAnd"],
-    restatementCompoundOr: defaultLocalizedStrings["RestatementCompoundOr"],
+    restatementComma: localizedStrings["RestatementComma"],
+    restatementCompoundAnd: localizedStrings["RestatementCompoundAnd"],
+    restatementCompoundOr: localizedStrings["RestatementCompoundOr"],
 };
 
 const MaxScaledDecimalPlaces = 2;
@@ -263,6 +263,54 @@ export function setLocaleOptions(options: ValueFormatterLocalizationOptions): vo
     WholeUnitsDisplayUnitSystem.RESET();
 }
 
+function adjusteLocalizedStrings(cultureSelector: string) {
+
+    let languageId = cultureSelector.substring(0, 2).toLowerCase();
+
+    let Cldr = require("cldrjs");
+
+
+    Cldr.load(require("cldr-core/supplemental/likelySubtags.json"));
+
+    let mycldr = new Cldr(cultureSelector);
+    try {
+        // Load cultureSelector as locale (es-MX, pt-PT, etc.)
+        Cldr.load(require("cldr-numbers-modern/main/" + mycldr.locale + "/numbers.json"));
+    }
+    catch
+    {
+        // Main language locale (pt-BR -> pt , en-US -> en, etc.)
+        try {
+            mycldr = new Cldr(languageId);
+            Cldr.load(require("cldr-numbers-modern/main/" + mycldr.locale + "/numbers.json"));
+        }
+        // Default for unknown languages
+        catch { return }
+    }
+
+    let ls: string;
+    let ns = mycldr.get("main/" + mycldr.locale + "/numbers/defaultNumberingSystem");
+
+    // E3
+    ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000-count-one"]);
+    localizedStrings["DisplayUnitSystem_E3_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
+    // E6
+    ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000-count-one"]);
+    localizedStrings["DisplayUnitSystem_E6_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
+    // E9
+    ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000000-count-one"]);
+    localizedStrings["DisplayUnitSystem_E9_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
+    // E12
+    ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000000000-count-one"]);
+    localizedStrings["DisplayUnitSystem_E12_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'", ".");
+
+    return;
+
+}
+
 export function createDefaultFormatter(
     formatString: string,
     allowFormatBeautification?: boolean,
@@ -272,12 +320,12 @@ export function createDefaultFormatter(
         ? localizationOptions.beautify(formatString)
         : formatString;
 
+    if (!(cultureSelector == null)) adjusteLocalizedStrings(cultureSelector);
     return {
         format: (value: any): string => {
             if (value == null) {
                 return localizationOptions.nullValue;
             }
-
             return formatCore({
                 value,
                 cultureSelector,
@@ -320,6 +368,8 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
 
     const { cultureSelector } = options;
 
+    if (!(cultureSelector == null)) adjusteLocalizedStrings(cultureSelector);
+
     if (shouldUseNumericDisplayUnits(options)) {
         let displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
 
@@ -351,7 +401,6 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
 
                     value = Double.roundToPrecision(value);
                 }
-
                 if (singleValueFormattingMode) {
                     return displayUnitSystem.formatSingleValue(
                         value,
@@ -695,7 +744,7 @@ export function calculateExactDigitsPrecision(
         unitsDegree = leftPartLength % 3 === 0 ? unitsDegree - 1 : unitsDegree;
         const divider: number = Math.pow(1000, unitsDegree);
         if (divider > 0) {
-        value = value / divider;
+            value = value / divider;
         }
     }
 
