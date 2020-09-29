@@ -274,10 +274,12 @@ function adjusteLocalizedStrings(cultureSelector: string) {
 
     let mycldr = new Cldr(cultureSelector);
     try {
+        // Load cultureSelector as locale (es-MX, pt-PT, etc.)
         Cldr.load(require("cldr-numbers-modern/main/" + mycldr.locale + "/numbers.json"));
     }
     catch
     {
+        // Main language locale (pt-BR -> pt , en-US -> en, etc.)
         try {
             mycldr = new Cldr(languageId);
             Cldr.load(require("cldr-numbers-modern/main/" + mycldr.locale + "/numbers.json"));
@@ -291,19 +293,19 @@ function adjusteLocalizedStrings(cultureSelector: string) {
 
     // E3
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E3_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2);
+    localizedStrings["DisplayUnitSystem_E3_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");
   
     // E6
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E6_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2);
+    localizedStrings["DisplayUnitSystem_E6_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");
   
     // E9
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E9_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2);  
+    localizedStrings["DisplayUnitSystem_E9_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");  
 
     // E12
     ls = mycldr.get(["main/" + mycldr.locale + "/numbers/decimalFormats-numberSystem-" + ns + "/short/decimalFormat/1000000000000-count-one"]);
-    localizedStrings["DisplayUnitSystem_E12_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2);
+    localizedStrings["DisplayUnitSystem_E12_LabelFormat"] = "{0}" + ls.slice(ls.lastIndexOf("0") + 2).replace("'.'",".");
   
     return;
 
