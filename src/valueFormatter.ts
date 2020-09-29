@@ -282,7 +282,7 @@ function adjusteLocalizedStrings(cultureSelector: string) {
             mycldr = new Cldr(languageId);
             Cldr.load(require("cldr-numbers-modern/main/" + mycldr.locale + "/numbers.json"));
         }
-        // Default for unknow cultures
+        // Default for unknown languages
         catch { return }
     }
 
