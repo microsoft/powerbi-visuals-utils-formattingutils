@@ -1,3 +1,7 @@
+## 4.7.1
+* Packages update
+* Vulnerabilities fixes
+
 ## 4.7.0
 * Packages updates
 * Obsolete docs removed
