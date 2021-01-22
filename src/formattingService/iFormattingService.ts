@@ -24,6 +24,8 @@
 *  THE SOFTWARE.
 */
 
+import { Culture } from "./formattingService";
+
 // Enumeration of DateTimeUnits
 export enum DateTimeUnit {
     Year,
@@ -42,7 +44,7 @@ export interface IFormattingService {
      * @param value - value to be formatted and converted to string.
      * @param format - format to be applied. If undefined or empty then generic format is used.
      */
-    formatValue(value: any, format?: string, cultureSelector?: string): string;
+    formatValue(value: any, format?: string, cultureSelector?: string|Culture): string;
 
     /**
      * Replaces the indexed format tokens (for example {0:c2}) in the format string with the localized formatted arguments.
@@ -50,14 +52,20 @@ export interface IFormattingService {
      * @param args - array of values which should replace the tokens in the format string.
      * @param culture - localization culture. If undefined then the current culture is used.
      */
-    format(formatWithIndexedTokens: string, args: any[], culture?: string): string;
+    format(formatWithIndexedTokens: string, args: any[], culture?: string|Culture): string;
 
     // Gets a value indicating whether the specified format a standard numeric format specifier.
     isStandardNumberFormat(format: string): boolean;
 
     // Performs a custom format with a value override.  Typically used for custom formats showing scaled values.
-    formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string): string;
+    formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string|Culture): string;
 
     // Gets the format string to use for dates in particular units.
     dateFormatString(unit: DateTimeUnit): string;
+    
+    /**
+     * Gets the culture object
+     * @param cultureOrCultureSelector - either a culture selector or if the culture was already retrieved earlier just return the same object back to avoid multiple lookups
+    */ 
+    getCulture(cultureOrCultureSelector?: string|Culture): Culture;
 }

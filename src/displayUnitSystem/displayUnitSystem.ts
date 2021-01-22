@@ -27,6 +27,8 @@
 import { numberFormat as NumberFormat, formattingService}  from "./../formattingService/formattingService";
 
 import { double as Double } from "powerbi-visuals-utils-typeutils";
+import { Culture } from '../formattingService/formattingService';
+
 
 // Constants
 const maxExponent = 24;
@@ -62,6 +64,8 @@ export class DisplayUnit {
     public labelFormat: string;
     public applicableRangeMin: number;
     public applicableRangeMax: number;
+    
+    public culture: Culture;
 
     // Methods
     public project(value: number): number {
@@ -79,7 +83,7 @@ export class DisplayUnit {
             return value;
         }
     }
-
+    
     public isApplicableTo(value: number): boolean {
         value = Math.abs(value);
         let precision = Double.getPrecision(value, 3);
@@ -97,12 +101,16 @@ export class DisplayUnitSystem {
     public displayUnit: DisplayUnit;
     private unitBaseValue: number;
     protected static UNSUPPORTED_FORMATS = /^(p\d*)|(e\d*)$/i;
-
+    public culture: Culture;
+    
     // Constructor
-    constructor(units?: DisplayUnit[]) {
-        this.units = units ? units : [];
+    constructor(
+        cultureSelector: string,
+        units?: DisplayUnit[]) {
+        this.culture = formattingService.getCulture(cultureSelector);
+        this.units = units ?? [];
     }
-
+    
     // Properties
     public get title(): string {
         return this.displayUnit ? this.displayUnit.title : undefined;
@@ -130,9 +138,8 @@ export class DisplayUnitSystem {
         value: number,
         format: string,
         decimals?: number,
-        trailingZeros?: boolean,
-        cultureSelector?: string): string {
-
+        trailingZeros?: boolean): string {
+            
         decimals = this.getNumberOfDecimalsForFormatting(format, decimals);
 
         let nonScientificFormat: string = "";
@@ -143,7 +150,7 @@ export class DisplayUnitSystem {
             && this.shouldRespectScalingUnit(format)) {
 
             value = this.displayUnit.project(value);
-            nonScientificFormat = this.displayUnit.labelFormat;
+            nonScientificFormat = this.displayUnit.labelFormat
         }
 
         return this.formatHelper({
@@ -152,7 +159,7 @@ export class DisplayUnitSystem {
             format,
             decimals,
             trailingZeros,
-            cultureSelector
+            cultureSelector: this.culture.name
         });
     }
 
@@ -219,12 +226,11 @@ export class DisplayUnitSystem {
         value: number,
         format: string,
         decimals?: number,
-        trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        trailingZeros?: boolean): string {
         // Change unit base to a value appropriate for this value
         this.update(this.shouldUseValuePrecision(value) ? Double.getPrecision(value, 8) : value);
 
-        return this.format(value, format, decimals, trailingZeros, cultureSelector);
+        return this.format(value, format, decimals, trailingZeros);
     }
 
     private shouldUseValuePrecision(value: number): boolean {
@@ -285,19 +291,31 @@ export class DisplayUnitSystem {
 // Provides a unit system that is defined by formatting in the model, and is suitable for visualizations shown in single number visuals in explore mode.
 export class NoDisplayUnitSystem extends DisplayUnitSystem {
     // Constructor
-    constructor() {
-        super([]);
+    constructor(cultureSelector: string) {
+        super(cultureSelector, []);
     }
 }
 
 /** Provides a unit system that creates a more concise format for displaying values. This is suitable for most of the cases where
     we are showing values (chart axes) and as such it is the default unit system. */
 export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
-    private static units: DisplayUnit[];
 
     // Constructor
-    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames) {
-        super(DefaultDisplayUnitSystem.getUnits(unitLookup));
+    constructor(
+        unitLookup: UnitLookup, 
+        cultureSelector: string) {
+        super(cultureSelector);
+        
+        let units = createDisplayUnits(unitLookup, this.culture, (value: number, previousUnitValue: number, min: number) => {
+            // When dealing with millions/billions/trillions we need to switch to millions earlier: for example instead of showing 100K 200K 300K we should show 0.1M 0.2M 0.3M etc
+            if (value - previousUnitValue >= 1000) {
+                return value / 10;
+            }
+
+            return min;
+        });
+        units[units.length - 1].applicableRangeMax = Infinity;
+        this.units = units;
     }
 
     // Methods
@@ -305,33 +323,11 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
         data: number,
         format: string,
         decimals?: number,
-        trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        trailingZeros?: boolean): string {
 
         format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
-        return super.format(data, format, decimals, trailingZeros, cultureSelector);
-    }
-
-    public static RESET(): void {
-        DefaultDisplayUnitSystem.units = null;
-    }
-
-    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames): DisplayUnit[] {
-        if (!DefaultDisplayUnitSystem.units) {
-            DefaultDisplayUnitSystem.units = createDisplayUnits(unitLookup, (value: number, previousUnitValue: number, min: number) => {
-                // When dealing with millions/billions/trillions we need to switch to millions earlier: for example instead of showing 100K 200K 300K we should show 0.1M 0.2M 0.3M etc
-                if (value - previousUnitValue >= 1000) {
-                    return value / 10;
-                }
-
-                return min;
-            });
-
-            // Ensure last unit has max of infinity
-            DefaultDisplayUnitSystem.units[DefaultDisplayUnitSystem.units.length - 1].applicableRangeMax = Infinity;
-        }
-        return DefaultDisplayUnitSystem.units;
+        return super.format(data, format, decimals, trailingZeros);
     }
 }
 
@@ -339,37 +335,27 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
     one of those units (e.g. 0.9M is not allowed since it's less than 1 million). This is suitable for cases such as dashboard tiles
     where we have restricted space but do not want to show partial units. */
 export class WholeUnitsDisplayUnitSystem extends DisplayUnitSystem {
-    private static units: DisplayUnit[];
 
     // Constructor
-    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames) {
-        super(WholeUnitsDisplayUnitSystem.getUnits(unitLookup));
-    }
-
-    public static RESET(): void {
-        WholeUnitsDisplayUnitSystem.units = null;
-    }
-
-    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames): DisplayUnit[] {
-        if (!WholeUnitsDisplayUnitSystem.units) {
-            WholeUnitsDisplayUnitSystem.units = createDisplayUnits(unitLookup);
-
-            // Ensure last unit has max of infinity
-            WholeUnitsDisplayUnitSystem.units[WholeUnitsDisplayUnitSystem.units.length - 1].applicableRangeMax = Infinity;
-        }
-
-        return WholeUnitsDisplayUnitSystem.units;
+    constructor(
+        unitLookup: UnitLookup, 
+        cultureSelector: string) {
+        super(cultureSelector);
+        let units = createDisplayUnits(unitLookup, this.culture);
+        
+        // Ensure last unit has max of infinity
+        units[units.length - 1].applicableRangeMax = Infinity;
+        this.units = units;
     }
 
     public format(
         data: number,
         format: string,
         decimals?: number,
-        trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        trailingZeros?: boolean): string {
         format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
-        return super.format(data, format, decimals, trailingZeros, cultureSelector);
+        return super.format(data, format, decimals, trailingZeros);
     }
 }
 
@@ -382,17 +368,13 @@ export class DataLabelsDisplayUnitSystem extends DisplayUnitSystem {
 
     private static units: DisplayUnit[];
 
-    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames) {
-        super(DataLabelsDisplayUnitSystem.getUnits(unitLookup));
-    }
-
-    public isFormatSupported(format: string): boolean {
-        return !DataLabelsDisplayUnitSystem.UNSUPPORTED_FORMATS.test(format);
-    }
-
-    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames): DisplayUnit[] {
+    constructor(
+        unitLookup: UnitLookup,
+        cultureSelector: string) {
+        super(cultureSelector);
+        
+        let units = [];
         if (!DataLabelsDisplayUnitSystem.units) {
-            let units = [];
             let adjustMinBasedOnPreviousUnit = (value: number, previousUnitValue: number, min: number): number => {
                 // Never returns true, we are always ignoring
                 // We do not early switch (e.g. 100K instead of 0.1M)
@@ -405,30 +387,33 @@ export class DataLabelsDisplayUnitSystem extends DisplayUnitSystem {
             };
 
             // Add Auto & None
-            let names = unitLookup(-1);
+            let names = unitLookup(-1, this.culture);
             addUnitIfNonEmpty(units, DataLabelsDisplayUnitSystem.AUTO_DISPLAYUNIT_VALUE, names.title, names.format, adjustMinBasedOnPreviousUnit);
 
-            names = unitLookup(0);
+            names = unitLookup(0, this.culture);
             addUnitIfNonEmpty(units, DataLabelsDisplayUnitSystem.NONE_DISPLAYUNIT_VALUE, names.title, names.format, adjustMinBasedOnPreviousUnit);
 
             // Add normal units
-            DataLabelsDisplayUnitSystem.units = units.concat(createDisplayUnits(unitLookup, adjustMinBasedOnPreviousUnit));
+            units = units.concat(createDisplayUnits(unitLookup, this.culture, adjustMinBasedOnPreviousUnit));
 
             // Ensure last unit has max of infinity
-            DataLabelsDisplayUnitSystem.units[DataLabelsDisplayUnitSystem.units.length - 1].applicableRangeMax = Infinity;
+            units[units.length - 1].applicableRangeMax = Infinity;
         }
-        return DataLabelsDisplayUnitSystem.units;
+        this.units = units;
+    }
+
+    public isFormatSupported(format: string): boolean {
+        return !DataLabelsDisplayUnitSystem.UNSUPPORTED_FORMATS.test(format);
     }
 
     public format(
         data: number,
         format: string,
         decimals?: number,
-        trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        trailingZeros?: boolean): string {
         format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
-        return super.format(data, format, decimals, trailingZeros, cultureSelector);
+        return super.format(data, format, decimals, trailingZeros);
     }
 }
 
@@ -436,11 +421,13 @@ export interface DisplayUnitSystemNames {
     title: string;
     format: string;
 }
+export type UnitLookup = (exponent: number, culture: Culture) =>  DisplayUnitSystemNames;
 
-function createDisplayUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames, adjustMinBasedOnPreviousUnit?: (value: number, previousUnitValue: number, min: number) => number) {
+
+function createDisplayUnits(unitLookup: UnitLookup, culture: Culture, adjustMinBasedOnPreviousUnit?: (value: number, previousUnitValue: number, min: number) => number) {
     let units = [];
     for (let i = 3; i < maxExponent; i++) {
-        let names = unitLookup(i);
+        let names = unitLookup(i, culture);
         if (names)
             addUnitIfNonEmpty(units, Double.pow10(i), names.title, names.format, adjustMinBasedOnPreviousUnit);
     }

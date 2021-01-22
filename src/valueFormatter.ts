@@ -29,7 +29,7 @@ import { DisplayUnitSystem, DataLabelsDisplayUnitSystem, NoDisplayUnitSystem, Wh
 import { DisplayUnitSystemType } from "./displayUnitSystem/displayUnitSystemType";
 import { DisplayUnit } from "./displayUnitSystem/displayUnitSystem";
 import * as stringExtensions from "./stringExtensions";
-import { numberFormat as NumberFormat, formattingService } from "./formattingService/formattingService";
+import { numberFormat as NumberFormat, formattingService, Culture } from "./formattingService/formattingService";
 import { DateTimeSequence } from "./date/dateTimeSequence";
 import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
@@ -116,7 +116,7 @@ export interface ValueFormatterLocalizationOptions {
     beautify(format: string): string;
 
     // Returns an object describing the given exponent in the current language.
-    describe(exponent: number): DisplayUnitSystemNames;
+    describe(exponent: number, culture: Culture): DisplayUnitSystemNames;
     restatementComma: string;
     restatementCompoundAnd: string;
     restatementCompoundOr: string;
@@ -213,14 +213,14 @@ function beautify(format: string): string {
     return format;
 }
 
-function describeUnit(exponent: number): DisplayUnitSystemNames {
+function describeUnit(exponent: number, culture: Culture): DisplayUnitSystemNames {
     let exponentLookup = (exponent === -1) ? "Auto" : exponent.toString();
 
-    let title: string = defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
-    let format: string = (exponent <= 0) ? "{0}" : defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
-
-    if (title || format)
-        return { title: title, format: format };
+    let key = "DisplayUnitSystem_E" + exponentLookup;
+    return {
+        title: (culture?.localizedStrings ?? defaultLocalizedStrings)[key+"_Title"],
+        format: (culture?.localizedStrings ?? defaultLocalizedStrings)[key+"_LabelFormat"]
+    }
 }
 
 export function getLocalizedString(stringId: string): string {
@@ -236,7 +236,7 @@ let localizationOptions: ValueFormatterLocalizationOptions = {
     infinity: defaultLocalizedStrings["InfinityValue"],
     negativeInfinity: defaultLocalizedStrings["NegativeInfinityValue"],
     beautify: format => beautify(format),
-    describe: exponent => describeUnit(exponent),
+    describe: (exponent, culture) => describeUnit(exponent, culture),
     restatementComma: defaultLocalizedStrings["RestatementComma"],
     restatementCompoundAnd: defaultLocalizedStrings["RestatementCompoundAnd"],
     restatementCompoundOr: defaultLocalizedStrings["RestatementCompoundOr"],
@@ -258,9 +258,6 @@ export function getFormatMetadata(format: string): NumberFormat.NumericFormatMet
 
 export function setLocaleOptions(options: ValueFormatterLocalizationOptions): void {
     localizationOptions = options;
-
-    DefaultDisplayUnitSystem.RESET();
-    WholeUnitsDisplayUnitSystem.RESET();
 }
 
 export function createDefaultFormatter(
@@ -321,7 +318,7 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
     const { cultureSelector } = options;
 
     if (shouldUseNumericDisplayUnits(options)) {
-        let displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
+        let displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType, cultureSelector);
 
         let singleValueFormattingMode = !!options.formatSingleValues;
 
@@ -357,15 +354,13 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
                         value,
                         format,
                         decimals,
-                        forcePrecision,
-                        cultureSelector);
+                        forcePrecision);
                 } else {
                     return displayUnitSystem.format(
                         value,
                         format,
                         decimals,
-                        forcePrecision,
-                        cultureSelector);
+                        forcePrecision);
                 }
             },
             displayUnit: displayUnitSystem.displayUnit,
@@ -459,21 +454,21 @@ export function formatVariantMeasureValue(
     }
 }
 
-export function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSystemType): DisplayUnitSystem {
+export function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSystemType, cultureSelector?: string): DisplayUnitSystem {
     if (displayUnitSystemType == null)
-        return new DefaultDisplayUnitSystem(localizationOptions.describe);
+        return new DefaultDisplayUnitSystem(localizationOptions.describe, cultureSelector);
 
     switch (displayUnitSystemType) {
         case DisplayUnitSystemType.Default:
-            return new DefaultDisplayUnitSystem(localizationOptions.describe);
+            return new DefaultDisplayUnitSystem(localizationOptions.describe, cultureSelector);
         case DisplayUnitSystemType.WholeUnits:
-            return new WholeUnitsDisplayUnitSystem(localizationOptions.describe);
+            return new WholeUnitsDisplayUnitSystem(localizationOptions.describe, cultureSelector);
         case DisplayUnitSystemType.Verbose:
-            return new NoDisplayUnitSystem();
+            return new NoDisplayUnitSystem(cultureSelector);
         case DisplayUnitSystemType.DataLabels:
-            return new DataLabelsDisplayUnitSystem(localizationOptions.describe);
+            return new DataLabelsDisplayUnitSystem(localizationOptions.describe, cultureSelector);
         default:
-            return new DefaultDisplayUnitSystem(localizationOptions.describe);
+            return new DefaultDisplayUnitSystem(localizationOptions.describe, cultureSelector);
     }
 }
 

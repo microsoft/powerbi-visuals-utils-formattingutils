@@ -6929,6 +6929,18 @@ export default function injectCultures(Globalize) {
                     Y: "MMMM yyyy"
                 }
             }
+        },
+        localizedStrings: {
+            DisplayUnitSystem_EAuto_Title: "Auto",
+            DisplayUnitSystem_E0_Title: "None",
+            DisplayUnitSystem_E3_LabelFormat: "{0} Tsd.",
+            DisplayUnitSystem_E3_Title: "Tausend",
+            DisplayUnitSystem_E6_LabelFormat: "{0} Mio.",
+            DisplayUnitSystem_E6_Title: "Millionen",
+            DisplayUnitSystem_E9_LabelFormat: "{0} Mrd.",
+            DisplayUnitSystem_E9_Title: "Milliarden",
+            DisplayUnitSystem_E12_LabelFormat: "{0} Trill.",
+            DisplayUnitSystem_E12_Title: "Trillionen", 
         }
     });
 

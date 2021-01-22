@@ -39,12 +39,27 @@ import { IFormattingService, DateTimeUnit } from "./iFormattingService";
 // tslint:disable-next-line
 import powerbi from "powerbi-visuals-api";
 
+export interface DisplayUnitSystemFormats 
+{
+    DisplayUnitSystem_EAuto_Title: string;
+    DisplayUnitSystem_E0_Title: string;
+    DisplayUnitSystem_E3_LabelFormat: string;
+    DisplayUnitSystem_E3_Title: string;
+    DisplayUnitSystem_E6_LabelFormat: string;
+    DisplayUnitSystem_E6_Title: string;
+    DisplayUnitSystem_E9_LabelFormat: string;
+    DisplayUnitSystem_E9_Title: string;
+    DisplayUnitSystem_E12_LabelFormat: string;
+    DisplayUnitSystem_E12_Title: string;
+}
+
 // Culture interfaces. These match the Globalize library interfaces intentionally.
 export interface Culture {
     name: string;
     calendar: Calendar;
     calendars: CalendarDictionary;
     numberFormat: NumberFormatInfo;
+    localizedStrings?: DisplayUnitSystemFormats;
 }
 
 export interface Calendar {
@@ -147,7 +162,7 @@ export class FormattingService implements IFormattingService {
     private _currentCulture: Culture;
     private _dateTimeScaleFormatInfo: DateTimeScaleFormatInfo;
 
-    public formatValue(value: any, format?: string, cultureSelector?: string): string {
+    public formatValue(value: any, format?: string, cultureSelector?: string|Culture): string {
         // Handle special cases
         if (value === undefined || value === null) {
             return "";
@@ -167,7 +182,7 @@ export class FormattingService implements IFormattingService {
         return value.toString();
     }
 
-    public format(formatWithIndexedTokens: string, args: any[], culture?: string): string {
+    public format(formatWithIndexedTokens: string, args: any[], culture?: string|Culture): string {
         if (!formatWithIndexedTokens) {
             return "";
         }
@@ -189,7 +204,7 @@ export class FormattingService implements IFormattingService {
         return numberFormat.isStandardFormat(format);
     }
 
-    public formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string): string {
+    public formatNumberWithCustomOverride(value: number, format: string, nonScientificOverrideFormat: string, culture?: string|Culture): string {
         let gculture = this.getCulture(culture);
 
         return numberFormat.formatWithCustomOverride(value, format, nonScientificOverrideFormat, gculture);
@@ -215,17 +230,26 @@ export class FormattingService implements IFormattingService {
 
     /**
      * Gets the culture assotiated with the specified cultureSelector ("en", "en-US", "fr-FR" etc).
-     * @param cultureSelector - name of a culture: "en", "en-UK", "fr-FR" etc. (See National Language Support (NLS) for full lists. Use "default" for invariant culture).
+     * @param cultureOrCultureSelector - name of a culture: "en", "en-UK", "fr-FR" etc. (See National Language Support (NLS) for full lists. Use "default" for invariant culture).
      * Exposing this function for testability of unsupported cultures
      */
-    public getCulture(cultureSelector?: string): Culture {
-        if (cultureSelector == null) {
+    public getCulture(cultureOrCultureSelector?: string|Culture): Culture {
+        function isCultureObject(o): o is Culture {
+            if(o != null && typeof o === "object" && o.name !== undefined && o.calendar !== undefined) {
+                return true;
+            }
+            return false;
+        }
+        
+        if(isCultureObject(cultureOrCultureSelector)) {
+            return cultureOrCultureSelector;
+        } else if (cultureOrCultureSelector == null) {
             if (this._currentCulture == null) {
                 this.initialize();
             }
             return this._currentCulture;
         } else {
-            let culture = Globalize.findClosestCulture(cultureSelector);
+            let culture = Globalize.findClosestCulture(cultureOrCultureSelector);
             if (!culture)
                 culture = Globalize.culture("en-US");
             return culture;
