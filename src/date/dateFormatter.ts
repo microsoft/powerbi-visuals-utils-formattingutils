@@ -96,7 +96,7 @@ export default class DateFormatter {
                 tt:   H < 12 ? "AM" : "PM",
                 T:    H < 12 ? "A"  : "P",
                 TT:   H < 12 ? "AM" : "PM",
-                Z:    utc ? "UTC" : (String(date).match(DateFormatter.timezone) || [""]).pop().replace(DateFormatter.timezoneClip, ""),
+                Z:    utc ? "UTC" : (String(date).match(DateFormatter.timezone) || [""]).pop()?.replace(DateFormatter.timezoneClip, ""),
                 o:    (o > 0 ? "-" : "+") + DateFormatter.pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
                 S:    ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : <any>(d % 100 - d % 10 !== 10) * d % 10]
             };

@@ -25,129 +25,126 @@
  */
 
 // dateUtils module provides DateTimeSequence with set of additional date manipulation routines
-export module dateUtils {
-    let MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    let MonthDaysLeap = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const MonthDaysLeap = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    /**
-     * Returns bool indicating weither the provided year is a leap year.
-     * @param year - year value
-     */
-    function isLeap(year: number): boolean {
-        return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+/**
+ * Returns bool indicating weither the provided year is a leap year.
+ * @param year - year value
+ */
+function isLeap(year: number): boolean {
+    return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+}
+
+/**
+ * Returns number of days in the provided year/month.
+ * @param year - year value
+ * @param month - month value
+ */
+function getMonthDays(year: number, month: number) {
+    return isLeap(year) ? MonthDaysLeap[month] : MonthDays[month];
+}
+/**
+ * Adds a specified number of years to the provided date.
+ * @param date - date value
+ * @param yearDelta - number of years to add
+ */
+export function addYears(date: Date, yearDelta: number): Date {
+    let year = date.getFullYear();
+    const month = date.getMonth();
+    let day = date.getDate();
+    const isLeapDay = month === 2 && day === 29;
+
+    const result = new Date(date.getTime());
+    year = year + yearDelta;
+    if (isLeapDay && !isLeap(year)) {
+        day = 28;
+    }
+    result.setFullYear(year, month, day);
+    return result;
+}
+
+/**
+ * Adds a specified number of months to the provided date.
+ * @param date - date value
+ * @param monthDelta - number of months to add
+ */
+export function addMonths(date: Date, monthDelta: number): Date {
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let day = date.getDate();
+
+    const result = new Date(date.getTime());
+    year += (monthDelta - (monthDelta % 12)) / 12;
+    month += monthDelta % 12;
+
+    // VSTS 1325771: Certain column charts don't display any data
+    // Wrap arround the month if is after december (value 11)
+    if (month > 11) {
+        month = month % 12;
+        year++;
     }
 
-    /**
-     * Returns number of days in the provided year/month.
-     * @param year - year value
-     * @param month - month value
-     */
-    function getMonthDays(year: number, month: number) {
-        return isLeap(year) ? MonthDaysLeap[month] : MonthDays[month];
-    }
+    day = Math.min(day, getMonthDays(year, month));
+    result.setFullYear(year, month, day);
+    return result;
+}
 
-    /**
-     * Adds a specified number of years to the provided date.
-     * @param date - date value
-     * @param yearDelta - number of years to add
-     */
-    export function addYears(date: Date, yearDelta: number): Date {
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let day = date.getDate();
-        let isLeapDay = month === 2 && day === 29;
+/**
+ * Adds a specified number of weeks to the provided date.
+ * @param date - date value
+ * @param weeks - number of weeks to add
+ */
+export function addWeeks(date: Date, weeks: number): Date {
+    return addDays(date, weeks * 7);
+}
 
-        let result = new Date(date.getTime());
-        year = year + yearDelta;
-        if (isLeapDay && !isLeap(year)) {
-            day = 28;
-        }
-        result.setFullYear(year, month, day);
-        return result;
-    }
+/**
+ * Adds a specified number of days to the provided date.
+ * @param date - date value
+ * @param days - number of days to add
+ */
+export function addDays(date: Date, days: number): Date {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const result = new Date(date.getTime());
+    result.setFullYear(year, month, day + days);
+    return result;
+}
 
-    /**
-     * Adds a specified number of months to the provided date.
-     * @param date - date value
-     * @param monthDelta - number of months to add
-     */
-    export function addMonths(date: Date, monthDelta: number): Date {
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let day = date.getDate();
+/**
+ * Adds a specified number of hours to the provided date.
+ * @param date - date value
+ * @param hours - number of hours to add
+ */
+export function addHours(date: Date, hours: number): Date {
+    return new Date(date.getTime() + hours * 3600000);
+}
 
-        let result = new Date(date.getTime());
-        year += (monthDelta - (monthDelta % 12)) / 12;
-        month += monthDelta % 12;
+/**
+ * Adds a specified number of minutes to the provided date.
+ * @param date - date value
+ * @param minutes - number of minutes to add
+ */
+export function addMinutes(date: Date, minutes: number): Date {
+    return new Date(date.getTime() + minutes * 60000);
+}
 
-        // VSTS 1325771: Certain column charts don't display any data
-        // Wrap arround the month if is after december (value 11)
-        if (month > 11) {
-            month = month % 12;
-            year++;
-        }
+/**
+ * Adds a specified number of seconds to the provided date.
+ * @param date - date value
+ * @param seconds - number of seconds to add
+ */
+export function addSeconds(date: Date, seconds: number): Date {
+    return new Date(date.getTime() + seconds * 1000);
+}
 
-        day = Math.min(day, getMonthDays(year, month));
-        result.setFullYear(year, month, day);
-        return result;
-    }
-
-    /**
-     * Adds a specified number of weeks to the provided date.
-     * @param date - date value
-     * @param weeks - number of weeks to add
-     */
-    export function addWeeks(date: Date, weeks: number): Date {
-        return addDays(date, weeks * 7);
-    }
-
-    /**
-     * Adds a specified number of days to the provided date.
-     * @param date - date value
-     * @param days - number of days to add
-     */
-    export function addDays(date: Date, days: number): Date {
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let day = date.getDate();
-        let result = new Date(date.getTime());
-        result.setFullYear(year, month, day + days);
-        return result;
-    }
-
-    /**
-     * Adds a specified number of hours to the provided date.
-     * @param date - date value
-     * @param hours - number of hours to add
-     */
-    export function addHours(date: Date, hours: number): Date {
-        return new Date(date.getTime() + hours * 3600000);
-    }
-
-    /**
-     * Adds a specified number of minutes to the provided date.
-     * @param date - date value
-     * @param minutes - number of minutes to add
-     */
-    export function addMinutes(date: Date, minutes: number): Date {
-        return new Date(date.getTime() + minutes * 60000);
-    }
-
-    /**
-     * Adds a specified number of seconds to the provided date.
-     * @param date - date value
-     * @param seconds - number of seconds to add
-     */
-    export function addSeconds(date: Date, seconds: number): Date {
-        return new Date(date.getTime() + seconds * 1000);
-    }
-
-    /**
-     * Adds a specified number of milliseconds to the provided date.
-     * @param date - date value
-     * @param milliseconds - number of milliseconds to add
-     */
-    export function addMilliseconds(date: Date, milliseconds: number): Date {
-        return new Date(date.getTime() + milliseconds);
-    }
+/**
+ * Adds a specified number of milliseconds to the provided date.
+ * @param date - date value
+ * @param milliseconds - number of milliseconds to add
+ */
+export function addMilliseconds(date: Date, milliseconds: number): Date {
+    return new Date(date.getTime() + milliseconds);
 }

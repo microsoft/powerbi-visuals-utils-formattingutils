@@ -37,7 +37,7 @@ const srcRecursivePath = "lib/**/*.js";
 const srcCssRecursivePath = "lib/**/*.css";
 const coverageFolder = "coverage";
 
-process.env.CHROME_BIN = require("puppeteer").executablePath();
+process.env.CHROME_BIN = require("playwright").chromium.executablePath();
 module.exports = (config: Config) => {
     config.set(<ConfigOptions>{
         browsers: ["ChromeHeadless"],
@@ -54,7 +54,6 @@ module.exports = (config: Config) => {
         },
         singleRun: true,
         plugins: [
-            "karma-remap-istanbul",
             "karma-coverage",
             "karma-typescript",
             "karma-webpack",
@@ -64,8 +63,6 @@ module.exports = (config: Config) => {
             "karma-coverage-istanbul-reporter"
         ],
         files: [
-            "node_modules/jquery/dist/jquery.min.js",
-            "node_modules/jasmine-jquery/lib/jasmine-jquery.js",
             srcCssRecursivePath,
             srcRecursivePath,
             testRecursivePath,

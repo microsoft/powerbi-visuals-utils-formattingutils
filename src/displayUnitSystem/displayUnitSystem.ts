@@ -24,6 +24,7 @@
  *  THE SOFTWARE.
  */
 
+/* eslint-disable no-useless-escape */
 import { numberFormat as NumberFormat, formattingService}  from "./../formattingService/formattingService";
 
 import { double as Double } from "powerbi-visuals-utils-typeutils";
@@ -82,7 +83,7 @@ export class DisplayUnit {
 
     public isApplicableTo(value: number): boolean {
         value = Math.abs(value);
-        let precision = Double.getPrecision(value, 3);
+        const precision = Double.getPrecision(value, 3);
         return Double.greaterOrEqualWithPrecision(value, this.applicableRangeMin, precision) && Double.lessWithPrecision(value, this.applicableRangeMax, precision);
     }
 
@@ -118,7 +119,7 @@ export class DisplayUnitSystem {
     }
 
     private findApplicableDisplayUnit(value: number): DisplayUnit {
-        for (let unit of this.units) {
+        for (const unit of this.units) {
             if (unit.isApplicableTo(value))
                 return unit;
         }
@@ -131,8 +132,8 @@ export class DisplayUnitSystem {
         format: string,
         decimals?: number,
         trailingZeros?: boolean,
-        cultureSelector?: string): string {
-
+        cultureSelector?: string
+    ): string {
         decimals = this.getNumberOfDecimalsForFormatting(format, decimals);
 
         let nonScientificFormat: string = "";
@@ -140,12 +141,12 @@ export class DisplayUnitSystem {
         if (this.isFormatSupported(format)
             && !this.hasScientitifcFormat(format)
             && this.isScalingUnit()
-            && this.shouldRespectScalingUnit(format)) {
+            && this.shouldRespectScalingUnit(format)
+        ) {
 
             value = this.displayUnit.project(value);
             nonScientificFormat = this.displayUnit.labelFormat;
         }
-
         return this.formatHelper({
             value,
             nonScientificFormat,
@@ -177,15 +178,16 @@ export class DisplayUnitSystem {
     }
 
     private formatHelper(options: FormattingOptions) {
-        let {
+        const {
             value,
-            nonScientificFormat,
             cultureSelector,
-            format,
             decimals,
             trailingZeros
         } = options;
-
+        let {
+            nonScientificFormat,
+            format
+        } = options
         // If the format is "general" and we want to override the number of decimal places then use the default numeric format string.
         if ((format === "g" || format === "G") && decimals != null) {
             format = "#,0.00";
@@ -193,13 +195,14 @@ export class DisplayUnitSystem {
 
         format = NumberFormat.addDecimalsToFormat(format, decimals, trailingZeros);
 
-        if (format && !formattingService.isStandardNumberFormat(format))
+        if (format && !formattingService.isStandardNumberFormat(format)) {
             return formattingService.formatNumberWithCustomOverride(
                 value,
                 format,
                 nonScientificFormat,
                 cultureSelector
-        );
+            );
+        }
 
         if (!format) {
             format = "G";
@@ -209,7 +212,7 @@ export class DisplayUnitSystem {
             nonScientificFormat = "{0}";
         }
 
-        let text: string = formattingService.formatValue(value, format, cultureSelector);
+        const text: string = formattingService.formatValue(value, format, cultureSelector);
 
         return formattingService.format(nonScientificFormat, [text]);
     }
@@ -220,7 +223,8 @@ export class DisplayUnitSystem {
         format: string,
         decimals?: number,
         trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        cultureSelector?: string
+    ): string {
         // Change unit base to a value appropriate for this value
         this.update(this.shouldUseValuePrecision(value) ? Double.getPrecision(value, 8) : value);
 
@@ -306,7 +310,8 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
         format: string,
         decimals?: number,
         trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        cultureSelector?: string
+    ): string {
 
         format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
@@ -366,7 +371,8 @@ export class WholeUnitsDisplayUnitSystem extends DisplayUnitSystem {
         format: string,
         decimals?: number,
         trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        cultureSelector?: string
+    ): string {
         format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
         return super.format(data, format, decimals, trailingZeros, cultureSelector);
@@ -392,8 +398,8 @@ export class DataLabelsDisplayUnitSystem extends DisplayUnitSystem {
 
     private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames): DisplayUnit[] {
         if (!DataLabelsDisplayUnitSystem.units) {
-            let units = [];
-            let adjustMinBasedOnPreviousUnit = (value: number, previousUnitValue: number, min: number): number => {
+            const units = [];
+            const adjustMinBasedOnPreviousUnit = (value: number, previousUnitValue: number, min: number): number => {
                 // Never returns true, we are always ignoring
                 // We do not early switch (e.g. 100K instead of 0.1M)
                 // Intended? If so, remove this function, otherwise, remove if statement
@@ -425,7 +431,8 @@ export class DataLabelsDisplayUnitSystem extends DisplayUnitSystem {
         format: string,
         decimals?: number,
         trailingZeros?: boolean,
-        cultureSelector?: string): string {
+        cultureSelector?: string
+    ): string {
         format = this.getScientificFormat(data, format, decimals, trailingZeros);
 
         return super.format(data, format, decimals, trailingZeros, cultureSelector);
@@ -438,9 +445,9 @@ export interface DisplayUnitSystemNames {
 }
 
 function createDisplayUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames, adjustMinBasedOnPreviousUnit?: (value: number, previousUnitValue: number, min: number) => number) {
-    let units = [];
+    const units = [];
     for (let i = 3; i < maxExponent; i++) {
-        let names = unitLookup(i);
+        const names = unitLookup(i);
         if (names)
             addUnitIfNonEmpty(units, Double.pow10(i), names.title, names.format, adjustMinBasedOnPreviousUnit);
     }
@@ -453,19 +460,20 @@ function addUnitIfNonEmpty(
     value: number,
     title: string,
     labelFormat: string,
-    adjustMinBasedOnPreviousUnit?: (value: number, previousUnitValue: number, min: number) => number): void {
+    adjustMinBasedOnPreviousUnit?: (value: number, previousUnitValue: number, min: number) => number
+): void {
     if (title || labelFormat) {
         let min = value;
 
         if (units.length > 0) {
-            let previousUnit = units[units.length - 1];
+            const previousUnit = units[units.length - 1];
 
             if (adjustMinBasedOnPreviousUnit)
                 min = adjustMinBasedOnPreviousUnit(value, previousUnit.value, min);
 
             previousUnit.applicableRangeMax = min;
         }
-        let unit = new DisplayUnit();
+        const unit = new DisplayUnit();
         unit.value = value;
         unit.applicableRangeMin = min;
         unit.applicableRangeMax = min * 1000;

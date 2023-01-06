@@ -1,7 +1,7 @@
 import * as formatting from "./formatting";
 import * as valueFormatter from "./valueFormatter";
 import * as stringExtensions from "./stringExtensions";
-import { textMeasurementService } from "./textMeasurementService";
+import { textMeasurementService, TextMeasurementService } from "./textMeasurementService";
 import * as interfaces from "./interfaces";
 import * as font from "./font/family";
 import * as familyInfo from "./font/familyInfo";
@@ -14,5 +14,5 @@ import * as formattingService  from "./formattingService/formattingService";
 import * as wordBreaker from "./wordBreaker";
 
 export {
-    interfaces, formatting, valueFormatter, stringExtensions, textMeasurementService, textUtil, wordBreaker, dateUtils, displayUnitSystem, dateTimeSequence, displayUnitSystemType, formattingService, font, familyInfo
+    interfaces, formatting, valueFormatter, stringExtensions, textMeasurementService, TextMeasurementService, textUtil, wordBreaker, dateUtils, displayUnitSystem, dateTimeSequence, displayUnitSystemType, formattingService, font, familyInfo
 };

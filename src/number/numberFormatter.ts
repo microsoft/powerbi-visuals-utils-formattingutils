@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default class NumberFormatter {
 
     static  expandNumber( number_, precision, formatInfo ) {
@@ -25,7 +26,7 @@ export default class NumberFormatter {
         if ( exponent > 0 ) {
             right = NumberFormatter.zeroPad( right, exponent, false );
             numberString += right.slice( 0, exponent );
-            right = right.substr( exponent );
+            right = right.substring( exponent );
         }
         else if ( exponent < 0 ) {
             exponent = -exponent;
