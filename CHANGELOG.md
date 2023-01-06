@@ -1,3 +1,9 @@
+## 5.0.0
+* Packages update
+* Vulnerabilities fixes
+* Migrated to playwright
+* Migrated to Webpack 5
+
 ## 4.7.1
 * Packages update
 * Vulnerabilities fixes
