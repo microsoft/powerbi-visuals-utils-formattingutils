@@ -29,8 +29,7 @@
 * CSS text-overflow property with value ellipsis was truncating the text visually
 * This function verifies the width and visual truncation are working appropriately
 */
-export default function verifyEllipsisActive($element: JQuery): void {
-    let element = $element.get(0);
-    expect($element.css("textOverflow")).toBe("ellipsis");
+export default function verifyEllipsisActive(element: HTMLElement): void {
+    expect(getComputedStyle(element)["textOverflow"]).toBe("ellipsis");
     expect(element.offsetWidth).toBeLessThan(element.scrollWidth);
 }

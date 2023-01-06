@@ -27,8 +27,6 @@
 import * as wordBreaker from "./../src/wordBreaker";
 import { TextProperties } from "./../src/interfaces";
 import { textMeasurementService } from "./../src/textMeasurementService";
-import lodashEvery from "lodash.every";
-import lodashRange from "lodash.range";
 
 describe("WordBreaker", () => {
 
@@ -39,18 +37,19 @@ describe("WordBreaker", () => {
         let one = "nobreakstoseehere";
         let content = "abcd efgh\nijkl mnop";
 
+        function getRange(start: number, end: number): number[]{
+            return Array.from(Array(end).keys()).slice(start)
+        }
+
         function getWordBreakerResultsBetweenIndeces(content: string, start: number, end: number): wordBreaker.WordBreakerResult[] {
-            return lodashRange(start, end).map((index) => {
+            return getRange(start, end).map((index) => {
                 return wordBreaker.find(index, content);
             });
         }
 
         function areAllSame(results: wordBreaker.WordBreakerResult[]): boolean {
-            let result = results[0];
-            return lodashEvery(results, {
-                start: result.start,
-                end: result.end
-            });
+            const result = results[0];
+            return !results.some(el => el.start !== result.start && el.end !== result.end)
         }
 
         function testWordBreakerBetweenIndeces(content: string, start: number, end: number): wordBreaker.WordBreakerResult {
@@ -258,7 +257,7 @@ describe("WordBreaker", () => {
 
         it("has truncator", () => {
             let truncator = (properties: TextProperties, maxWidth: number) => {
-                return properties.text.slice(0, -1) + "…";
+                return properties.text?.slice(0, -1) + "…";
             };
 
             words = wordBreaker.splitByWidth("abcd efg hijk lmn opqr stu vwx yz", textProperties, textWidthMeasurer, 75, 0, truncator);

@@ -51,11 +51,11 @@ describe("textUtil", () => {
 
     describe("replaceSpaceWithNBSP", () => {
         it("should return undefined if the given string is undefined", () => {
-            const expectedValue: string = undefined;
+            const expectedValue = undefined;
 
-            const actualValue: string = textUtil.replaceSpaceWithNBSP(expectedValue);
+            const actualValue: string = textUtil.replaceSpaceWithNBSP(<any>expectedValue);
 
-            expect(actualValue).toBe(expectedValue);
+            expect(actualValue).toBe(<any>expectedValue);
         });
 
         it("should replace white spaces", () => {
