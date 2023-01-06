@@ -51,7 +51,7 @@
     "karma-webpack": "5.0.0",
     "less": "4.1.3",
     "lodash.clonedeep": "4.5.0",
-    "playwright": "^1.29.1",
+    "playwright-chromium": "^1.29.1",
     "powerbi-visuals-api": "5.2.0",
     "powerbi-visuals-utils-testutils": "3.2.1",
     "eslint-plugin-powerbi-visuals": "^0.8.1",

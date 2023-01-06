@@ -135,6 +135,7 @@ export function splitByWidth(
     maxNumLines: number,
     truncator?: ITextTruncator): string[] {
     // Default truncator returns string as-is
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     truncator = truncator ? truncator : (properties: TextProperties, maxWidth: number) => properties.text;
 
     const result: string[] = [];

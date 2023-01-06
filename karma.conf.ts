@@ -29,17 +29,15 @@
 const webpackConfig = require("./webpack.config.js");
 const tsconfig = require("./tsconfig.json");
 
-import { Config, ConfigOptions } from "karma";
-
 const testRecursivePath = "test/**/*.ts";
 const srcOriginalRecursivePath = "src/**/*.ts";
 const srcRecursivePath = "lib/**/*.js";
 const srcCssRecursivePath = "lib/**/*.css";
 const coverageFolder = "coverage";
 
-process.env.CHROME_BIN = require("playwright").chromium.executablePath();
-module.exports = (config: Config) => {
-    config.set(<ConfigOptions>{
+process.env.CHROME_BIN = require("playwright-chromium").chromium.executablePath();
+module.exports = (config) => {
+    config.set({
         browsers: ["ChromeHeadless"],
         colors: true,
         frameworks: ["jasmine"],

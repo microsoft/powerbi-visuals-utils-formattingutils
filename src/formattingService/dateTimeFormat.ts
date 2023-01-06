@@ -47,7 +47,7 @@ export function canFormat(value: any) {
 // Formats the date using provided format and culture
 export function format(value: Date, format: string, culture: Culture): string {
     format = format || "G";
-    let isStandard = format.length === 1;
+    const isStandard = format.length === 1;
     try {
         if (isStandard) {
             return formatDateStandard(value, format, culture);
@@ -62,11 +62,11 @@ export function format(value: Date, format: string, culture: Culture): string {
 // Formats the date using standard format expression
 function formatDateStandard(value: Date, format: string, culture: Culture) {
     // In order to provide parity with .NET we have to support additional set of DateTime patterns.
-    let patterns = culture.calendar.patterns;
+    const patterns = culture.calendar.patterns;
     // Extend supported set of patterns
     ensurePatterns(culture.calendar);
     // Handle extended set of formats
-    let output = findDateFormat(value, format, culture.name);
+    const output = findDateFormat(value, format, culture.name);
     if (output.format.length === 1)
         format = patterns[output.format];
     else
@@ -81,14 +81,14 @@ function formatDateStandard(value: Date, format: string, culture: Culture) {
 // Formats the date using custom format expression
 function formatDateCustom(value: Date, format: string, culture: Culture): string {
     let result: string;
-    let literals: string[] = [];
+    const literals: string[] = [];
     format = formattingEncoder.preserveLiterals(format, literals);
     if (format.indexOf("F") > -1) {
         // F is not supported so we need to replace the F with f based on the milliseconds
         // Replace all sequences of F longer than 3 with "FFF"
         format = stringExtensions.replaceAll(format, "FFFF", "FFF");
         // Based on milliseconds update the format to use fff
-        let milliseconds = value.getMilliseconds();
+        const milliseconds = value.getMilliseconds();
         if (milliseconds % 10 >= 1) {
             format = stringExtensions.replaceAll(format, "FFF", "fff");
         }
@@ -124,14 +124,14 @@ function processCustomDateTimeFormat(format: string): string {
 
 // Localizes the time separator symbol
 function localize(value: string, dictionary: any): string {
-    let timeSeparator = dictionary[":"];
+    const timeSeparator = dictionary[":"];
     if (timeSeparator === ":") {
         return value;
     }
     let result = "";
-    let count = value.length;
+    const count = value.length;
     for (let i = 0; i < count; i++) {
-        let char = value.charAt(i);
+        const char = value.charAt(i);
         switch (char) {
             case ":":
                 result += timeSeparator;
@@ -145,7 +145,7 @@ function localize(value: string, dictionary: any): string {
 }
 
 function ensurePatterns(calendar: GlobalizeCalendar) {
-    let patterns = calendar.patterns;
+    const patterns = calendar.patterns;
     if (patterns["g"] === undefined) {
         patterns["g"] = patterns["f"].replace(patterns["D"], patterns["d"]);  // Generic: Short date, short time
         patterns["G"] = patterns["F"].replace(patterns["D"], patterns["d"]);  // Generic: Short date, long time

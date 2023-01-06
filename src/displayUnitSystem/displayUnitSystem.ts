@@ -165,6 +165,7 @@ export class DisplayUnitSystem {
         return format && format.indexOf(PERCENTAGE_FORMAT) >= 0;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     public shouldRespectScalingUnit(format: string): boolean {
         return true;
     }
