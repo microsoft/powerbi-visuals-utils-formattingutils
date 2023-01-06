@@ -28,6 +28,7 @@
     "build": "tsc",
     "postbuild": "npm run lessc",
     "test": "karma start",
+    "pretest": "npm run lint",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "lintfix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "lessc": "lessc src/styles/style.less lib/index.css"
@@ -36,6 +37,7 @@
     "@types/jasmine": "4.3.1",
     "@types/karma": "6.3.3",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "eslint": "^8.1.0",
     "coverage-istanbul-loader": "^3.0.5",
     "coveralls": "3.1.1",
     "jasmine": "4.5.0",
