@@ -1,4 +1,3 @@
-/* tslint:disable */
 export interface GlobalizeCulture {
     name: string;
     calendar: GlobalizeCalendar;
@@ -306,7 +305,7 @@ arrayIndexOf = function (array, item) {
 };
 
 endsWith = function (value, pattern) {
-    return value.substr(value.length - pattern.length) === pattern;
+    return value.substring(value.length - pattern.length) === pattern;
 };
 
 extend = function (deep) {
@@ -495,7 +494,7 @@ formatDate = function (value, format, culture) {
         var r, s = num + "";
         if (c > 1 && s.length < c) {
             r = (zeros[c - 2] + s);
-            return r.substr(r.length - c, c);
+            return r.substring(r.length - c, r.length);
         }
         else {
             r = s;
@@ -650,7 +649,7 @@ formatDate = function (value, format, culture) {
             case "fff":
                 // Milliseconds
                 ret.push(
-                    padZeros(value.getMilliseconds(), 3).substr(0, clength)
+                    padZeros(value.getMilliseconds(), 3).substring(0, clength)
                 );
                 break;
             case "z":
@@ -719,7 +718,7 @@ formatDate = function (value, format, culture) {
         if (exponent > 0) {
             right = zeroPad(right, exponent, false);
             numberString += right.slice(0, exponent);
-            right = right.substr(exponent);
+            right = right.substring(exponent);
         }
         else if (exponent < 0) {
             exponent = -exponent;
@@ -1230,10 +1229,10 @@ parseNegativePattern = function (value, nf, negativePattern) {
         // fall through
         case "n-":
             if (endsWith(value, neg)) {
-                ret = ["-", value.substr(0, value.length - neg.length)];
+                ret = ["-", value.substring(0, value.length - neg.length)];
             }
             else if (endsWith(value, pos)) {
-                ret = ["+", value.substr(0, value.length - pos.length)];
+                ret = ["+", value.substring(0, value.length - pos.length)];
             }
             break;
         case "- n":
@@ -1242,15 +1241,15 @@ parseNegativePattern = function (value, nf, negativePattern) {
         // fall through
         case "-n":
             if (startsWith(value, neg)) {
-                ret = ["-", value.substr(neg.length)];
+                ret = ["-", value.substring(neg.length)];
             }
             else if (startsWith(value, pos)) {
-                ret = ["+", value.substr(pos.length)];
+                ret = ["+", value.substring(pos.length)];
             }
             break;
         case "(n)":
             if (startsWith(value, "(") && endsWith(value, ")")) {
-                ret = ["-", value.substr(1, value.length - 2)];
+                ret = ["-", value.substring(1, value.length - 1)];
             }
             break;
     }
@@ -1348,7 +1347,7 @@ Globalize.findClosestCulture = function (name) {
             else {
                 name = trim(parts[1]);
                 if (name.indexOf("q=") === 0) {
-                    name = name.substr(2);
+                    name = name.substring(2);
                     pri = parseFloat(name);
                     pri = isNaN(pri) ? 0 : pri;
                 }
@@ -1380,7 +1379,7 @@ Globalize.findClosestCulture = function (name) {
                     break;
                 }
                 // strip off the last part. e.g. en-US => en
-                lang = lang.substr(0, index);
+                lang = lang.substring(0, index);
                 match = cultures[lang];
                 if (match) {
                     return match;
@@ -1510,8 +1509,8 @@ Globalize.parseFloat = function (value, radix, cultureSelector) {
             exponent = null;
         }
         else {
-            intAndFraction = num.substr(0, exponentPos);
-            exponent = num.substr(exponentPos + 1);
+            intAndFraction = num.substring(0, exponentPos);
+            exponent = num.substring(exponentPos + 1);
         }
         // determine decimal position
         var integer,
@@ -1523,8 +1522,8 @@ Globalize.parseFloat = function (value, radix, cultureSelector) {
             fraction = null;
         }
         else {
-            integer = intAndFraction.substr(0, decimalPos);
-            fraction = intAndFraction.substr(decimalPos + decSep.length);
+            integer = intAndFraction.substring(0, decimalPos);
+            fraction = intAndFraction.substring(decimalPos + decSep.length);
         }
         // handle groups (e.g. 1,000,000)
         var groupSep = nf[","];

@@ -23,6 +23,7 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
+/* eslint-disable no-useless-escape */
 
 interface IRegexInt {
     // Regex for replace.
@@ -39,7 +40,7 @@ export interface DateFormat {
 }
 
 /**
- * Translate .NET format into something supported by jQuery.Globalize.
+ * Translate .NET format into something supported by Globalize.
  */
 export function findDateFormat(value: Date, format: string, cultureName: string): DateFormat {
     switch (format) {
@@ -90,7 +91,7 @@ export function findDateFormat(value: Date, format: string, cultureName: string)
 }
 
 /**
- * Translates unsupported .NET custom format expressions to the custom expressions supported by JQuery.Globalize.
+ * Translates unsupported .NET custom format expressions to the custom expressions supported by Globalize.
  */
 export function fixDateTimeFormat(format: string): string {
     // Fix for the "K" format (timezone):

@@ -43,7 +43,7 @@ export class FamilyInfo {
             return null;
         }
         if (regex) {
-            for (let fontFamily of this.families) {
+            for (const fontFamily of this.families) {
                 if (regex.test(fontFamily)) {
                     return fontFamily;
                 }

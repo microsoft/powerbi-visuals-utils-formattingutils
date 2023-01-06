@@ -24,7 +24,6 @@
 *  THE SOFTWARE.
 */
 
-// tslint:disable-next-line
 import powerbi from "powerbi-visuals-api";
 // powerbi
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
@@ -40,34 +39,35 @@ import { DisplayUnitSystemType } from "./../src/displayUnitSystem/displayUnitSys
 import { valueFormatter } from "./../src/index";
 
 describe("ValueFormatter", () => {
+    let nullableString = <any>null;
     describe("calculateExactDigitsPrecision", () => {
         it("should return 0 if value is not valid and digits are 3", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(NaN, null, 0, 3);
+            const res = valueFormatter.calculateExactDigitsPrecision(NaN, nullableString, 0, 3);
             expect(res).toBe(0);
         });
 
         it("should return 1 for 12340 if display units are auto and digits are 3", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(12340, null, 0, 3);
+            const res = valueFormatter.calculateExactDigitsPrecision(12340, nullableString, 0, 3);
             expect(res).toBe(1);
         });
 
         it("should return 2 for 2340 if display units are auto and digits are 3", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(2340, null, 0, 3);
+            const res = valueFormatter.calculateExactDigitsPrecision(2340, nullableString, 0, 3);
             expect(res).toBe(2);
         });
 
         it("should return 0 for 123403 if display units are auto and digits are 3", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(123403, null, 0, 3);
+            const res = valueFormatter.calculateExactDigitsPrecision(123403, nullableString, 0, 3);
             expect(res).toBe(0);
         });
 
         it("should return 2 for 1234035 if display units are auto and digits are 3", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(1234035, null, 0, 3);
+            const res = valueFormatter.calculateExactDigitsPrecision(1234035, nullableString, 0, 3);
             expect(res).toBe(2);
         });
 
         it("should return 0 for 1234035 if display units are thousands and digits are 3", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(1234035, null, 1000, 3);
+            const res = valueFormatter.calculateExactDigitsPrecision(1234035, nullableString, 1000, 3);
             expect(res).toBe(0);
         });
 
@@ -102,32 +102,32 @@ describe("ValueFormatter", () => {
         });
 
         it("should return 1 for 1.3537905 if display units are auto and digits are 2", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(1.3537905, null, 0, 2);
+            const res = valueFormatter.calculateExactDigitsPrecision(1.3537905, nullableString, 0, 2);
             expect(res).toBe(1);
         });
 
         it("should return 3 for 1.3537905 if display units are auto and digits are 4", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(1.3537905, null, 0, 4);
+            const res = valueFormatter.calculateExactDigitsPrecision(1.3537905, nullableString, 0, 4);
             expect(res).toBe(3);
         });
 
         it("should return 1 for 345678 if display units are auto and digits are 4", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(345678, null, 0, 4);
+            const res = valueFormatter.calculateExactDigitsPrecision(345678, nullableString, 0, 4);
             expect(res).toBe(1);
         });
 
         it("should return 6 for 345678 if display units are thousands and digits are 9", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(345678, null, 1000, 9);
+            const res = valueFormatter.calculateExactDigitsPrecision(345678, nullableString, 1000, 9);
             expect(res).toBe(6);
         });
 
         it("should return 8 for 345345678 if display units are milliards and digits are 9", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(345345678, null, 1000000000, 9);
+            const res = valueFormatter.calculateExactDigitsPrecision(345345678, nullableString, 1000000000, 9);
             expect(res).toBe(8);
         });
 
         it("should return 8 for 5345345678 if display units are milliards and digits are 9", () => {
-            const res = valueFormatter.calculateExactDigitsPrecision(5345345678, null, 0, 9);
+            const res = valueFormatter.calculateExactDigitsPrecision(5345345678, nullableString, 0, 9);
             expect(res).toBe(8);
         });
         
@@ -150,29 +150,29 @@ describe("ValueFormatter", () => {
         });
 
         it("target is lesser that bounds with lessMinReplacement as null", () => {
-            const res = valueFormatter.checkValueInBounds(-3, 0, 14, null);
+            const res = valueFormatter.checkValueInBounds(-3, 0, 14, nullableString);
             expect(res).toBeNull();
         });
 
         it("max is undefined", () => {
-            let res = valueFormatter.checkValueInBounds(5, -4, null);
+            let res = valueFormatter.checkValueInBounds(5, -4, nullableString), max;
             expect(res).toBe(5);
 
-            res = valueFormatter.checkValueInBounds(5, -4, undefined);
+            res = valueFormatter.checkValueInBounds(5, -4, max);
             expect(res).toBe(5);
 
-            res = valueFormatter.checkValueInBounds(-5, -4, null, null);
+            res = valueFormatter.checkValueInBounds(-5, -4, nullableString, nullableString);
             expect(res).toBeNull();
         });
 
         it("min is undefined", () => {
-            let res = valueFormatter.checkValueInBounds(5, null, 15);
+            let res = valueFormatter.checkValueInBounds(5, nullableString, 15), min;
             expect(res).toBe(5);
 
-            res = valueFormatter.checkValueInBounds(5, undefined, 15);
+            res = valueFormatter.checkValueInBounds(5, min, 15);
             expect(res).toBe(5);
 
-            res = valueFormatter.checkValueInBounds(-2, null, -3);
+            res = valueFormatter.checkValueInBounds(-2, nullableString, -3);
             expect(res).toBe(-3);
         });
     });
@@ -318,80 +318,80 @@ describe("ValueFormatter", () => {
             };
 
             it("column unspecfied format", () => {
-                let format = getFormatString(null, null);
+                let format = getFormatString(nullableString, nullableString);
 
                 expect(format).toBeUndefined();
             });
 
             it("column (null)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Null));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Null));
 
                 expect(format).toBeUndefined();
             });
 
             it("column (boolean)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Boolean));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Boolean));
 
                 expect(format).toBeUndefined();
             });
 
             it("column (date)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Date));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Date));
 
                 expect(format).toBe(DefaultDateFormat);
             });
 
             it("column (datetime)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.DateTime));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.DateTime));
 
                 expect(format).toBe(DefaultDateFormat);
             });
 
             it("column (time)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Time));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Time));
 
                 expect(format).toBe(DefaultDateFormat);
             });
 
             it("column (integer)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Integer));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Integer));
 
                 expect(format).toBe(DefaultIntegerFormat);
             });
 
             it("column (double)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Double));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Double));
 
                 expect(format).toBe(DefaultNumericFormat);
             });
 
             it("column (decimal)", () => {
-                let format = getFormatString(null, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Decimal));
+                let format = getFormatString(nullableString, ValueType.fromPrimitiveTypeAndCategory(PrimitiveType.Decimal));
 
                 expect(format).toBe(DefaultNumericFormat);
             });
 
             it("column (month)", () => {
-                let format = getFormatString(null, ValueType.fromDescriptor({ temporal: { month: true } }));
+                let format = getFormatString(nullableString, ValueType.fromDescriptor({ temporal: { month: true } }));
 
                 expect(format).toBe(DefaultIntegerFormat);
             });
 
             it("column (year)", () => {
-                let format = getFormatString(null, ValueType.fromDescriptor({ temporal: { year: true } }));
+                let format = getFormatString(nullableString, ValueType.fromDescriptor({ temporal: { year: true } }));
 
                 expect(format).toBe("0");
             });
 
             it("column (text)", () => {
-                let format = getFormatString(null, ValueType.fromDescriptor({ text: true }));
+                let format = getFormatString(nullableString, ValueType.fromDescriptor({ text: true }));
 
                 expect(format).toBeUndefined();
             });
 
             it("column with custom format", () => {
                 let customFormat = "*PBI*";
-                let format = getFormatString(customFormat, null);
+                let format = getFormatString(customFormat, nullableString);
 
                 expect(format).toBe(customFormat);
             });
@@ -535,7 +535,7 @@ describe("ValueFormatter", () => {
             expect(scale.format(null)).toBe("(Blank)");
         });
 
-        it("create Exponent format", () => {
+        it("create Exponent format with format(E)", () => {
             let scale = valueFormatter.create({ format: "E", value: 1e15 });
 
             expect(scale.format(719200000000001920000000000)).toBe("7.192000E+026");
@@ -582,92 +582,79 @@ describe("ValueFormatter", () => {
         });
 
         it("create HundredThousand", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 300000 });
+            let scale = valueFormatter.create({ format: undefined, value: 300000 });
 
             expect(scale.format(300000)).toBe("0.3M");
         });
 
         it("create Million", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000 });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000 });
 
             expect(scale.format(900000000)).toBe("0.9bn");
         });
 
         it("create Billion", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000000 });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000000 });
 
             expect(scale.format(900000000000)).toBe("0.9T");
         });
 
         it("create Trillion", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 9e14, displayUnitSystemType: DisplayUnitSystemType.Default });
+            let scale = valueFormatter.create({ format: undefined, value: 9e14, displayUnitSystemType: DisplayUnitSystemType.Default });
 
             expect(scale.format(9e14)).toBe("900T");
         });
 
         it("create Exponent", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 9e15, displayUnitSystemType: DisplayUnitSystemType.Default });
+            let scale = valueFormatter.create({ format: undefined, value: 9e15, displayUnitSystemType: DisplayUnitSystemType.Default });
 
             expect(scale.format(9e15)).toBe("9E+15");
         });
 
         it("create HundredThousand Whole Units", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 300000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
+            let scale = valueFormatter.create({ format: undefined, value: 300000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
 
             expect(scale.format(300000)).toBe("300K");
         });
 
         it("create Million Whole Units", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
 
             expect(scale.format(900000000)).toBe("900M");
         });
 
         it("create Billion Whole Units", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
 
             expect(scale.format(900000000000)).toBe("900bn");
         });
 
         it("create Trillion Whole Units", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000000000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000000000, displayUnitSystemType: DisplayUnitSystemType.WholeUnits });
 
             expect(scale.format(900000000000000)).toBe("900T");
         });
 
         it("create HundredThousand Verbose (No Units)", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 300000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
+            let scale = valueFormatter.create({ format: undefined, value: 300000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
 
             expect(scale.format(300000)).toBe("300000");
         });
 
         it("create Million Verbose (No Units)", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
 
             expect(scale.format(900000000)).toBe("900000000");
         });
 
         it("create Billion Verbose (No Units)", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
 
             expect(scale.format(900000000000)).toBe("900000000000");
         });
 
         it("create Trillion Verbose (No Units)", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 900000000000000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
+            let scale = valueFormatter.create({ format: undefined, value: 900000000000000, displayUnitSystemType: DisplayUnitSystemType.Verbose });
 
             expect(scale.format(900000000000000)).toBe("900000000000000");
         });
@@ -771,8 +758,7 @@ describe("ValueFormatter", () => {
         });
 
         it("create Boolean", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: false, value2: true, tickCount: 6 });
+            let scale = valueFormatter.create({ format: undefined, value: false, value2: true, tickCount: 6 });
 
             expect(scale.format(true)).toBe("True");
             expect(scale.format(false)).toBe("False");
@@ -780,8 +766,7 @@ describe("ValueFormatter", () => {
         });
 
         it("create Boolean with numeric index values", () => {
-            let format: string;
-            let scale = valueFormatter.create({ format: format, value: 0, value2: 1, tickCount: 6 });
+            let scale = valueFormatter.create({ format: undefined, value: 0, value2: 1, tickCount: 6 });
 
             expect(scale.format(true)).toBe("True");
             expect(scale.format(false)).toBe("False");
@@ -818,8 +803,9 @@ describe("ValueFormatter", () => {
         });
 
         it("formatListAnd wrong parameters values", () => {
-            expect(valueFormatter.formatListAnd(null)).toBeNull();
-            expect(valueFormatter.formatListAnd(undefined)).toBeNull();
+            let strings;
+            expect(valueFormatter.formatListAnd(nullableString)).toBeNull();
+            expect(valueFormatter.formatListAnd(strings)).toBeNull();
         });
 
     });
@@ -834,8 +820,9 @@ describe("ValueFormatter", () => {
         });
 
         it("formatListOr wrong parameters values", () => {
-            expect(valueFormatter.formatListOr(null)).toBeNull();
-            expect(valueFormatter.formatListOr(undefined)).toBeNull();
+            let strings;
+            expect(valueFormatter.formatListOr(nullableString)).toBeNull();
+            expect(valueFormatter.formatListOr(strings)).toBeNull();
         });
     });
 

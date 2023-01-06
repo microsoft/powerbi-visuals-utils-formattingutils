@@ -55,7 +55,7 @@ function search(index: number, content: string, backward: boolean): number {
  * @param content - string to search
 */
 export function find(index: number, content: string): WordBreakerResult {
-    let result = { start: 0, end: 0 };
+    const result = { start: 0, end: 0 };
     if (content.length === 0) {
         return result;
     }
@@ -92,9 +92,9 @@ export function wordCount(content: string): number {
 }
 
 export function getMaxWordWidth(content: string, textWidthMeasurer: ITextAsSVGMeasurer, properties: TextProperties): number {
-    let words = split(content);
+    const words = split(content);
     let maxWidth = 0;
-    for (let w of words) {
+    for (const w of words) {
         properties.text = w;
         maxWidth = Math.max(maxWidth, textWidthMeasurer(properties));
     }
@@ -135,15 +135,16 @@ export function splitByWidth(
     maxNumLines: number,
     truncator?: ITextTruncator): string[] {
     // Default truncator returns string as-is
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     truncator = truncator ? truncator : (properties: TextProperties, maxWidth: number) => properties.text;
 
-    let result: string[] = [];
-    let words = split(content);
+    const result: string[] = [];
+    const words = split(content);
 
     let usedWidth = 0;
     let wordsInLine: string[] = [];
 
-    for (let word of words) {
+    for (const word of words) {
         // Last line? Just add whatever is left
         if ((maxNumLines > 0) && (result.length >= maxNumLines - 1)) {
             wordsInLine.push(word);
@@ -152,7 +153,7 @@ export function splitByWidth(
 
         // Determine width if we add this word
         // Account for SPACE we will add when joining...
-        let wordWidth = wordsInLine.length === 0
+        const wordWidth = wordsInLine.length === 0
             ? getWidth(word, properties, textWidthMeasurer)
             : getWidth(SPACE + word, properties, textWidthMeasurer);
 

@@ -35,7 +35,6 @@ import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 
 // powerbi
-// tslint:disable-next-line
 import powerbi from "powerbi-visuals-api";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
@@ -207,17 +206,17 @@ const defaultLocalizedStrings = {
 };
 
 function beautify(format: string): string {
-    let key = BeautifiedFormat[format];
+    const key = BeautifiedFormat[format];
     if (key)
         return defaultLocalizedStrings[key] || format;
     return format;
 }
 
 function describeUnit(exponent: number): DisplayUnitSystemNames {
-    let exponentLookup = (exponent === -1) ? "Auto" : exponent.toString();
+    const exponentLookup = (exponent === -1) ? "Auto" : exponent.toString();
 
-    let title: string = defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
-    let format: string = (exponent <= 0) ? "{0}" : defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
+    const title: string = defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
+    const format: string = (exponent <= 0) ? "{0}" : defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
 
     if (title || format)
         return { title: title, format: format };
@@ -314,20 +313,20 @@ export function checkValueInBounds(
 
 // Creates an IValueFormatter to be used for a range of values.
 export function create(options: ValueFormatterOptions): IValueFormatter {
-    const format: string = !!options.allowFormatBeautification
+    const format: string = options.allowFormatBeautification
         ? localizationOptions.beautify(options.format)
         : options.format;
 
     const { cultureSelector } = options;
 
     if (shouldUseNumericDisplayUnits(options)) {
-        let displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
+        const displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
 
-        let singleValueFormattingMode = !!options.formatSingleValues;
+        const singleValueFormattingMode = !!options.formatSingleValues;
 
         displayUnitSystem.update(Math.max(Math.abs(options.value || 0), Math.abs(options.value2 || 0)));
 
-        let forcePrecision = options.precision != null;
+        const forcePrecision = options.precision != null;
 
         let decimals: number;
 
@@ -338,7 +337,7 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
 
         return {
             format: (value: any): string => {
-                let formattedValue: string = getStringFormat(value, true /*nullsAreBlank*/);
+                const formattedValue: string = getStringFormat(value, true /*nullsAreBlank*/);
                 if (!StringExtensions.isNullOrUndefinedOrWhiteSpaceString(formattedValue)) {
                     return formattedValue;
                 }
@@ -385,7 +384,7 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
                     return localizationOptions.nullValue;
                 }
 
-                let formatString: string = formattingService.dateFormatString(unit);
+                const formatString: string = formattingService.dateFormatString(unit);
 
                 return formatCore({
                     value,
@@ -409,7 +408,7 @@ export function format(
         return localizationOptions.nullValue;
     }
 
-    const formatString: string = !!allowFormatBeautification
+    const formatString: string = allowFormatBeautification
         ? localizationOptions.beautify(format)
         : format;
 
@@ -478,18 +477,18 @@ export function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSyste
 }
 
 function shouldUseNumericDisplayUnits(options: ValueFormatterOptions): boolean {
-    let value = options.value;
-    let value2 = options.value2;
-    let format = options.format;
+    const value = options.value;
+    const value2 = options.value2;
+    const format = options.format;
     // For singleValue visuals like card, gauge we don't want to roundoff data to the nearest thousands so format the whole number / integers below 10K to not use display units
     if (options.formatSingleValues && format) {
 
         if (Math.abs(value) < MinIntegerValueForDisplayUnits) {
 
-            let isCustomFormat = !NumberFormat.isStandardFormat(format);
+            const isCustomFormat = !NumberFormat.isStandardFormat(format);
 
             if (isCustomFormat) {
-                let precision = NumberFormat.getCustomFormatMetadata(format, true /*calculatePrecision*/).precision;
+                const precision = NumberFormat.getCustomFormatMetadata(format, true /*calculatePrecision*/).precision;
 
                 if (precision < MinPrecisionForDisplayUnits)
                     return false;
@@ -517,13 +516,13 @@ function shouldUseDateUnits(value: any, value2?: any, tickCount?: number): boole
 export function getFormatString(column: DataViewMetadataColumn, formatStringProperty: DataViewObjectPropertyIdentifier, suppressTypeFallback?: boolean): string {
     if (column) {
         if (formatStringProperty) {
-            let propertyValue = dataViewObjects.getValue<string>(column.objects, formatStringProperty);
+            const propertyValue = dataViewObjects.getValue<string>(column.objects, formatStringProperty);
             if (propertyValue)
                 return propertyValue;
         }
 
         if (!suppressTypeFallback) {
-            let columnType = column.type;
+            const columnType = column.type;
             if (columnType) {
                 if (columnType.dateTime)
                     return DefaultDateFormat;
@@ -546,7 +545,7 @@ export function getFormatStringByColumn(column: DataViewMetadataColumn, suppress
         }
 
         if (!suppressTypeFallback) {
-            let columnType: ValueTypeDescriptor = column.type;
+            const columnType: ValueTypeDescriptor = column.type;
 
             if (columnType) {
                 if (columnType.dateTime) {
@@ -578,17 +577,17 @@ function formatListCompound(strings: string[], conjunction: string): string {
         return null;
     }
 
-    let length = strings.length;
+    const length = strings.length;
     if (length > 0) {
         result = strings[0];
-        let lastIndex = length - 1;
+        const lastIndex = length - 1;
         for (let i = 1, len = lastIndex; i < len; i++) {
-            let value = strings[i];
+            const value = strings[i];
             result = StringExtensions.format(localizationOptions.restatementComma, result, value);
         }
 
         if (length > 1) {
-            let value = strings[lastIndex];
+            const value = strings[lastIndex];
             result = StringExtensions.format(conjunction, result, value);
         }
     }
@@ -617,7 +616,7 @@ function formatCore(options: CoreFormattingOptions): string {
         cultureSelector
     } = options;
 
-    let formattedValue: string = getStringFormat(
+    const formattedValue: string = getStringFormat(
         value,
         nullsAreBlank ? nullsAreBlank : false);
 
@@ -657,7 +656,7 @@ function getStringFormat(value: any, nullsAreBlank: boolean): string {
 }
 
 export function getDisplayUnits(displayUnitSystemType: DisplayUnitSystemType): DisplayUnit[] {
-    let displayUnitSystem = createDisplayUnitSystem(displayUnitSystemType);
+    const displayUnitSystem = createDisplayUnitSystem(displayUnitSystemType);
     return displayUnitSystem.units;
 }
 

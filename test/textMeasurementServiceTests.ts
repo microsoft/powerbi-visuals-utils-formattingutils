@@ -28,11 +28,9 @@ import * as stringExtensions from "./../src/stringExtensions";
 import * as ephemeralStorage from "./../src/storageService/ephemeralStorageService";
 import ephemeralStorageService = ephemeralStorage.ephemeralStorageService;
 import verifyEllipsisActive from "./verifyEllipsisActive";
-import * as tms from "./../src/textMeasurementService";
-import textMeasurementService = tms.textMeasurementService;
+import { textMeasurementService } from "./../src/textMeasurementService";
 import { TextProperties } from "../src/interfaces";
-import * as $ from "jquery";
-import lodashClonedeep from "lodash.clonedeep";
+import * as lodashClonedeep from "lodash.clonedeep";
 
 // powerbi.extensibility.utils.test
 import { testDom } from "powerbi-visuals-utils-testutils";
@@ -41,18 +39,18 @@ describe("Text measurement service", () => {
 
     describe("measureSvgTextElementWidth", () => {
         it("svg text element", () => {
-            let element = $("<text>")
-                .text("PowerBI rocks!")
-                .css({
-                    "font-family": "Arial",
-                    "font-size": "11px",
-                    "font-weight": "bold",
-                    "font-style": "italic",
-                    "white-space": "nowrap",
-                });
+            let element = document.createElement("text")
+            element.innerText = "PowerBI rocks!";
+            css(element, {
+                "font-family": "Arial",
+                "font-size": "11px",
+                "font-weight": "bold",
+                "font-style": "italic",
+                "white-space": "nowrap",
+            });
             attachToDom(element);
 
-            let width = textMeasurementService.measureSvgTextElementWidth(<any>element.get(0));
+            let width = textMeasurementService.measureSvgTextElementWidth(element);
             expect(width).toBeGreaterThan(50);
         });
     });
@@ -98,7 +96,7 @@ describe("Text measurement service", () => {
 
         beforeEach(() => {
             ephemeralStorageService["clearCache"]();
-            setDataSpy = spyOn(ephemeralStorageService, <any>"setData");
+            setDataSpy = spyOn(ephemeralStorageService, "setData");
             setDataSpy.and.callThrough();
         });
 
@@ -178,19 +176,19 @@ describe("Text measurement service", () => {
     });
 
     it("getMeasurementProperties", () => {
-        let element = $("<text>")
-            .text("PowerBI rocks!")
-            .css({
-                "font-family": "Arial",
-                "font-size": "11px",
-                "font-weight": "700", // 700 is bold: https://developer.mozilla.org/en/docs/Web/CSS/font-weight
-                "font-style": "italic",
-                "font-variant": "normal",
-                "white-space": "nowrap",
-            });
+        let element = document.createElement("text")
+        element.innerText ="PowerBI rocks!";
+        css(element, {
+            "font-family": "Arial",
+            "font-size": "11px",
+            "font-weight": "700", // 700 is bold: https://developer.mozilla.org/en/docs/Web/CSS/font-weight
+            "font-style": "italic",
+            "font-variant": "normal",
+            "white-space": "nowrap",
+        });
         attachToDom(element);
 
-        let properties = textMeasurementService.getMeasurementProperties(element.get(0));
+        let properties = textMeasurementService.getMeasurementProperties(element);
         let expectedProperties: TextProperties = {
             fontFamily: "Arial",
             fontSize: "11px",
@@ -206,21 +204,21 @@ describe("Text measurement service", () => {
 
     describe("getSvgMeasurementProperties", () => {
         it("svg text element", () => {
-            let svg = $("<svg>");
-            let element = $("<text>")
-                .text("PowerBI rocks!")
-                .css({
-                    "font-family": "Arial",
-                    "font-size": "11px",
-                    "font-weight": "700",
-                    "font-style": "italic",
-                    "font-variant": "normal",
-                    "white-space": "nowrap",
-                });
-            svg.append(element);
+            let svg = document.createElement("svg")
+            let text = document.createElement("text")
+            text.innerText ="PowerBI rocks!";
+            css(text, {
+                "font-family": "Arial",
+                "font-size": "11px",
+                "font-weight": "700",
+                "font-style": "italic",
+                "font-variant": "normal",
+                "white-space": "nowrap",
+            });
+            svg.append(text);
             attachToDom(svg);
 
-            let properties = textMeasurementService.getSvgMeasurementProperties(<any>element[0]);
+            let properties = textMeasurementService.getSvgMeasurementProperties(text);
             let expectedProperties: TextProperties = {
                 fontFamily: "Arial",
                 fontSize: "11px",
@@ -282,7 +280,7 @@ describe("Text measurement service", () => {
             attachToDom(element);
             textMeasurementService.svgEllipsis(element, 20);
 
-            let text = $(element).text();
+            let text = element.textContent || "";
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
         });
 
@@ -292,7 +290,7 @@ describe("Text measurement service", () => {
 
             textMeasurementService.svgEllipsis(element, 200);
 
-            let text = $(element).text();
+            let text = element.textContent || "";
             expect(text).toEqual("PowerBI rocks!");
         });
     });
@@ -305,8 +303,8 @@ describe("Text measurement service", () => {
 
             textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 1 /* maxHeight */);
 
-            let text = $(element).text();
-            expect($(element).find("tspan").length).toBe(1);
+            let text = element.textContent || "";
+            expect(element.querySelectorAll("tspan").length).toBe(1);
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
         });
 
@@ -317,9 +315,9 @@ describe("Text measurement service", () => {
 
             textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
-            let text = $(element).text();
-            expect($(element).find("tspan").length).toBe(2);
-            expect(text.match(RegExp(Ellipsis, "g")).length).toBe(2);
+            let text = element.textContent || "";
+            expect(element.querySelectorAll("tspan").length).toBe(2);
+            expect(text.match(RegExp(Ellipsis, "g"))?.length).toBe(2);
         });
 
         it("with breaks but forced to single line", () => {
@@ -329,8 +327,8 @@ describe("Text measurement service", () => {
 
             textMeasurementService.wordBreak(element, 25 /* maxLength */, 20 * 1 /* maxHeight */);
 
-            let text = $(element).text();
-            expect($(element).find("tspan").length).toBe(1);
+            let text = element.textContent || "";
+            expect(element.querySelectorAll("tspan").length).toBe(1);
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
         });
 
@@ -341,8 +339,8 @@ describe("Text measurement service", () => {
 
             textMeasurementService.wordBreak(element, 25 /* maxLength */, 1 /* maxHeight */);
 
-            let text = $(element).text();
-            expect($(element).find("tspan").length).toBe(1);
+            let text = element.textContent || "";
+            expect(element.querySelectorAll("tspan").length).toBe(1);
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
         });
 
@@ -353,8 +351,8 @@ describe("Text measurement service", () => {
 
             textMeasurementService.wordBreak(element, 75 /* maxLength */, 20 * 3 /* maxHeight */);
 
-            let text = $(element).text();
-            expect($(element).find("tspan").length).toBe(3);
+            let text = element.textContent || "";
+            expect(element.querySelectorAll("tspan").length).toBe(3);
             expect(stringExtensions.endsWith(text, Ellipsis)).toBeTruthy();
         });
     });
@@ -365,10 +363,10 @@ describe("Text measurement service", () => {
             let element = createSpanElement(originalText);
             attachToDom(element);
 
-            textMeasurementService.wordBreakOverflowingText(<any>element[0], 25 /* maxLength */, 20 * 1 /* maxHeight */);
+            textMeasurementService.wordBreakOverflowingText(<any>element, 25 /* maxLength */, 20 * 1 /* maxHeight */);
             let children = getChildren(element);
             expect(children.length).toBe(1);
-            verifyEllipsisActive(children.first());
+            verifyEllipsisActive(children[0] as HTMLElement);
         });
 
         it("with breaks and ellipses", () => {
@@ -376,12 +374,12 @@ describe("Text measurement service", () => {
             let element = createSpanElement(originalText);
             attachToDom(element);
 
-            textMeasurementService.wordBreakOverflowingText(<any>element[0], 25 /* maxLength */, 20 * 2 /* maxHeight */);
+            textMeasurementService.wordBreakOverflowingText(<any>element, 25 /* maxLength */, 20 * 2 /* maxHeight */);
 
             let children = getChildren(element);
             expect(children.length).toBe(2);
-            verifyEllipsisActive(children.first());
-            verifyEllipsisActive(children.last());
+            verifyEllipsisActive(children[0] as HTMLElement);
+            verifyEllipsisActive(children[children.length - 1] as HTMLElement);
         });
 
         it("with breaks but forced to single line", () => {
@@ -389,11 +387,11 @@ describe("Text measurement service", () => {
             let element = createSpanElement(originalText);
             attachToDom(element);
 
-            textMeasurementService.wordBreakOverflowingText(<any>element[0], 25 /* maxLength */, 20 * 1 /* maxHeight */);
+            textMeasurementService.wordBreakOverflowingText(<any>element, 25 /* maxLength */, 20 * 1 /* maxHeight */);
 
             let children = getChildren(element);
             expect(children.length).toBe(1);
-            verifyEllipsisActive(children.first());
+            verifyEllipsisActive(children[0] as HTMLElement);
         });
 
         it("with breaks but forced to single line due to low max height", () => {
@@ -401,11 +399,11 @@ describe("Text measurement service", () => {
             let element = createSpanElement(originalText);
             attachToDom(element);
 
-            textMeasurementService.wordBreakOverflowingText(<any>element[0], 25 /* maxLength */, 1 /* maxHeight */);
+            textMeasurementService.wordBreakOverflowingText(<any>element, 25 /* maxLength */, 1 /* maxHeight */);
 
             let children = getChildren(element);
             expect(children.length).toBe(1);
-            verifyEllipsisActive(children.first());
+            verifyEllipsisActive(children[0] as HTMLElement);
         });
 
         it("with breaks multiple words on each line", () => {
@@ -413,37 +411,35 @@ describe("Text measurement service", () => {
             let element = createSpanElement(originalText);
             attachToDom(element);
 
-            textMeasurementService.wordBreakOverflowingText(<any>element[0], 75 /* maxLength */, 20 * 3 /* maxHeight */);
+            textMeasurementService.wordBreakOverflowingText(<any>element, 75 /* maxLength */, 20 * 3 /* maxHeight */);
 
             let children = getChildren(element);
             expect(children.length).toBe(3);
-            verifyEllipsisActive(children.last());
+            verifyEllipsisActive(children[0] as HTMLElement);
         });
 
-        function getChildren(element: JQuery): JQuery {
-            return $(element).children();
+        function getChildren(element: HTMLElement): Element[] {
+            return Array.from(element.children);
         }
     });
 
-    function attachToDom(element: JQuery | Element): JQuery {
-        let dom = $(testDom("100px", "100px"));
-        dom.append([element]);
+    function attachToDom(element: HTMLElement | Element): HTMLElement {
+        let dom = testDom("100px", "100px");
+        dom.append(element);
         return dom;
     }
 
     function createSvgTextElement(text: string): SVGTextElement {
-        // tslint:disable-next-line
         const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        // tslint:disable-next-line
         const svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
         svgTextElement.textContent = text;
         svgElement.appendChild(svgTextElement);
         return svgTextElement;
     }
 
-    function createSpanElement(text: string): JQuery {
-        let element = $("<span>");
-        element.text(text);
+    function createSpanElement(text: string): HTMLElement {
+        let element = document.createElement("span");
+        element.innerText = text;
 
         return element;
     }
@@ -458,5 +454,10 @@ describe("Text measurement service", () => {
             fontSize: fontSize + "px",
             text: text ? text : "PowerBI rocks!",
         };
+    }
+
+    function css(element, style) {
+        for (const property in style)
+            element.style[property] = style[property];
     }
 });
