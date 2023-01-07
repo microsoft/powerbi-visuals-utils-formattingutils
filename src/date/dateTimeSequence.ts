@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 
-import { dateUtils } from "./dateUtils";
+import * as dateUtils from "./dateUtils";
 
 // powerbi.extensibility.utils.type
 import { numericSequence, numericSequenceRange, double as Double } from "powerbi-visuals-utils-typeutils";
@@ -101,8 +101,8 @@ export class DateTimeSequence {
      * @param max - new max to be covered by sequence
      */
     public moveToCover(min: Date, max: Date): void {
-        let delta: number = DateTimeSequence.getDelta(min, max, this.unit);
-        let count = Math.floor(delta / this.interval);
+        const delta: number = DateTimeSequence.getDelta(min, max, this.unit);
+        const count = Math.floor(delta / this.interval);
         this.min = DateTimeSequence.ADD_INTERVAL(this.min, count * this.interval, this.unit);
 
         this.sequence = [];
@@ -148,12 +148,12 @@ export class DateTimeSequence {
 
     public static CALCULATE_YEARS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range and sequence
-        let yearsRange = NumericSequenceRange.calculateDataRange(dataMin.getFullYear(), dataMax.getFullYear(), false);
+        const yearsRange = NumericSequenceRange.calculateDataRange(dataMin.getFullYear(), dataMax.getFullYear(), false);
 
         // Calculate year sequence
-        let sequence = NumericSequence.calculate(NumericSequenceRange.calculate(0, yearsRange.max - yearsRange.min), expectedCount, 0, null, null, [1, 2, 5]);
-        let newMinYear = Math.floor(yearsRange.min / sequence.interval) * sequence.interval;
-        let date = new Date(newMinYear, 0, 1);
+        const sequence = NumericSequence.calculate(NumericSequenceRange.calculate(0, yearsRange.max - yearsRange.min), expectedCount, 0, null, null, [1, 2, 5]);
+        const newMinYear = Math.floor(yearsRange.min / sequence.interval) * sequence.interval;
+        const date = new Date(newMinYear, 0, 1);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Year);
@@ -161,32 +161,32 @@ export class DateTimeSequence {
 
     public static CALCULATE_MONTHS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range
-        let minYear = dataMin.getFullYear();
-        let maxYear = dataMax.getFullYear();
-        let minMonth = dataMin.getMonth();
-        let maxMonth = (maxYear - minYear) * 12 + dataMax.getMonth();
-        let date = new Date(minYear, 0, 1);
+        const minYear = dataMin.getFullYear();
+        const maxYear = dataMax.getFullYear();
+        const minMonth = dataMin.getMonth();
+        const maxMonth = (maxYear - minYear) * 12 + dataMax.getMonth();
+        const date = new Date(minYear, 0, 1);
 
         // Calculate month sequence
-        let sequence = NumericSequence.calculateUnits(minMonth, maxMonth, expectedCount, [1, 2, 3, 6, 12]);
+        const sequence = NumericSequence.calculateUnits(minMonth, maxMonth, expectedCount, [1, 2, 3, 6, 12]);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Month);
     }
 
     public static CALCULATE_WEEKS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
-        let firstDayOfWeek = 0;
-        let minDayOfWeek = dataMin.getDay();
-        let dayOffset = (minDayOfWeek - firstDayOfWeek + 7) % 7;
-        let minDay = dataMin.getDate() - dayOffset;
+        const firstDayOfWeek = 0;
+        const minDayOfWeek = dataMin.getDay();
+        const dayOffset = (minDayOfWeek - firstDayOfWeek + 7) % 7;
+        const minDay = dataMin.getDate() - dayOffset;
 
         // Calculate range
-        let date = new Date(dataMin.getFullYear(), dataMin.getMonth(), minDay);
-        let min = 0;
-        let max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Week));
+        const date = new Date(dataMin.getFullYear(), dataMin.getMonth(), minDay);
+        const min = 0;
+        const max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Week));
 
         // Calculate week sequence
-        let sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 4, 8]);
+        const sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 4, 8]);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Week);
@@ -194,12 +194,12 @@ export class DateTimeSequence {
 
     public static CALCULATE_DAYS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range
-        let date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate());
-        let min = 0;
-        let max = Double.ceilWithPrecision(DateTimeSequence.getDelta(dataMin, dataMax, DateTimeUnit.Day));
+        const date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate());
+        const min = 0;
+        const max = Double.ceilWithPrecision(DateTimeSequence.getDelta(dataMin, dataMax, DateTimeUnit.Day));
 
         // Calculate day sequence
-        let sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 7, 14]);
+        const sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 7, 14]);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Day);
@@ -207,12 +207,12 @@ export class DateTimeSequence {
 
     public static CALCULATE_HOURS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range
-        let date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate());
-        let min = Double.floorWithPrecision(DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Hour));
-        let max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Hour));
+        const date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate());
+        const min = Double.floorWithPrecision(DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Hour));
+        const max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Hour));
 
         // Calculate hour sequence
-        let sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 3, 6, 12, 24]);
+        const sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 3, 6, 12, 24]);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Hour);
@@ -220,12 +220,12 @@ export class DateTimeSequence {
 
     public static CALCULATE_MINUTES(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range
-        let date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate(), dataMin.getHours());
-        let min = Double.floorWithPrecision(DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Minute));
-        let max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Minute));
+        const date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate(), dataMin.getHours());
+        const min = Double.floorWithPrecision(DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Minute));
+        const max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Minute));
 
         // Calculate minutes numeric sequence
-        let sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 6, 60 * 12, 60 * 24]);
+        const sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 6, 60 * 12, 60 * 24]);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Minute);
@@ -233,12 +233,12 @@ export class DateTimeSequence {
 
     public static CALCULATE_SECONDS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range
-        let date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate(), dataMin.getHours(), dataMin.getMinutes());
-        let min = Double.floorWithPrecision(DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Second));
-        let max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Second));
+        const date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate(), dataMin.getHours(), dataMin.getMinutes());
+        const min = Double.floorWithPrecision(DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Second));
+        const max = Double.ceilWithPrecision(DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Second));
 
         // Calculate minutes numeric sequence
-        let sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 5, 10, 15, 30, 60, 60 * 2, 60 * 5, 60 * 10, 60 * 15, 60 * 30, 60 * 60]);
+        const sequence = NumericSequence.calculateUnits(min, max, expectedCount, [1, 2, 5, 10, 15, 30, 60, 60 * 2, 60 * 5, 60 * 10, 60 * 15, 60 * 30, 60 * 60]);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Second);
@@ -246,12 +246,12 @@ export class DateTimeSequence {
 
     public static CALCULATE_MILLISECONDS(dataMin: Date, dataMax: Date, expectedCount: number): DateTimeSequence {
         // Calculate range
-        let date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate(), dataMin.getHours(), dataMin.getMinutes(), dataMin.getSeconds());
-        let min = DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Millisecond);
-        let max = DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Millisecond);
+        const date = new Date(dataMin.getFullYear(), dataMin.getMonth(), dataMin.getDate(), dataMin.getHours(), dataMin.getMinutes(), dataMin.getSeconds());
+        const min = DateTimeSequence.getDelta(date, dataMin, DateTimeUnit.Millisecond);
+        const max = DateTimeSequence.getDelta(date, dataMax, DateTimeUnit.Millisecond);
 
         // Calculate milliseconds numeric sequence
-        let sequence = NumericSequence.calculate(NumericSequenceRange.calculate(min, max), expectedCount, 0);
+        const sequence = NumericSequence.calculate(NumericSequenceRange.calculate(min, max), expectedCount, 0);
 
         // Convert to date sequence
         return DateTimeSequence.fromNumericSequence(date, sequence, DateTimeUnit.Millisecond);
@@ -280,10 +280,10 @@ export class DateTimeSequence {
     }
 
     private static fromNumericSequence(date: Date, sequence: NumericSequence, unit: DateTimeUnit) {
-        let result = new DateTimeSequence(unit);
+        const result = new DateTimeSequence(unit);
         for (let i = 0; i < sequence.sequence.length; i++) {
-            let x: number = sequence.sequence[i];
-            let d: Date = DateTimeSequence.ADD_INTERVAL(date, x, unit);
+            const x: number = sequence.sequence[i];
+            const d: Date = DateTimeSequence.ADD_INTERVAL(date, x, unit);
             result.add(d);
         }
         result.interval = sequence.interval;
@@ -324,30 +324,30 @@ export class DateTimeSequence {
 
     public static GET_INTERVAL_UNIT(min: Date, max: Date, maxCount: number): DateTimeUnit {
         maxCount = Math.max(maxCount, 2);
-        let totalDays = DateTimeSequence.getDelta(min, max, DateTimeUnit.Day);
+        const totalDays = DateTimeSequence.getDelta(min, max, DateTimeUnit.Day);
         if (totalDays > 356 && totalDays >= 30 * 6 * maxCount)
             return DateTimeUnit.Year;
         if (totalDays > 60 && totalDays > 7 * maxCount)
             return DateTimeUnit.Month;
         if (totalDays > 14 && totalDays > 2 * maxCount)
             return DateTimeUnit.Week;
-        let totalHours = DateTimeSequence.getDelta(min, max, DateTimeUnit.Hour);
+        const totalHours = DateTimeSequence.getDelta(min, max, DateTimeUnit.Hour);
         if (totalDays > 2 && totalHours > 12 * maxCount)
             return DateTimeUnit.Day;
         if (totalHours >= 24 && totalHours >= maxCount)
             return DateTimeUnit.Hour;
-        let totalMinutes = DateTimeSequence.getDelta(min, max, DateTimeUnit.Minute);
+        const totalMinutes = DateTimeSequence.getDelta(min, max, DateTimeUnit.Minute);
         if (totalMinutes > 2 && totalMinutes >= maxCount)
             return DateTimeUnit.Minute;
-        let totalSeconds = DateTimeSequence.getDelta(min, max, DateTimeUnit.Second);
+        const totalSeconds = DateTimeSequence.getDelta(min, max, DateTimeUnit.Second);
         if (totalSeconds > 2 && totalSeconds >= 0.8 * maxCount)
             return DateTimeUnit.Second;
-        let totalMilliseconds = DateTimeSequence.getDelta(min, max, DateTimeUnit.Millisecond);
+        const totalMilliseconds = DateTimeSequence.getDelta(min, max, DateTimeUnit.Millisecond);
         if (totalMilliseconds > 0)
             return DateTimeUnit.Millisecond;
 
         // If the size of the range is 0 we need to guess the unit based on the date's non-zero values starting with milliseconds
-        let date = min;
+        const date = min;
         if (date.getMilliseconds() !== 0)
             return DateTimeUnit.Millisecond;
         if (date.getSeconds() !== 0)

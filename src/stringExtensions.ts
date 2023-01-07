@@ -24,6 +24,7 @@
 *  THE SOFTWARE.
 */
 
+/* eslint-disable no-useless-escape */
 const HtmlTagRegex = new RegExp("[<>]", "g");
 
 /**
@@ -40,7 +41,7 @@ export function format(...args: string[]) {
         return s;
 
     for (let i = 0; i < args.length - 1; i++) {
-        let reg = new RegExp("\\{" + i + "\\}", "gm");
+        const reg = new RegExp("\\{" + i + "\\}", "gm");
         s = s.replace(reg, args[i + 1]);
     }
     return s;
@@ -54,7 +55,7 @@ export function equalIgnoreCase(a: string, b: string): boolean {
 }
 
 export function startsWithIgnoreCase(a: string, b: string): boolean {
-    let normalizedSearchString = normalizeCase(b);
+    const normalizedSearchString = normalizeCase(b);
     return normalizeCase(a).indexOf(normalizedSearchString) === 0;
 }
 
@@ -95,8 +96,8 @@ export function stringToArrayBuffer(str: string): Uint8Array {
     if (isNullOrEmpty(str)) {
         return null;
     }
-    let buffer = new ArrayBuffer(str.length);
-    let bufferView = new Uint8Array(buffer);
+    const buffer = new ArrayBuffer(str.length);
+    const bufferView = new Uint8Array(buffer);
     for (let i = 0, strLen = str.length; i < strLen; i++) {
         bufferView[i] = str.charCodeAt(i);
     }
@@ -125,7 +126,7 @@ export function isNullOrUndefinedOrWhiteSpaceString(str: string): boolean {
  * Returns a value indicating whether the str contains any whitespace.
  */
 export function containsWhitespace(str: string): boolean {
-    let expr: RegExp = /\s/;
+    const expr: RegExp = /\s/;
     return expr.test(str);
 }
 
@@ -180,23 +181,23 @@ export function replaceAll(text: string, textToFind: string, textToReplace: stri
     if (!textToFind)
         return text;
 
-    let pattern = escapeStringForRegex(textToFind);
+    const pattern = escapeStringForRegex(textToFind);
     return text.replace(new RegExp(pattern, "gi"), textToReplace);
 }
 
 export function ensureUniqueNames(names: string[]): string[] {
-    let usedNames: { [name: string]: boolean } = {};
+    const usedNames: { [name: string]: boolean } = {};
 
     // Make sure we are giving fair chance for all columns to stay with their original name
     // First we fill the used names map to contain all the original unique names from the list.
-    for (let name of names) {
+    for (const name of names) {
         usedNames[name] = false;
     }
 
-    let uniqueNames: string[] = [];
+    const uniqueNames: string[] = [];
 
     // Now we go over all names and find a unique name for each
-    for (let name of names) {
+    for (const name of names) {
         let uniqueName = name;
 
         // If the (original) column name is already taken lets try to find another name
@@ -233,10 +234,10 @@ export function findUniqueName(
 }
 
 export function constructNameFromList(list: string[], separator: string, maxCharacter: number): string {
-    let labels: string[] = [];
+    const labels: string[] = [];
     let exceeded: boolean;
     let length = 0;
-    for (let item of list) {
+    for (const item of list) {
         if (length + item.length > maxCharacter && labels.length > 0) {
             exceeded = true;
             break;
@@ -245,7 +246,7 @@ export function constructNameFromList(list: string[], separator: string, maxChar
         length += item.length;
     }
 
-    let separatorWithSpace = " " + separator + " ";
+    const separatorWithSpace = " " + separator + " ";
     let name = labels.join(separatorWithSpace);
 
     if (exceeded)
@@ -279,7 +280,7 @@ export function stringifyAsPrettyJSON(object: any): string {
  * (6708134): this should have a fully Unicode-aware implementation
  */
 export function deriveClsCompliantName(input: string, fallback: string): string {
-    let result = input.replace(/^[^A-Za-z]*/g, "").replace(/[ :\.\/\\\-\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]/g, "_").replace(/[\W]/g, "");
+    const result = input.replace(/^[^A-Za-z]*/g, "").replace(/[ :\.\/\\\-\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]/g, "_").replace(/[\W]/g, "");
 
     return result.length > 0 ? result : fallback;
 }
