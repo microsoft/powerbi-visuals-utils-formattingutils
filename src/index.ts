@@ -1,7 +1,7 @@
 import * as formatting from "./formatting";
 import * as valueFormatter from "./valueFormatter";
 import * as stringExtensions from "./stringExtensions";
-import { textMeasurementService } from "./textMeasurementService";
+import * as textMeasurementService from "./textMeasurementService";
 import * as interfaces from "./interfaces";
 import * as font from "./font/family";
 import * as familyInfo from "./font/familyInfo";

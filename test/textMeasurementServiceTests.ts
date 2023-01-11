@@ -24,11 +24,10 @@
 *  THE SOFTWARE.
 */
 
-import * as stringExtensions from "./../src/stringExtensions";
 import * as ephemeralStorage from "./../src/storageService/ephemeralStorageService";
 import ephemeralStorageService = ephemeralStorage.ephemeralStorageService;
 import verifyEllipsisActive from "./verifyEllipsisActive";
-import { textMeasurementService } from "./../src/textMeasurementService";
+import { textMeasurementService, stringExtensions } from "./../src/index";
 import { TextProperties } from "../src/interfaces";
 import * as lodashClonedeep from "lodash.clonedeep";
 
