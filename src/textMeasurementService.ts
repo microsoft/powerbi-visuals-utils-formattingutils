@@ -42,26 +42,26 @@ interface CanvasElement extends HTMLElement {
     getContext(name: string);
 }
 
-export class TextMeasurementService {
-    private static ellipsis = "...";
+export module textMeasurementService {
+    const ellipsis = "...";
 
-    private static spanElement: HTMLElement;
-    private static svgTextElement: SVGTextElement;
-    private static canvasCtx: CanvasContext;
-    private static fallbackFontFamily: string;
+    let spanElement: HTMLElement;
+    let svgTextElement: SVGTextElement;
+    let canvasCtx: CanvasContext;
+    let fallbackFontFamily: string;
 
     /**
      * Idempotent function for adding the elements to the DOM.
      */
-    private static ensureDOM(): void {
-        if (TextMeasurementService.spanElement) {
+    function ensureDOM(): void {
+        if (spanElement) {
             return;
         }
 
-        TextMeasurementService.spanElement = document.createElement("span");
-        document.body.appendChild(TextMeasurementService.spanElement);
+        spanElement = document.createElement("span");
+        document.body.appendChild(spanElement);
         // The style hides the svg element from the canvas, preventing canvas from scrolling down to show svg black square.
-        /* eslint-disable-next-line powerbi-visuals/no-http-string */
+        // tslint:disable-next-line
         const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svgElement.setAttribute("height", "0");
         svgElement.setAttribute("width", "0");
@@ -71,29 +71,29 @@ export class TextMeasurementService {
         svgElement.style.position = "absolute";
         svgElement.style.height = "0px";
         svgElement.style.width = "0px";
-        /* eslint-disable-next-line powerbi-visuals/no-http-string */
-        TextMeasurementService.svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        svgElement.appendChild(TextMeasurementService.svgTextElement);
+        // tslint:disable-next-line
+        svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        svgElement.appendChild(svgTextElement);
         document.body.appendChild(svgElement);
-        const canvasElement: CanvasElement = document.createElement("canvas");
-        TextMeasurementService.canvasCtx = canvasElement.getContext("2d");
-        const style: CSSStyleDeclaration = window.getComputedStyle(TextMeasurementService.svgTextElement);
+        let canvasElement: CanvasElement = document.createElement("canvas");
+        canvasCtx = canvasElement.getContext("2d");
+        let style: CSSStyleDeclaration = window.getComputedStyle(svgTextElement);
         if (style) {
-            TextMeasurementService.fallbackFontFamily = style.fontFamily;
+            fallbackFontFamily = style.fontFamily;
         } else {
-            TextMeasurementService.fallbackFontFamily = "";
+            fallbackFontFamily = "";
         }
     }
 
     /**
      * Removes spanElement from DOM.
      */
-    removeSpanElement() {
-        if (TextMeasurementService.spanElement && TextMeasurementService.spanElement.remove) {
-            TextMeasurementService.spanElement.remove();
+    export function removeSpanElement() {
+        if (spanElement && spanElement.remove) {
+            spanElement.remove();
         }
 
-        TextMeasurementService.spanElement = null;
+        spanElement = null;
     }
 
     /**
@@ -101,17 +101,17 @@ export class TextMeasurementService {
      * @param textProperties The text properties to use for text measurement.
      * @param text The text to measure.
      */
-    measureSvgTextWidth(textProperties: TextProperties, text?: string): number {
-        TextMeasurementService.ensureDOM();
+    export function measureSvgTextWidth(textProperties: TextProperties, text?: string): number {
+        ensureDOM();
 
-        TextMeasurementService.canvasCtx.font =
+        canvasCtx.font =
             (textProperties.fontStyle || "") + " " +
             (textProperties.fontVariant || "") + " " +
             (textProperties.fontWeight || "") + " " +
             textProperties.fontSize + " " +
-            (textProperties.fontFamily || TextMeasurementService.fallbackFontFamily);
+            (textProperties.fontFamily || fallbackFontFamily);
 
-        return TextMeasurementService.canvasCtx.measureText(text || textProperties.text).width;
+        return canvasCtx.measureText(text || textProperties.text).width;
     }
 
     /**
@@ -119,28 +119,28 @@ export class TextMeasurementService {
      * @param textProperties The text properties to use for text measurement.
      * @param text The text to measure.
      */
-    measureSvgTextRect(textProperties: TextProperties, text?: string): SVGRect {
-        TextMeasurementService.ensureDOM();
+    export function measureSvgTextRect(textProperties: TextProperties, text?: string): SVGRect {
+        ensureDOM();
 
         // Removes DOM elements faster than innerHTML
-        while (TextMeasurementService.svgTextElement.firstChild) {
-            TextMeasurementService.svgTextElement.removeChild(TextMeasurementService.svgTextElement.firstChild);
+        while (svgTextElement.firstChild) {
+            svgTextElement.removeChild(svgTextElement.firstChild);
         }
 
-        TextMeasurementService.svgTextElement.setAttribute("style", null);
+        svgTextElement.setAttribute("style", null);
 
-        TextMeasurementService.svgTextElement.style.visibility = "hidden";
-        TextMeasurementService.svgTextElement.style.fontFamily = textProperties.fontFamily || TextMeasurementService.fallbackFontFamily;
-        TextMeasurementService.svgTextElement.style.fontVariant = textProperties.fontVariant;
-        TextMeasurementService.svgTextElement.style.fontSize = textProperties.fontSize;
-        TextMeasurementService.svgTextElement.style.fontWeight = textProperties.fontWeight;
-        TextMeasurementService.svgTextElement.style.fontStyle = textProperties.fontStyle;
-        TextMeasurementService.svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
-        TextMeasurementService.svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
+        svgTextElement.style.visibility = "hidden";
+        svgTextElement.style.fontFamily = textProperties.fontFamily || fallbackFontFamily;
+        svgTextElement.style.fontVariant = textProperties.fontVariant;
+        svgTextElement.style.fontSize = textProperties.fontSize;
+        svgTextElement.style.fontWeight = textProperties.fontWeight;
+        svgTextElement.style.fontStyle = textProperties.fontStyle;
+        svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
+        svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
         // We're expecting the browser to give a synchronous measurement here
         // We're using SVGTextElement because it works across all browsers
-        return TextMeasurementService.svgTextElement.getBBox();
+        return svgTextElement.getBBox();
     }
 
     /**
@@ -148,8 +148,8 @@ export class TextMeasurementService {
      * @param textProperties The text properties to use for text measurement.
      * @param text The text to measure.
      */
-    measureSvgTextHeight(textProperties: TextProperties, text?: string): number {
-        return this.measureSvgTextRect(textProperties, text).height;
+    export function measureSvgTextHeight(textProperties: TextProperties, text?: string): number {
+        return measureSvgTextRect(textProperties, text).height;
     }
 
     /**
@@ -157,20 +157,20 @@ export class TextMeasurementService {
      * Does NOT return text width; obliterates text value
      * @param {TextProperties} textProperties - The text properties to use for text measurement
      */
-    private estimateSvgTextRect(textProperties: TextProperties): SVGRect {
-        const propertiesKey = textProperties.fontFamily + textProperties.fontSize;
+    function estimateSvgTextRect(textProperties: TextProperties): SVGRect {
+        let propertiesKey = textProperties.fontFamily + textProperties.fontSize;
         let rect: SVGRect = ephemeralStorageService.getData(propertiesKey);
 
         if (rect == null) {
             // To estimate we check the height of a particular character, once it is cached, subsequent
             // calls should always get the height from the cache (regardless of the text).
-            const estimatedTextProperties: TextProperties = {
+            let estimatedTextProperties: TextProperties = {
                 fontFamily: textProperties.fontFamily,
                 fontSize: textProperties.fontSize,
                 text: "M",
             };
 
-            rect = this.measureSvgTextRect(estimatedTextProperties);
+            rect = textMeasurementService.measureSvgTextRect(estimatedTextProperties);
 
             // NOTE: In some cases (disconnected/hidden DOM) we may provide incorrect measurement results (zero sized bounding-box), so
             // we only store values in the cache if we are confident they are correct.
@@ -185,8 +185,8 @@ export class TextMeasurementService {
      * This method returns the text Rect with the given SVG text properties.
      * @param {TextProperties} textProperties - The text properties to use for text measurement
      */
-    estimateSvgTextBaselineDelta(textProperties: TextProperties): number {
-        const rect = this.estimateSvgTextRect(textProperties);
+    export function estimateSvgTextBaselineDelta(textProperties: TextProperties): number {
+        let rect = estimateSvgTextRect(textProperties);
         return rect.y + rect.height;
     }
 
@@ -194,8 +194,8 @@ export class TextMeasurementService {
      * This method estimates the height of the text with the given SVG text properties.
      * @param {TextProperties} textProperties - The text properties to use for text measurement
      */
-    estimateSvgTextHeight(textProperties: TextProperties, tightFightForNumeric: boolean = false): number {
-        let height = this.estimateSvgTextRect(textProperties).height;
+    export function estimateSvgTextHeight(textProperties: TextProperties, tightFightForNumeric: boolean = false): number {
+        let height = estimateSvgTextRect(textProperties).height;
 
         // replace it with new baseline calculation
         if (tightFightForNumeric)
@@ -208,15 +208,15 @@ export class TextMeasurementService {
      * This method measures the width of the svgElement.
      * @param svgElement The SVGTextElement to be measured.
      */
-    measureSvgTextElementWidth(svgElement: Element): number {
-        return this.measureSvgTextWidth(this.getSvgMeasurementProperties(svgElement));
+    export function measureSvgTextElementWidth(svgElement: Element): number {
+        return measureSvgTextWidth(getSvgMeasurementProperties(svgElement));
     }
 
     /**
      * This method fetches the text measurement properties of the given DOM element.
      * @param element The selector for the DOM Element.
      */
-    getMeasurementProperties(element: Element): TextProperties {
+    export function getMeasurementProperties(element: Element): TextProperties {
         const style: CSSStyleDeclaration = window.getComputedStyle(element);
         return {
             text: (<HTMLInputElement>element).value || element.textContent,
@@ -233,8 +233,8 @@ export class TextMeasurementService {
      * This method fetches the text measurement properties of the given SVG text element.
      * @param element The SVGTextElement to be measured.
      */
-    getSvgMeasurementProperties(element: Element): TextProperties {
-        const style: CSSStyleDeclaration = window.getComputedStyle(element);
+    export function getSvgMeasurementProperties(element: Element): TextProperties {
+        let style: CSSStyleDeclaration = window.getComputedStyle(element);
         if (style) {
             return {
                 text: element.textContent,
@@ -258,7 +258,7 @@ export class TextMeasurementService {
      * This method returns the width of a div element.
      * @param element The div element.
      */
-    getDivElementWidth(element: Element): string {
+    export function getDivElementWidth(element: Element): string {
         const style: CSSStyleDeclaration = window.getComputedStyle(element);
         if (style)
             return style.width;
@@ -271,39 +271,39 @@ export class TextMeasurementService {
      * @param textProperties The text properties (including text content) to use for text measurement.
      * @param maxWidth The maximum width available for rendering the text.
      */
-    getTailoredTextOrDefault(textProperties: TextProperties, maxWidth: number): string {
-        TextMeasurementService.ensureDOM();
+    export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidth: number): string {
+        ensureDOM();
 
-        const strLength: number = textProperties.text.length;
+        let strLength: number = textProperties.text.length;
 
         if (strLength === 0) {
             return textProperties.text;
         }
 
-        let width: number = this.measureSvgTextWidth(textProperties);
+        let width: number = measureSvgTextWidth(textProperties);
 
         if (width < maxWidth) {
             return textProperties.text;
         }
 
         // Create a copy of the textProperties so we don't modify the one that's passed in.
-        const copiedTextProperties = Prototype.inherit(textProperties);
+        let copiedTextProperties = Prototype.inherit(textProperties);
 
         // Take the properties and apply them to svgTextElement
         // Then, do the binary search to figure out the substring we want
         // Set the substring on textElement argument
-        const text = copiedTextProperties.text = TextMeasurementService.ellipsis + copiedTextProperties.text;
+        let text = copiedTextProperties.text = ellipsis + copiedTextProperties.text;
 
         let min = 1;
         let max = text.length;
-        let i = TextMeasurementService.ellipsis.length;
+        let i = ellipsis.length;
 
         while (min <= max) {
             // num | 0 prefered to Math.floor(num) for performance benefits
             i = (min + max) / 2 | 0;
 
-            copiedTextProperties.text = text.substring(0, i);
-            width = this.measureSvgTextWidth(copiedTextProperties);
+            copiedTextProperties.text = text.substr(0, i);
+            width = measureSvgTextWidth(copiedTextProperties);
 
             if (maxWidth > width) {
                 min = i + 1;
@@ -318,13 +318,13 @@ export class TextMeasurementService {
         // it will pick one of the closest two, which could result in a
         // value bigger with than 'maxWidth' thus we need to go back by
         // one to guarantee a smaller width than 'maxWidth'.
-        copiedTextProperties.text = text.substring(0, i);
-        width = this.measureSvgTextWidth(copiedTextProperties);
+        copiedTextProperties.text = text.substr(0, i);
+        width = measureSvgTextWidth(copiedTextProperties);
         if (width > maxWidth) {
             i--;
         }
 
-        return text.substring(TextMeasurementService.ellipsis.length, i) + TextMeasurementService.ellipsis;
+        return text.substr(ellipsis.length, i - ellipsis.length) + ellipsis;
     }
 
     /**
@@ -332,10 +332,10 @@ export class TextMeasurementService {
      * @param textElement The SVGTextElement containing the text to render.
      * @param maxWidth The maximum width available for rendering the text.
      */
-    svgEllipsis(textElement: Element, maxWidth: number): void {
-        const properties: TextProperties = this.getSvgMeasurementProperties(textElement);
-        const originalText: string = properties.text;
-        const tailoredText: string = this.getTailoredTextOrDefault(properties, maxWidth);
+    export function svgEllipsis(textElement: Element, maxWidth: number): void {
+        let properties: TextProperties = getSvgMeasurementProperties(textElement);
+        let originalText: string = properties.text;
+        let tailoredText: string = getTailoredTextOrDefault(properties, maxWidth);
 
         if (originalText !== tailoredText) {
             textElement.textContent = tailoredText;
@@ -350,29 +350,29 @@ export class TextMeasurementService {
      * @param maxHeight - the maximum height available (defaults to single line)
      * @param linePadding - (optional) padding to add to line height
      */
-    wordBreak(textElement: Element, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
-        const properties: TextProperties = this.getSvgMeasurementProperties(textElement);
-        const height: number = this.estimateSvgTextHeight(properties) + linePadding;
-        const maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
+    export function wordBreak(textElement: Element, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
+        let properties: TextProperties = getSvgMeasurementProperties(textElement);
+        let height: number = estimateSvgTextHeight(properties) + linePadding;
+        let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
         // Save y of parent textElement to apply as first tspan dy
-        const firstDY: string = textElement ? textElement.getAttribute("y") : null;
+        let firstDY: string = textElement ? textElement.getAttribute("y") : null;
 
         // Store and clear text content
-        const labelText = textElement ? textElement.textContent : null;
+        let labelText = textElement ? textElement.textContent : null;
         textElement.textContent = null;
 
         // Append a tspan for each word broken section
-        const words = wordBreaker.splitByWidth(labelText, properties, this.measureSvgTextWidth.bind(this), maxWidth, maxNumLines);
+        let words = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
         const fragment: DocumentFragment = document.createDocumentFragment();
         for (let i = 0, ilen = words.length; i < ilen; i++) {
             const dy = i === 0 ? firstDY : height;
             properties.text = words[i];
-            /* eslint-disable-next-line powerbi-visuals/no-http-string */
+            // tslint:disable-next-line
             const textElement: SVGTSpanElement = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
             textElement.setAttribute("x", "0");
             textElement.setAttribute("dy", dy ? dy.toString() : null);
-            textElement.appendChild(document.createTextNode(this.getTailoredTextOrDefault(properties, maxWidth)));
+            textElement.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
             fragment.appendChild(textElement);
         }
         textElement.appendChild(fragment);
@@ -386,17 +386,17 @@ export class TextMeasurementService {
      * @param maxHeight - the maximum height available (defaults to single line)
      * @param linePadding - (optional) padding to add to line height
      */
-    wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
-        const properties: TextProperties = this.getSvgMeasurementProperties(textElement);
-        const height: number = this.estimateSvgTextHeight(properties) + linePadding;
-        const maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
+    export function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: number, maxHeight: number, linePadding: number = 0): void {
+        const properties: TextProperties = getSvgMeasurementProperties(textElement);
+        let height: number = estimateSvgTextHeight(properties) + linePadding;
+        let maxNumLines: number = Math.max(1, Math.floor(maxHeight / height));
 
         // Store and clear text content
         const labelText: string = textElement.textContent;
         textElement.textContent = null;
 
         // Append a span for each word broken section
-        const words: string[] = wordBreaker.splitByWidth(labelText, properties, this.measureSvgTextWidth, maxWidth, maxNumLines);
+        const words: string[] = wordBreaker.splitByWidth(labelText, properties, measureSvgTextWidth, maxWidth, maxNumLines);
         const fragment: DocumentFragment = document.createDocumentFragment();
         for (let i = 0; i < words.length; i++) {
             const span: HTMLSpanElement = document.createElement("span");
@@ -407,11 +407,9 @@ export class TextMeasurementService {
             span.style.display = "block";
             span.style.width = PixelConverter.toString(maxWidth);
             span.appendChild(document.createTextNode(words[i]));
-            span.appendChild(document.createTextNode(this.getTailoredTextOrDefault(properties, maxWidth)));
+            span.appendChild(document.createTextNode(getTailoredTextOrDefault(properties, maxWidth)));
             fragment.appendChild(span);
         }
         textElement.appendChild(fragment);
     }
 }
-
-export const textMeasurementService = new TextMeasurementService
