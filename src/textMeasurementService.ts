@@ -135,7 +135,6 @@ export function measureSvgTextRect(textProperties: TextProperties, text?: string
     svgTextElement.style.fontWeight = textProperties.fontWeight;
     svgTextElement.style.fontStyle = textProperties.fontStyle;
     svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
-    const el = document.createTextNode(text || textProperties.text)
     svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
     // We're expecting the browser to give a synchronous measurement here
