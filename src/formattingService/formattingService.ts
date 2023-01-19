@@ -34,7 +34,6 @@ import * as numberFormat from "./numberFormat";
 import * as formattingEncoder from "./formattingEncoder";
 
 import { IFormattingService, DateTimeUnit } from "./iFormattingService";
-import powerbi from "powerbi-visuals-api";
 
 // Culture interfaces. These match the Globalize library interfaces intentionally.
 export interface Culture {
@@ -177,6 +176,7 @@ export class FormattingService implements IFormattingService {
             return urlParam;
         }
 
+        const powerbi = import("powerbi-visuals-api");
         if (powerbi && (<any>powerbi).common && (<any>(<any>powerbi).common).cultureInfo) {
             // Get cultureInfo set in powerbi
             return (<any>(<any>powerbi).common).cultureInfo;

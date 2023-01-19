@@ -398,7 +398,6 @@ export function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: 
     const fragment: DocumentFragment = document.createDocumentFragment();
     for (let i = 0; i < words.length; i++) {
         const span: HTMLSpanElement = document.createElement("span");
-        span.classList.add("overflowingText");
         span.style.overflow = "hidden";
         span.style.whiteSpace = "nowrap";
         span.style.textOverflow = "ellipsis";
