@@ -52,7 +52,6 @@
     "karma-webpack": "5.0.0",
     "lodash.clonedeep": "4.5.0",
     "playwright-chromium": "^1.29.2",
-    "powerbi-visuals-api": "5.2.0",
     "powerbi-visuals-utils-testutils": "3.2.1",
     "eslint-plugin-powerbi-visuals": "^0.8.1",
     "ts-loader": "9.4.2",
@@ -61,6 +60,7 @@
     "webpack": "^5.75.0"
   },
   "dependencies": {
+    "powerbi-visuals-api": "5.2.0",
     "powerbi-visuals-utils-dataviewutils": "^3.0.0",
     "powerbi-visuals-utils-typeutils": "^3.0.1"
   }
