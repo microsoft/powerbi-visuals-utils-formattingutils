@@ -63,5 +63,6 @@
     "powerbi-visuals-api": "5.2.0",
     "powerbi-visuals-utils-dataviewutils": "^3.0.0",
     "powerbi-visuals-utils-typeutils": "^3.0.1"
-  }
+  },
+  "optionalDependencies": { "fsevents": "*" }
 }
