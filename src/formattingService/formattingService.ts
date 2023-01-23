@@ -170,19 +170,11 @@ export class FormattingService implements IFormattingService {
      *  Exposing this function for testability
      */
     public getCurrentCulture(): string {
-        const urlParam = this.getUrlParam("language");
-
-        if (urlParam) {
-            return urlParam;
+        if (window?.navigator){
+            return (<any>window.navigator).userLanguage || window.navigator["language"]
         }
 
-        const powerbi = import("powerbi-visuals-api");
-        if (powerbi && (<any>powerbi).common && (<any>(<any>powerbi).common).cultureInfo) {
-            // Get cultureInfo set in powerbi
-            return (<any>(<any>powerbi).common).cultureInfo;
-        }
-
-        return (<any>window.navigator).userLanguage || window.navigator["language"] || "en-US";
+        return "en-US";
     }
 
     /**
