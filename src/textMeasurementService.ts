@@ -135,10 +135,6 @@ export function measureSvgTextRect(textProperties: TextProperties, text?: string
     svgTextElement.style.fontWeight = textProperties.fontWeight;
     svgTextElement.style.fontStyle = textProperties.fontStyle;
     svgTextElement.style.whiteSpace = textProperties.whiteSpace || "nowrap";
-    const el = document.createTextNode(text || textProperties.text)
-    console.log(el)
-    console.log("text - " + text)
-    console.log("textProperties.text - " + textProperties.text)
     svgTextElement.appendChild(document.createTextNode(text || textProperties.text));
 
     // We're expecting the browser to give a synchronous measurement here
@@ -402,7 +398,6 @@ export function wordBreakOverflowingText(textElement: SVGTextElement, maxWidth: 
     const fragment: DocumentFragment = document.createDocumentFragment();
     for (let i = 0; i < words.length; i++) {
         const span: HTMLSpanElement = document.createElement("span");
-        span.classList.add("overflowingText");
         span.style.overflow = "hidden";
         span.style.whiteSpace = "nowrap";
         span.style.textOverflow = "ellipsis";
