@@ -13,5 +13,5 @@
 import { locales } from "./powerbiGlobalizeLocales";
 
 export default function injectCultures(Globalize) {
-    Object.keys(locales).forEach(locale => Globalize.addCultureInfo(locales[locale]));
+    Object.keys(locales).forEach(locale => Globalize.addCultureInfo(...locales[locale]));
 }
