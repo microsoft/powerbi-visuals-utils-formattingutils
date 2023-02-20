@@ -32,7 +32,6 @@ const tsconfig = require("./tsconfig.json");
 const testRecursivePath = "test/**/*.ts";
 const srcOriginalRecursivePath = "src/**/*.ts";
 const srcRecursivePath = "lib/**/*.js";
-const srcCssRecursivePath = "lib/**/*.css";
 const coverageFolder = "coverage";
 
 process.env.CHROME_BIN = require("playwright-chromium").chromium.executablePath();
@@ -61,7 +60,6 @@ module.exports = (config) => {
             "karma-coverage-istanbul-reporter"
         ],
         files: [
-            srcCssRecursivePath,
             srcRecursivePath,
             testRecursivePath,
             {
