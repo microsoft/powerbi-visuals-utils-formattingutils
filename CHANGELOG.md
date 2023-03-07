@@ -1,3 +1,7 @@
+## 6.0.0
+* Packages update
+* Vulnerabilities fixes
+
 ## 5.1.0
 * Moved cultures to separate file to allow dynamically remove redundant cultures while building the visual using custom webpack loader
 
