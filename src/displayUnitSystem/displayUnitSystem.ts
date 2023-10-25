@@ -227,7 +227,7 @@ export class DisplayUnitSystem {
         cultureSelector?: string
     ): string {
         // Change unit base to a value appropriate for this value
-        this.update(this.shouldUseValuePrecision(value) ? Double.getPrecision(value, 8) : value);
+        this.update(this.shouldUseValuePrecision(value) ? Double.getPrecision(value, 8) ?? 0 : value);
 
         return this.format(value, format, decimals, trailingZeros, cultureSelector);
     }
