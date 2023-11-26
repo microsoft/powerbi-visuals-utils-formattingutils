@@ -1,3 +1,7 @@
+## 6.1.0
+* Packages update
+* Updated to Typescript 5.0 **⚠**
+
 ## 6.0.1
 * Packages update
 * Removed coveralls
