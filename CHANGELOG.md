@@ -1,6 +1,6 @@
 ## 6.1.0
 * Packages update
-* Updated to Typescript 5.0 **⚠**
+* Updated to Typescript 5 **⚠**
 
 ## 6.0.1
 * Packages update
