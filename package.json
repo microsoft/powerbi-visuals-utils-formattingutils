@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-utils-formattingutils",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "FormattingUtils",
   "main": "lib/src/index.js",
   "module": "lib//src/index.js",
@@ -51,7 +51,7 @@
     "karma-webpack": "5.0.0",
     "lodash.clonedeep": "4.5.0",
     "playwright-chromium": "^1.40.1",
-    "powerbi-visuals-utils-testutils": "6.0.2",
+    "powerbi-visuals-utils-testutils": "6.0.3",
     "eslint-plugin-powerbi-visuals": "^0.8.1",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
