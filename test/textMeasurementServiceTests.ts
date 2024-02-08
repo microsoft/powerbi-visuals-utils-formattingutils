@@ -271,6 +271,21 @@ describe("Text measurement service", () => {
             expect(stringExtensions.startsWithIgnoreCase(text, "Pow")).toBeTruthy();
             expect(properties).toEqual(originalProperties);
         });
+
+        it("tailored text must be shorter than original text", () => {
+            const MAX_WIDTH = 3;
+            const ORIGINAL_TEXT = "1";
+
+            let properties: TextProperties = {
+                "fontFamily": "helvetica, arial, sans-serif",
+                "fontSize": "10.666666666666666px",
+                "text": ORIGINAL_TEXT,
+            }
+            let result = textMeasurementService.getTailoredTextOrDefault(properties, MAX_WIDTH);
+            
+            // result = '.....', ORIGINAL_TEXT='1'
+            expect(result.length).toBeLessThan(ORIGINAL_TEXT.length);
+        })
     });
 
     describe("svgEllipsis", () => {
