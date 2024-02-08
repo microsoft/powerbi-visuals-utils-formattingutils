@@ -232,7 +232,7 @@ describe("Text measurement service", () => {
         });
     });
 
-    fdescribe("getTailoredTextOrDefault", () => {
+    describe("getTailoredTextOrDefault", () => {
         it("without ellipsis", () => {
             let properties: TextProperties = {
                 fontFamily: "Arial",
