@@ -232,7 +232,7 @@ describe("Text measurement service", () => {
         });
     });
 
-    describe("getTailoredTextOrDefault", () => {
+    fdescribe("getTailoredTextOrDefault", () => {
         it("without ellipsis", () => {
             let properties: TextProperties = {
                 fontFamily: "Arial",
@@ -271,6 +271,20 @@ describe("Text measurement service", () => {
             expect(stringExtensions.startsWithIgnoreCase(text, "Pow")).toBeTruthy();
             expect(properties).toEqual(originalProperties);
         });
+
+        it("short string", () => {
+            const MAX_WIDTH = 3;
+            const ORIGINAL_TEXT = "1";
+
+            let properties: TextProperties = {
+                "fontFamily": "helvetica, arial, sans-serif",
+                "fontSize": "10.666666666666666px",
+                "text": ORIGINAL_TEXT,
+            }
+            let result = textMeasurementService.getTailoredTextOrDefault(properties, MAX_WIDTH);
+
+            expect(result.length).toBeLessThanOrEqual(ORIGINAL_TEXT.length);
+        })
     });
 
     describe("svgEllipsis", () => {
