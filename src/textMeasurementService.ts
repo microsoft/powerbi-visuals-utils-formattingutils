@@ -273,7 +273,7 @@ export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidt
     ensureDOM();
 
     const strLength: number = textProperties.text.length;
-    if (strLength === 0) {
+    if (strLength <= ellipsis.length) {
         return textProperties.text;
     }
 
