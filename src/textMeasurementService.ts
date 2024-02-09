@@ -273,12 +273,17 @@ export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidt
     ensureDOM();
 
     const strLength: number = textProperties.text.length;
-    if (strLength <= ellipsis.length) {
+    if (strLength <= 0) {
         return textProperties.text;
     }
 
     let width: number = measureSvgTextWidth(textProperties);
     if (width < maxWidth) {
+        return textProperties.text;
+    }
+
+    const ellipsesWidth: number = measureSvgTextWidth(textProperties, ellipsis);
+    if (ellipsesWidth >= width) {
         return textProperties.text;
     }
 
