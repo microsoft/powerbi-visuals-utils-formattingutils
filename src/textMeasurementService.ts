@@ -273,7 +273,7 @@ export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidt
     ensureDOM();
 
     const strLength: number = textProperties.text.length;
-    if (strLength <= 0) {
+    if (strLength === 0) {
         return textProperties.text;
     }
 
