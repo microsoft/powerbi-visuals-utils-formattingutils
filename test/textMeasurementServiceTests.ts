@@ -233,14 +233,17 @@ describe("Text measurement service", () => {
     });
 
     describe("getTailoredTextOrDefault", () => {
-        it("without ellipsis", () => {
+        const defaultTextProperties: TextProperties = {
+            fontFamily: "Arial",
+            fontSize: "11px",
+            fontWeight: "700",
+            fontStyle: "italic",
+            whiteSpace: "nowrap",
+            fontVariant: "normal"
+        }
+        it("long text without ellipsis", () => {
             let properties: TextProperties = {
-                fontFamily: "Arial",
-                fontSize: "11px",
-                fontWeight: "700",
-                fontStyle: "italic",
-                whiteSpace: "nowrap",
-                fontVariant: "normal",
+                ...defaultTextProperties,
                 text: "PowerBI rocks!",
             };
 
@@ -252,14 +255,9 @@ describe("Text measurement service", () => {
             expect(properties).toEqual(originalProperties);
         });
 
-        it("with ellipsis", () => {
+        it("long text with ellipsis", () => {
             let properties: TextProperties = {
-                fontFamily: "Arial",
-                fontSize: "11px",
-                fontWeight: "700",
-                fontStyle: "italic",
-                whiteSpace: "nowrap",
-                fontVariant: "normal",
+                ...defaultTextProperties,
                 text: "PowerBI rocks!",
             };
 
@@ -272,18 +270,45 @@ describe("Text measurement service", () => {
             expect(properties).toEqual(originalProperties);
         });
 
-        it("short string", () => {
+        it("long text replaced with ellipsis", () => {
+            const MAX_WIDTH = 0;
+            const ORIGINAL_TEXT = "PowerBI rocks!";
+            const EXPECTED_TEXT = "...";
+            const properties: TextProperties = {
+                ...defaultTextProperties,
+                text: ORIGINAL_TEXT,
+            };
+
+            const result = textMeasurementService.getTailoredTextOrDefault(properties, MAX_WIDTH);
+
+            expect(result).toEqual(EXPECTED_TEXT);
+        })
+
+        it("choose best text by width", () => {
+            const MAX_WIDTH = 3;
+            const ORIGINAL_TEXT = "..m";
+            const EXPECTED_TEXT = "...";
+            const properties: TextProperties = {
+                ...defaultTextProperties,
+                text: ORIGINAL_TEXT,
+            };
+
+            const result = textMeasurementService.getTailoredTextOrDefault(properties, MAX_WIDTH);
+
+            expect(result).toEqual(EXPECTED_TEXT);
+        })
+
+        it("short string without ellipsis", () => {
             const MAX_WIDTH = 3;
             const ORIGINAL_TEXT = "1";
 
-            let properties: TextProperties = {
-                "fontFamily": "helvetica, arial, sans-serif",
-                "fontSize": "10.666666666666666px",
-                "text": ORIGINAL_TEXT,
+            const properties: TextProperties = {
+                ...defaultTextProperties,
+                text: ORIGINAL_TEXT,
             }
-            let result = textMeasurementService.getTailoredTextOrDefault(properties, MAX_WIDTH);
+            const result = textMeasurementService.getTailoredTextOrDefault(properties, MAX_WIDTH);
 
-            expect(result.length).toBeLessThanOrEqual(ORIGINAL_TEXT.length);
+            expect(result).toEqual(ORIGINAL_TEXT);
         })
     });
 
