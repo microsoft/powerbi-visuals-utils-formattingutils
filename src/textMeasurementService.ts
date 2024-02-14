@@ -273,14 +273,17 @@ export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidt
     ensureDOM();
 
     const strLength: number = textProperties.text.length;
-
     if (strLength === 0) {
         return textProperties.text;
     }
 
     let width: number = measureSvgTextWidth(textProperties);
-
     if (width < maxWidth) {
+        return textProperties.text;
+    }
+
+    const ellipsesWidth: number = measureSvgTextWidth(textProperties, ellipsis);
+    if (ellipsesWidth >= width) {
         return textProperties.text;
     }
 
@@ -297,7 +300,7 @@ export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidt
     let i = ellipsis.length;
 
     while (min <= max) {
-        // num | 0 prefered to Math.floor(num) for performance benefits
+        // num | 0 preferred to Math.floor(num) for performance benefits
         i = (min + max) / 2 | 0;
 
         copiedTextProperties.text = text.substring(0, i);
@@ -322,7 +325,7 @@ export function getTailoredTextOrDefault(textProperties: TextProperties, maxWidt
         i--;
     }
 
-    return text.substring(ellipsis.length, i) + ellipsis;
+    return textProperties.text.substring(0, i - ellipsis.length) + ellipsis;
 }
 
 /**
