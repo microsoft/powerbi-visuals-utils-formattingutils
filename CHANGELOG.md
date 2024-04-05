@@ -1,3 +1,6 @@
+## 6.1.1
+* powerbi-visuals-api update to 5.9.0
+
 ## 6.1.0
 * Fixed wrong tailored text generation in getTailoredTextOrDefault
 
