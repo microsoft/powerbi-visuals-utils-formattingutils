@@ -1,3 +1,7 @@
+## 6.1.2
+* Updated packages
+* powerbi-visuals-api update to 5.11.0
+
 ## 6.1.1
 * powerbi-visuals-api update to 5.9.0
 
