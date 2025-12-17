@@ -130,7 +130,7 @@ describe("ValueFormatter", () => {
             const res = valueFormatter.calculateExactDigitsPrecision(5345345678, nullableString, 0, 9);
             expect(res).toBe(8);
         });
-        
+
     });
 
     describe("checkValueInBounds", () => {
@@ -830,5 +830,102 @@ describe("ValueFormatter", () => {
         let displayUnits = valueFormatter.getDisplayUnits(DisplayUnitSystemType.Default);
         expect(displayUnits).toBeDefined();
         expect(displayUnits.length).toBeGreaterThan(0);
+    });
+
+    describe("Localization Tests", () => {
+        it("should format single value with English locale", () => {
+            const formatter = valueFormatter.create({
+                value: 1500000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "en-US"
+            });
+            const result = formatter.format(1500000);
+            expect(result).toContain("M");
+        });
+
+        it("should format single value with German locale", () => {
+            const formatter = valueFormatter.create({
+                value: 1500000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "de-DE"
+            });
+            const result = formatter.format(1500000);
+            expect(result).toContain("Mio");
+        });
+
+        it("should format single value with Japanese locale", () => {
+            const formatter = valueFormatter.create({
+                value: 3000000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "ja-JP"
+            });
+            const result = formatter.format(3000000);
+            expect(result).toContain("百万");
+        });
+
+        it("should format range with multiple values", () => {
+            const formatter = valueFormatter.create({
+                value: 100000,
+                value2: 900000,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "de-DE"
+            });
+            const result = formatter.format(500000);
+            expect(result).toContain("Mio");
+        });
+
+        it("should fallback to language base when region not found", () => {
+            const formatter = valueFormatter.create({
+                value: 1000000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "de-XX"
+            });
+            const result = formatter.format(1000000);
+            expect(result).toContain("Mio");
+        });
+
+        it("should fallback to English for unknown locale", () => {
+            const formatter = valueFormatter.create({
+                value: 1000000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "xx-YY"
+            });
+            const result = formatter.format(1000000);
+            expect(result).toContain("M");
+        });
+
+        it("should handle negative values with localization", () => {
+            const formatter = valueFormatter.create({
+                value: -2500000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "de-DE"
+            });
+            const result = formatter.format(-2500000);
+            expect(result).toContain("Mio");
+        });
+
+        it("should differentiate Spanish regional variants", () => {
+            const formatterES = valueFormatter.create({
+                value: 25000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "es-ES"
+            });
+            const formatterMX = valueFormatter.create({
+                value: 25000,
+                formatSingleValues: true,
+                displayUnitSystemType: DisplayUnitSystemType.Default,
+                cultureSelector: "es-MX"
+            });
+
+            expect(formatterES.format(25000)).toContain("mil");
+            expect(formatterMX.format(25000)).toContain("k");
+        });
     });
 });

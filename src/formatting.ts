@@ -23,8 +23,6 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
-/* eslint-disable no-useless-escape */
-
 interface IRegexInt {
     // Regex for replace.
     r: RegExp;

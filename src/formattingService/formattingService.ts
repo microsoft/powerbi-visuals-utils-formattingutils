@@ -23,7 +23,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-/* eslint-disable no-useless-escape */
 
 import { Globalize } from "./../../globalize/globalize";
 import injectCultures from "./../../globalize/globalize.cultures";

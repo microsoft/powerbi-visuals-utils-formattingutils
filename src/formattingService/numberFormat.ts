@@ -30,7 +30,6 @@
  * formatting expressions for numeric types including custom formats.
  */
 
-/* eslint-disable no-useless-escape */
 import { Globalize, GlobalizeNumberFormat } from "./../../globalize/globalize";
 // powerbi.extensibility.utils.type
 import { double as Double, regExpExtensions } from "powerbi-visuals-utils-typeutils";
@@ -93,7 +92,7 @@ export function getNumericFormat(value: number, baseFormat: string): string {
         return baseFormat;
 
     if (hasFormatComponents(baseFormat)) {
-        const {positive, negative, zero} = getComponents(baseFormat);
+        const { positive, negative, zero } = getComponents(baseFormat);
 
         if (value > 0)
             return getNumericFormatFromComponent(value, positive);
@@ -123,7 +122,7 @@ export function addDecimalsToFormat(baseFormat: string, decimals: number, traili
         baseFormat = ZeroPlaceholder;
 
     if (hasFormatComponents(baseFormat)) {
-        const {positive, negative, zero} = getComponents(baseFormat);
+        const { positive, negative, zero } = getComponents(baseFormat);
         const formats = [positive, negative, zero];
         for (let i = 0; i < formats.length; i++) {
             // Update format in formats array
@@ -167,7 +166,9 @@ function addDecimalsToFormatComponent(format: string, decimals: number, trailing
 
             if (formatDecimal.length > 0)
                 formatDecimal = DecimalFormatCharacter + formatDecimal;
-
+            else if (decimals == 0)
+                // To avoid deleting "." when decimals is 0 and format is #,#,.K
+                formatDecimal = DecimalFormatCharacter;
             format = beforeDecimal + formatDecimal + afterDecimal;
         }
         else if (decimalPlaceholders.length > 0) {

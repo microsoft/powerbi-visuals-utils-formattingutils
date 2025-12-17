@@ -11,7 +11,8 @@
             "es2015",
             "dom"
         ],
-        "outDir": "./lib"
+        "outDir": "./lib",
+        "skipLibCheck": true
     },
     "files": [
         "src/index.ts" 

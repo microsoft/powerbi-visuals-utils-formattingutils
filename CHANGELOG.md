@@ -1,3 +1,9 @@
+## 6.1.3
+* Updated packages
+* Fixed issue with addDecimalsToFormat
+* Added localized abbreviations
+* Improved description for value1 and value2
+
 ## 6.1.2
 * Updated packages
 * powerbi-visuals-api update to 5.11.0

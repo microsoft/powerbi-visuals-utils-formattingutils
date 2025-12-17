@@ -24,6 +24,7 @@
 *  THE SOFTWARE.
 */
 
+import { createDisplayUnitSystem } from "../../src/valueFormatter";
 import {
     DisplayUnit,
     DisplayUnitSystem,
@@ -121,6 +122,44 @@ describe("DisplayUnitSystem", () => {
             expect(actualResult).toBeTruthy();
         });
     });
+
+    describe("format", () => {
+        it("should handle #,#,.K with 0 decimals", () => {
+            const expectedResult: string = "10,000K"
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem()
+
+            const actualValue: string = displayUnitSystem.format(10000000, "#,#,.K", 0);
+
+            expect(actualValue).toBe(expectedResult);
+        });
+
+        it("should not have trailing zeros if decimals are 0", () => {
+            const expectedResult: string = "10,000K"
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem()
+
+            const actualValue: string = displayUnitSystem.format(10000000, "#,#,.K", 0, true);
+
+            expect(actualValue).toBe(expectedResult);
+        })
+
+        it("should handle #,#,.K with 2 decimals with trailing zeros", () => {
+            const expectedResult: string = "10,000.00K"
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem()
+
+            const actualValue: string = displayUnitSystem.format(10000000, "#,#,.K", 2, true);
+
+            expect(actualValue).toBe(expectedResult);
+        });
+
+        it("should handle #,#,,.M", () => {
+            const expectedValue = "10,000M"
+            const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem()
+            const actualValue = displayUnitSystem.format(10000000000, "#,#,,.M", 0)
+
+            expect(actualValue).toBe(expectedValue)
+        })
+
+    })
 
     function createDisplayUnitSystem(units?: DisplayUnit[]): DisplayUnitSystem {
         return new DisplayUnitSystem(units);

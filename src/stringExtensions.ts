@@ -24,7 +24,6 @@
 *  THE SOFTWARE.
 */
 
-/* eslint-disable no-useless-escape */
 const HtmlTagRegex = new RegExp("[<>]", "g");
 
 /**

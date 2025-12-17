@@ -96,9 +96,7 @@ describe("IFormattingService", () => {
             const formattingService: IFormattingService = createFormattingService();
 
             spyOn(formattingService, <any>"initialize").and.callThrough();
-
             formattingService.dateFormatString(DateTimeUnit.Year);
-
             expect((<FormattingService>formattingService)["initialize"]).toHaveBeenCalled();
         });
     });

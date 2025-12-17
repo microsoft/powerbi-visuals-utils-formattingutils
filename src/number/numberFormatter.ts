@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default class NumberFormatter {
 
     static  expandNumber( number_, precision, formatInfo ) {

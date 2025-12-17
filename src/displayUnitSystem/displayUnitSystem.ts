@@ -25,7 +25,7 @@
  */
 
 /* eslint-disable no-useless-escape */
-import { numberFormat as NumberFormat, formattingService}  from "./../formattingService/formattingService";
+import { numberFormat as NumberFormat, formattingService } from "./../formattingService/formattingService";
 
 import { double as Double } from "powerbi-visuals-utils-typeutils";
 
@@ -165,7 +165,6 @@ export class DisplayUnitSystem {
         return format && format.indexOf(PERCENTAGE_FORMAT) >= 0;
     }
 
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     public shouldRespectScalingUnit(format: string): boolean {
         return true;
     }
@@ -298,11 +297,11 @@ export class NoDisplayUnitSystem extends DisplayUnitSystem {
 /** Provides a unit system that creates a more concise format for displaying values. This is suitable for most of the cases where
     we are showing values (chart axes) and as such it is the default unit system. */
 export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
-    private static units: DisplayUnit[];
+    private static units: Record<string, DisplayUnit[]> = {};
 
     // Constructor
-    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames) {
-        super(DefaultDisplayUnitSystem.getUnits(unitLookup));
+    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames, culture?: string) {
+        super(DefaultDisplayUnitSystem.getUnits(unitLookup, culture));
     }
 
     // Methods
@@ -320,12 +319,12 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
     }
 
     public static RESET(): void {
-        DefaultDisplayUnitSystem.units = null;
+        DefaultDisplayUnitSystem.units = {};
     }
 
-    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames): DisplayUnit[] {
-        if (!DefaultDisplayUnitSystem.units) {
-            DefaultDisplayUnitSystem.units = createDisplayUnits(unitLookup, (value: number, previousUnitValue: number, min: number) => {
+    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames, culture: string): DisplayUnit[] {
+        if (!DefaultDisplayUnitSystem.units[culture]) {
+            DefaultDisplayUnitSystem.units[culture] = createDisplayUnits(unitLookup, (value: number, previousUnitValue: number, min: number) => {
                 // When dealing with millions/billions/trillions we need to switch to millions earlier: for example instead of showing 100K 200K 300K we should show 0.1M 0.2M 0.3M etc
                 if (value - previousUnitValue >= 1000) {
                     return value / 10;
@@ -335,9 +334,9 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
             });
 
             // Ensure last unit has max of infinity
-            DefaultDisplayUnitSystem.units[DefaultDisplayUnitSystem.units.length - 1].applicableRangeMax = Infinity;
+            DefaultDisplayUnitSystem.units[culture][DefaultDisplayUnitSystem.units[culture].length - 1].applicableRangeMax = Infinity;
         }
-        return DefaultDisplayUnitSystem.units;
+        return DefaultDisplayUnitSystem.units[culture];
     }
 }
 
@@ -345,26 +344,26 @@ export class DefaultDisplayUnitSystem extends DisplayUnitSystem {
     one of those units (e.g. 0.9M is not allowed since it's less than 1 million). This is suitable for cases such as dashboard tiles
     where we have restricted space but do not want to show partial units. */
 export class WholeUnitsDisplayUnitSystem extends DisplayUnitSystem {
-    private static units: DisplayUnit[];
+    private static units: Record<string, DisplayUnit[]> = {};
 
     // Constructor
-    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames) {
-        super(WholeUnitsDisplayUnitSystem.getUnits(unitLookup));
+    constructor(unitLookup: (exponent: number) => DisplayUnitSystemNames, culture?: string) {
+        super(WholeUnitsDisplayUnitSystem.getUnits(unitLookup, culture));
     }
 
     public static RESET(): void {
-        WholeUnitsDisplayUnitSystem.units = null;
+        WholeUnitsDisplayUnitSystem.units = {};
     }
 
-    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames): DisplayUnit[] {
-        if (!WholeUnitsDisplayUnitSystem.units) {
-            WholeUnitsDisplayUnitSystem.units = createDisplayUnits(unitLookup);
+    private static getUnits(unitLookup: (exponent: number) => DisplayUnitSystemNames, culture: string = 'en'): DisplayUnit[] {
+        if (!WholeUnitsDisplayUnitSystem.units[culture]) {
+            WholeUnitsDisplayUnitSystem.units[culture] = createDisplayUnits(unitLookup);
 
             // Ensure last unit has max of infinity
-            WholeUnitsDisplayUnitSystem.units[WholeUnitsDisplayUnitSystem.units.length - 1].applicableRangeMax = Infinity;
+            WholeUnitsDisplayUnitSystem.units[culture][WholeUnitsDisplayUnitSystem.units[culture].length - 1].applicableRangeMax = Infinity;
         }
 
-        return WholeUnitsDisplayUnitSystem.units;
+        return WholeUnitsDisplayUnitSystem.units[culture];
     }
 
     public format(

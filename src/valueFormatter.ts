@@ -33,6 +33,7 @@ import { numberFormat as NumberFormat, formattingService } from "./formattingSer
 import { DateTimeSequence } from "./date/dateTimeSequence";
 import { double as Double, valueType } from "powerbi-visuals-utils-typeutils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
+import { getAbbreviationFromExponent, getDisplayUnitsForCulture } from "../globalize/cldrDisplayUnits"
 
 // powerbi
 import powerbi from "powerbi-visuals-api";
@@ -65,13 +66,69 @@ export interface ValueFormatterOptions {
     // The format string to use.
     format?: string;
 
-    // The data value.
+    /**
+     * The minimum value in the data range. Used to determine the appropriate display unit scale.
+     * 
+     * **For numeric values:**
+     * - Determines which display unit to use (e.g., K, M, B, T)
+     * - Example: value: 1500000 → formats in millions (1.50M)
+     * 
+     * **For date values:**
+     * - Must be a Date object
+     * - Used with `value2` and `tickCount` to determine date unit granularity (year, month, day, etc.)
+     * - All three parameters (value, value2, tickCount) are required for date unit formatting
+     * 
+     * @example
+     * // Numeric: Determine display unit scale
+     * valueFormatter.create({ value: 1500000, format: "#,0" }) // → "1.50M"
+     * 
+     * @example
+     * // Date: Determine date unit granularity
+     * valueFormatter.create({ 
+     *   value: new Date(2024, 0, 1),
+     *   value2: new Date(2024, 11, 31),
+     *   tickCount: 12
+     * })
+     */
     value?: any;
 
-    // The data value.
+    /**
+     * The maximum value in the data range. Used with `value` to determine optimal display unit scale.
+     * 
+     * **For numeric values:**
+     * - Ensures consistent formatting across a value range (important for chart axes)
+     * - Example: value: 1000, value2: 1000000 → uses consistent unit across range
+     * 
+     * **For date values:**
+     * - Must be a Date object
+     * - Used with `value` and `tickCount` to calculate appropriate date intervals
+     * - Required for date unit formatting (year, quarter, month, week, day, etc.)
+     * 
+     * @example
+     * // Numeric: Consistent units across range
+     * valueFormatter.create({ value: 1000, value2: 1000000 })
+     * 
+     * @example
+     * // Date: Calculate date intervals
+     * valueFormatter.create({
+     *   value: new Date(2024, 0, 1),
+     *   value2: new Date(2024, 0, 31),
+     *   tickCount: 7
+     * }) // Determines optimal interval (e.g., weekly)
+     */
     value2?: any;
 
-    // The number of ticks.
+    /**
+     * The number of tick marks or intervals for the axis.
+     * 
+     * **For numeric values:**
+     * - Optional, used for calculating precision
+     * 
+     * **For date values:**
+     * - Required when using date-based display units
+     * - Works with `value` and `value2` to determine date granularity
+     * - Example: 12 ticks between Jan-Dec → monthly intervals
+     */
     tickCount?: any;
 
     // The display unit system to use
@@ -113,9 +170,9 @@ export interface ValueFormatterLocalizationOptions {
 
     // Returns a beautified form the given format string.
     beautify(format: string): string;
-
+    
     // Returns an object describing the given exponent in the current language.
-    describe(exponent: number): DisplayUnitSystemNames;
+    describe(exponent: number, culture?: string): DisplayUnitSystemNames;
     restatementComma: string;
     restatementCompoundAnd: string;
     restatementCompoundOr: string;
@@ -212,12 +269,20 @@ function beautify(format: string): string {
     return format;
 }
 
-function describeUnit(exponent: number): DisplayUnitSystemNames {
+function describeUnit(exponent: number, culture?: string): DisplayUnitSystemNames {
     const exponentLookup = (exponent === -1) ? "Auto" : exponent.toString();
+    let title: string = defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
+    let format: string = (exponent <= 0) ? "{0}" : defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
+    if (culture) {
+        const localization = getDisplayUnitsForCulture(culture)
+        const abbreviation = getAbbreviationFromExponent(exponent)
+        if (!abbreviation) {
+            return null
+        }
 
-    const title: string = defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_Title"];
-    const format: string = (exponent <= 0) ? "{0}" : defaultLocalizedStrings["DisplayUnitSystem_E" + exponentLookup + "_LabelFormat"];
-
+        title = localization[abbreviation].title || title;
+        format = localization[abbreviation].format || format;
+    }
     if (title || format)
         return { title: title, format: format };
 }
@@ -235,7 +300,7 @@ let localizationOptions: ValueFormatterLocalizationOptions = {
     infinity: defaultLocalizedStrings["InfinityValue"],
     negativeInfinity: defaultLocalizedStrings["NegativeInfinityValue"],
     beautify: format => beautify(format),
-    describe: exponent => describeUnit(exponent),
+    describe: (exponent, culture) => describeUnit(exponent, culture),
     restatementComma: defaultLocalizedStrings["RestatementComma"],
     restatementCompoundAnd: defaultLocalizedStrings["RestatementCompoundAnd"],
     restatementCompoundOr: defaultLocalizedStrings["RestatementCompoundOr"],
@@ -257,9 +322,6 @@ export function getFormatMetadata(format: string): NumberFormat.NumericFormatMet
 
 export function setLocaleOptions(options: ValueFormatterLocalizationOptions): void {
     localizationOptions = options;
-
-    DefaultDisplayUnitSystem.RESET();
-    WholeUnitsDisplayUnitSystem.RESET();
 }
 
 export function createDefaultFormatter(
@@ -311,6 +373,8 @@ export function checkValueInBounds(
     return targetNum;
 }
 
+
+
 // Creates an IValueFormatter to be used for a range of values.
 export function create(options: ValueFormatterOptions): IValueFormatter {
     const format: string = options.allowFormatBeautification
@@ -320,7 +384,7 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
     const { cultureSelector } = options;
 
     if (shouldUseNumericDisplayUnits(options)) {
-        const displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType);
+        const displayUnitSystem = createDisplayUnitSystem(options.displayUnitSystemType, options.cultureSelector);
 
         const singleValueFormattingMode = !!options.formatSingleValues;
 
@@ -395,7 +459,6 @@ export function create(options: ValueFormatterOptions): IValueFormatter {
             options: options
         };
     }
-
     return createDefaultFormatter(format, false, cultureSelector);
 }
 
@@ -458,21 +521,22 @@ export function formatVariantMeasureValue(
     }
 }
 
-export function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSystemType): DisplayUnitSystem {
+export function createDisplayUnitSystem(displayUnitSystemType?: DisplayUnitSystemType, culture?: string): DisplayUnitSystem {
+    const localisedDescribe = (exponent: number) => localizationOptions.describe(exponent, culture);
     if (displayUnitSystemType == null)
-        return new DefaultDisplayUnitSystem(localizationOptions.describe);
+        return new DefaultDisplayUnitSystem(localisedDescribe, culture);
 
     switch (displayUnitSystemType) {
         case DisplayUnitSystemType.Default:
-            return new DefaultDisplayUnitSystem(localizationOptions.describe);
+            return new DefaultDisplayUnitSystem(localisedDescribe, culture);
         case DisplayUnitSystemType.WholeUnits:
-            return new WholeUnitsDisplayUnitSystem(localizationOptions.describe);
+            return new WholeUnitsDisplayUnitSystem(localisedDescribe, culture);
         case DisplayUnitSystemType.Verbose:
             return new NoDisplayUnitSystem();
         case DisplayUnitSystemType.DataLabels:
-            return new DataLabelsDisplayUnitSystem(localizationOptions.describe);
+            return new DataLabelsDisplayUnitSystem(localisedDescribe);
         default:
-            return new DefaultDisplayUnitSystem(localizationOptions.describe);
+            return new DefaultDisplayUnitSystem(localisedDescribe, culture);
     }
 }
 
@@ -694,7 +758,7 @@ export function calculateExactDigitsPrecision(
         unitsDegree = leftPartLength % 3 === 0 ? unitsDegree - 1 : unitsDegree;
         const divider: number = Math.pow(1000, unitsDegree);
         if (divider > 0) {
-        value = value / divider;
+            value = value / divider;
         }
     }
 

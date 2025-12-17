@@ -60,7 +60,6 @@ function ensureDOM(): void {
     spanElement = document.createElement("span");
     document.body.appendChild(spanElement);
     // The style hides the svg element from the canvas, preventing canvas from scrolling down to show svg black square.
-    /* eslint-disable-next-line powerbi-visuals/no-http-string */
     const svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svgElement.setAttribute("height", "0");
     svgElement.setAttribute("width", "0");
@@ -70,7 +69,7 @@ function ensureDOM(): void {
     svgElement.style.position = "absolute";
     svgElement.style.height = "0px";
     svgElement.style.width = "0px";
-    /* eslint-disable-next-line powerbi-visuals/no-http-string */
+
     svgTextElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
     svgElement.appendChild(svgTextElement);
     document.body.appendChild(svgElement);
@@ -369,7 +368,7 @@ export function wordBreak(textElement: Element, maxWidth: number, maxHeight: num
     for (let i = 0, ilen = words.length; i < ilen; i++) {
         const dy = i === 0 ? firstDY : height;
         properties.text = words[i];
-        /* eslint-disable-next-line powerbi-visuals/no-http-string */
+
         const textElement: SVGTSpanElement = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
         textElement.setAttribute("x", "0");
         textElement.setAttribute("dy", dy ? dy.toString() : null);
