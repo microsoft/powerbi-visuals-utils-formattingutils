@@ -35,7 +35,7 @@ import { findDateFormat, fixDateTimeFormat } from "./../formatting";
 import * as formattingEncoder from "./formattingEncoder";
 import * as stringExtensions from "./../stringExtensions";
 
-import { Globalize, GlobalizeCalendar } from "./../../globalize/globalize";
+import { Globalize, GlobalizeCalendar } from "./../globalize/globalize";
 let _currentCachedFormat: string;
 let _currentCachedProcessedFormat: string;
 
@@ -54,7 +54,7 @@ export function format(value: Date, format: string, culture: Culture): string {
         } else {
             return formatDateCustom(value, format, culture);
         }
-    } catch (e) {
+    } catch {
         return formatDateStandard(value, "G", culture);
     }
 }

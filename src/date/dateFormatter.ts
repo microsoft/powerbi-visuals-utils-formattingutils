@@ -39,9 +39,10 @@ export default class DateFormatter {
 
     // Regexes and supporting functions are cached through closure
     static format(date, mask, utc) {
-        let dF = DateFormatter;
+        const dF = DateFormatter;
 
         // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
+        // eslint-disable-next-line powerbi-visuals/no-banned-terms
         if (arguments.length === 1 && Object.prototype.toString.call(date) === "[object String]" && !/\d/.test(date)) {
             mask = date;
             date = undefined;
@@ -59,7 +60,7 @@ export default class DateFormatter {
             utc = true;
         }
 
-        let	_ = utc ? "getUTC" : "get",
+        const	_ = utc ? "getUTC" : "get",
             d = date[_ + "Date"](),
             D = date[_ + "Day"](),
             M = date[_ + "Month"](),

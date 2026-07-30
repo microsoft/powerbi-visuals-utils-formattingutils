@@ -1,7 +1,9 @@
 node_modules
 *.log
-/typings
+typings
 /coverage
 /lib
-*.map
-/.tmp
+*.js.map
+.tmp
+.vitest-attachments
+__screenshots__

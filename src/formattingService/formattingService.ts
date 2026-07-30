@@ -25,8 +25,8 @@
  */
 /* eslint-disable no-useless-escape */
 
-import { Globalize } from "./../../globalize/globalize";
-import injectCultures from "./../../globalize/globalize.cultures";
+import { Globalize } from "./../globalize/globalize";
+import injectCultures from "./../globalize/globalize.cultures";
 injectCultures(Globalize);
 
 import * as dateTimeFormat from "./dateTimeFormat";

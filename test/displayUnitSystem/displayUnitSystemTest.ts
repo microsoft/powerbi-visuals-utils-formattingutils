@@ -24,12 +24,13 @@
 *  THE SOFTWARE.
 */
 
+import { vi } from "vitest";
 import {
     DisplayUnit,
     DisplayUnitSystem,
     DisplayUnitSystemNames,
     DataLabelsDisplayUnitSystem
-} from "./../../src/displayUnitSystem/displayUnitSystem";
+} from "../../src/displayUnitSystem/displayUnitSystem";
 
 describe("DisplayUnit", () => {
     describe("project", () => {
@@ -103,7 +104,7 @@ describe("DisplayUnitSystem", () => {
         it("shouldn't call findApplicableDisplayUnit if the value is undefined", () => {
             const displayUnitSystem: DisplayUnitSystem = createDisplayUnitSystem();
 
-            spyOn(displayUnitSystem, <any>"findApplicableDisplayUnit").and.callThrough();
+            vi.spyOn(displayUnitSystem as any, "findApplicableDisplayUnit");
 
             displayUnitSystem.update(undefined);
 

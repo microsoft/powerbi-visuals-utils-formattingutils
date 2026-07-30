@@ -24,17 +24,24 @@
 *  THE SOFTWARE.
 */
 
-import * as ephemeralStorage from "./../src/storageService/ephemeralStorageService";
+import { vi, type MockInstance } from "vitest";
+import * as ephemeralStorage from "../src/storageService/ephemeralStorageService";
 import ephemeralStorageService = ephemeralStorage.ephemeralStorageService;
-import verifyEllipsisActive from "./verifyEllipsisActive";
-import { textMeasurementService, stringExtensions } from "./../src/index";
+import { textMeasurementService, stringExtensions } from "../src/index";
 import { TextProperties } from "../src/interfaces";
-import * as lodashClonedeep from "lodash.clonedeep";
+import lodashClonedeep from "lodash.clonedeep";
+import verifyEllipsisActive from "./verifyEllipsisActive";
 
-// powerbi.extensibility.utils.test
-import { testDom } from "powerbi-visuals-utils-testutils";
 describe("Text measurement service", () => {
     let Ellipsis = "...";
+    let attachedDomNodes: HTMLElement[] = [];
+
+    afterEach(() => {
+        for (const node of attachedDomNodes)
+            node.remove();
+
+        attachedDomNodes = [];
+    });
 
     describe("measureSvgTextElementWidth", () => {
         it("svg text element", () => {
@@ -91,12 +98,15 @@ describe("Text measurement service", () => {
     });
 
     describe("estimate cache", () => {
-        let setDataSpy: jasmine.Spy;
+        let setDataSpy: MockInstance;
 
         beforeEach(() => {
             ephemeralStorageService["clearCache"]();
-            setDataSpy = spyOn(ephemeralStorageService, "setData");
-            setDataSpy.and.callThrough();
+            setDataSpy = vi.spyOn(ephemeralStorageService, "setData");
+        });
+
+        afterEach(() => {
+            setDataSpy.mockRestore();
         });
 
         it("estimateSvgTextHeight does cache", () => {
@@ -107,7 +117,7 @@ describe("Text measurement service", () => {
             textMeasurementService.estimateSvgTextHeight(getTextProperties(10, "E", "RandomFont2"));
             textMeasurementService.estimateSvgTextHeight(getTextProperties(10, "F", "RandomFont2"));
 
-            expect(setDataSpy.calls.count()).toBe(3);
+            expect(setDataSpy.mock.calls.length).toBe(3);
         });
 
         it("estimateSvgTextBaselineDelta does cache", () => {
@@ -118,27 +128,34 @@ describe("Text measurement service", () => {
             textMeasurementService.estimateSvgTextBaselineDelta(getTextProperties(10, "E", "RandomFont2"));
             textMeasurementService.estimateSvgTextBaselineDelta(getTextProperties(10, "F", "RandomFont2"));
 
-            expect(setDataSpy.calls.count()).toBe(3);
+            expect(setDataSpy.mock.calls.length).toBe(3);
         });
 
         it("estimateSvgTextHeight does not cache when results are wrong", () => {
-            let textProperties = getTextProperties(10, "A", "RandomFont");
+            // Use a unique font family so the cache key (fontFamily + fontSize) is not
+            // already populated by the caching tests above.
+            const textProperties = getTextProperties(10, "A", "ZeroSizeTestFont");
 
-            // Mock measureSvgTextRect() to mimic the behavior when the iframe is disconnected / hidden.
-            let measureSvgTextRectSpy = spyOn(textMeasurementService, "measureSvgTextRect");
-            measureSvgTextRectSpy.and.returnValue(<any>{
-                x: 0,
-                y: 0,
-                width: 0,
-                height: 0,
-            });
+            // Force a zero-sized bounding box to mimic a disconnected / hidden DOM, where the
+            // browser returns an empty rect. This is the real condition the caching guard
+            // (rect.height > 0) protects against.
+            const originalGetBBox = SVGTextElement.prototype.getBBox;
+            SVGTextElement.prototype.getBBox = function (): DOMRect {
+                return <any>{ x: 0, y: 0, width: 0, height: 0 };
+            };
 
-            let wrongHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
+            let wrongHeight: number;
+            try {
+                wrongHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
+            } finally {
+                // Always restore the real measurement implementation.
+                SVGTextElement.prototype.getBBox = originalGetBBox;
+            }
             expect(wrongHeight).toBe(0);
 
-            // Calling again with the same text properties should not retrieve the incorrect height from the cache.
-            measureSvgTextRectSpy.and.callThrough();
-            let correctHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
+            // The wrong (zero) value must not have been cached, so a subsequent real
+            // measurement returns a correct, positive height.
+            const correctHeight = textMeasurementService.estimateSvgTextHeight(textProperties);
             expect(correctHeight).toBeGreaterThan(0);
         });
     });
@@ -462,8 +479,14 @@ describe("Text measurement service", () => {
     });
 
     function attachToDom(element: HTMLElement | Element): HTMLElement {
-        let dom = testDom("100px", "100px");
+        let dom = document.createElement("div");
+        dom.style.width = "100px";
+        dom.style.height = "100px";
+        dom.style.position = "absolute";
+        dom.style.visibility = "hidden";
         dom.append(element);
+        document.body.appendChild(dom);
+        attachedDomNodes.push(dom);
         return dom;
     }
 

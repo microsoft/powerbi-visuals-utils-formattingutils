@@ -25,7 +25,7 @@
 */
 
 
-import * as ephemeralStorageService from "./../../src/storageService/ephemeralStorageService";
+import * as ephemeralStorageService from "../../src/storageService/ephemeralStorageService";
 import EphemeralStorageService = ephemeralStorageService.EphemeralStorageService;
 
 describe("Ephemeral Storage Service", () => {
@@ -49,17 +49,19 @@ describe("Ephemeral Storage Service", () => {
         expect(value == null).toBeTruthy();
     });
 
-    it("cache is cleared after interval", (done) => {
-        let timeout = 10;
-        let storage = new EphemeralStorageService(timeout);
+    it("cache is cleared after interval", () => {
+        const timeout = 10;
+        const storage = new EphemeralStorageService(timeout);
 
         storage.setData("key", "value");
 
-        setTimeout(() => {
-            // cache should be cleared by now
-            let value = storage.getData("key");
-            expect(value == null).toBeTruthy();
-            done();
-        }, timeout + 10);
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                // cache should be cleared by now
+                const value = storage.getData("key");
+                expect(value == null).toBeTruthy();
+                resolve();
+            }, timeout + 10);
+        });
     });
 });

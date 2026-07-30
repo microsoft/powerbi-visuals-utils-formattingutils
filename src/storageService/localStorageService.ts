@@ -29,13 +29,13 @@ export class LocalStorageService implements IStorageService {
     public getData(key: string): any {
         try {
             if (localStorage) {
-                let value = localStorage[key];
+                const value = localStorage[key];
                 if (value) {
                     return JSON.parse(value);
                 }
             }
         }
-        catch (exception) { }
+        catch { /* localStorage unavailable */ }
 
         return null;
     }
@@ -46,6 +46,6 @@ export class LocalStorageService implements IStorageService {
                 localStorage[key] = JSON.stringify(data);
             }
         }
-        catch (e) { }
+        catch { /* localStorage unavailable */ }
     }
 }

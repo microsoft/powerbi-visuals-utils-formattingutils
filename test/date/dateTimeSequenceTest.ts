@@ -25,8 +25,9 @@
 */
 
 
-import { DateTimeUnit } from "./../../src/formattingService/iFormattingService";
-import { DateTimeSequence } from "./../../src/date/dateTimeSequence";
+import { vi } from "vitest";
+import { DateTimeUnit } from "../../src/formattingService/iFormattingService";
+import { DateTimeSequence } from "../../src/date/dateTimeSequence";
 
 describe("DateTimeSequence ", () => {
     describe("add", () => {
@@ -101,7 +102,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_YEARS").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_YEARS");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
@@ -117,7 +118,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_WEEKS").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_WEEKS");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
@@ -133,7 +134,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_DAYS").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_DAYS");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
@@ -149,7 +150,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_HOURS").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_HOURS");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
@@ -165,7 +166,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_MINUTES").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_MINUTES");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
@@ -181,7 +182,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_SECONDS").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_SECONDS");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,
@@ -197,7 +198,7 @@ describe("DateTimeSequence ", () => {
                 minDate: Date = new Date(2010, 5, 15),
                 maxDate: Date = new Date(2017, 1, 15);
 
-            spyOn(DateTimeSequence, "CALCULATE_MILLISECONDS").and.callThrough();
+            vi.spyOn(DateTimeSequence, "CALCULATE_MILLISECONDS");
 
             const dateTimeSequence: DateTimeSequence = DateTimeSequence.CALCULATE(
                 minDate,

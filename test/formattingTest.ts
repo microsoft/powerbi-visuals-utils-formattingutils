@@ -25,7 +25,7 @@
 */
 
 // powerbi.extensibility.utils.formatting
-import { DateFormat, findDateFormat, fixDateTimeFormat } from "./../src/formatting";
+import { DateFormat, findDateFormat, fixDateTimeFormat } from "../src/formatting";
 
 describe("fixDateTimeFormat", () => {
     it("should return a format without percentage", () => {

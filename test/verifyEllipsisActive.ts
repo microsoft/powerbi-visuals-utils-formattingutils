@@ -24,6 +24,8 @@
  *  THE SOFTWARE.
  */
 
+import { expect } from "vitest";
+
 /**
 * The original string, which ended with "..." was always placed in the DOM
 * CSS text-overflow property with value ellipsis was truncating the text visually

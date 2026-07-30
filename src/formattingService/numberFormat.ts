@@ -31,7 +31,7 @@
  */
 
 /* eslint-disable no-useless-escape */
-import { Globalize, GlobalizeNumberFormat } from "./../../globalize/globalize";
+import { Globalize, GlobalizeNumberFormat } from "./../globalize/globalize";
 // powerbi.extensibility.utils.type
 import { double as Double, regExpExtensions } from "powerbi-visuals-utils-typeutils";
 // powerbi.extensibility.utils.formatting
@@ -243,7 +243,7 @@ export function format(
             return formatNumberStandard(value, format, culture);
 
         return formatNumberCustom(value, format, culture);
-    } catch (e) {
+    } catch {
         return Globalize.format(value, undefined, culture);
     }
 }

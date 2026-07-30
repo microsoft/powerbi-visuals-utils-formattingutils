@@ -24,7 +24,7 @@
 *  THE SOFTWARE.
 */
 
-import * as textUtil from "./../src/textUtil";
+import * as textUtil from "../src/textUtil";
 
 describe("textUtil", () => {
     describe("removeBreakingSpaces", () => {

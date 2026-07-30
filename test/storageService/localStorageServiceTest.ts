@@ -24,8 +24,8 @@
 *  THE SOFTWARE.
 */
 
-import { IStorageService } from "./../../src/storageService/iStorageService";
-import { LocalStorageService } from "./../../src/storageService/localStorageService";
+import { IStorageService } from "../../src/storageService/iStorageService";
+import { LocalStorageService } from "../../src/storageService/localStorageService";
 
 describe("LocalStorageService", () => {
     describe("getData", () => {

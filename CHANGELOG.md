@@ -1,3 +1,23 @@
+## 7.0.0
+
+### Breaking changes
+* Test runner migrated from Karma + Jasmine to Vitest.
+* Tests now run in a real browser via Vitest browser mode (Playwright/Chromium).
+* Build migrated from Webpack to the TypeScript compiler (`tsc`); `globalize` sources moved under `src/`.
+* Compiled output moved from `lib/src/` to `lib/`; public package entry points now resolve from `lib/*`.
+* Development/build TypeScript upgraded to 6.x.
+
+### Changed
+* `powerbi-visuals-api` remains on ^5.11.0.
+* `powerbi-visuals-utils-typeutils` updated to ^7.0.0.
+* `powerbi-visuals-utils-dataviewutils` updated to ^7.0.0.
+* CI/development baseline updated to Node.js 20.x.
+
+### Infrastructure
+* Lint stack migrated to ESLint 10 flat config.
+* CI workflows modernized to `actions/*@v6` and Node 20/22 matrix.
+* Custom CodeQL workflow updated to Node 20 and modern action versions.
+
 ## 6.1.2
 * Updated packages
 * powerbi-visuals-api update to 5.11.0

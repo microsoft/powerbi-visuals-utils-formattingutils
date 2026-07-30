@@ -24,7 +24,7 @@
 *  THE SOFTWARE.
 */
 
-import * as stringExtensions from "./../src/stringExtensions";
+import * as stringExtensions from "../src/stringExtensions";
 
 describe("stringExtensions", () => {
     describe("format", () => {
@@ -330,38 +330,38 @@ describe("stringExtensions", () => {
     });
 
     it("contains", () => {
-        expect(stringExtensions.contains("work it harder", "work")).toBe(true, "start");
-        expect(stringExtensions.contains("work it harder", "it")).toBe(true, "middle");
-        expect(stringExtensions.contains("work it harder", "harder")).toBe(true, "end");
-        expect(stringExtensions.contains("work it harder", "work it")).toBe(true, "with space");
+        expect(stringExtensions.contains("work it harder", "work"), "start").toBe(true);
+        expect(stringExtensions.contains("work it harder", "it"), "middle").toBe(true);
+        expect(stringExtensions.contains("work it harder", "harder"), "end").toBe(true);
+        expect(stringExtensions.contains("work it harder", "work it"), "with space").toBe(true);
 
         expect(stringExtensions.contains("harder", "work it harder")).toBe(false);
 
-        expect(stringExtensions.contains("work it harder", "HARDER")).toBe(false, "lower-case vs. upper-case");
-        expect(stringExtensions.contains("WORK IT HARDER", "harder")).toBe(false, "upper-case vs. lower-case");
+        expect(stringExtensions.contains("work it harder", "HARDER"), "lower-case vs. upper-case").toBe(false);
+        expect(stringExtensions.contains("WORK IT HARDER", "harder"), "upper-case vs. lower-case").toBe(false);
 
-        expect(stringExtensions.contains(null, "null")).toBe(false, "null source");
-        expect(stringExtensions.contains(undefined, "undefined")).toBe(false, "null source");
-        expect(stringExtensions.contains("", "empty")).toBe(false, "empty source");
-        expect(stringExtensions.contains("non-empty", "")).toBe(true, "empty substring");
+        expect(stringExtensions.contains(null, "null"), "null source").toBe(false);
+        expect(stringExtensions.contains(undefined, "undefined"), "null source").toBe(false);
+        expect(stringExtensions.contains("", "empty"), "empty source").toBe(false);
+        expect(stringExtensions.contains("non-empty", ""), "empty substring").toBe(true);
     });
 
     it("containsIgnoreCase", () => {
-        expect(stringExtensions.containsIgnoreCase("make it better", "make")).toBe(true, "start");
-        expect(stringExtensions.containsIgnoreCase("make it better", "it")).toBe(true, "middle");
-        expect(stringExtensions.containsIgnoreCase("make it better", "better")).toBe(true, "start");
-        expect(stringExtensions.containsIgnoreCase("make it better", "make it")).toBe(true, "with space");
+        expect(stringExtensions.containsIgnoreCase("make it better", "make"), "start").toBe(true);
+        expect(stringExtensions.containsIgnoreCase("make it better", "it"), "middle").toBe(true);
+        expect(stringExtensions.containsIgnoreCase("make it better", "better"), "start").toBe(true);
+        expect(stringExtensions.containsIgnoreCase("make it better", "make it"), "with space").toBe(true);
 
         expect(stringExtensions.containsIgnoreCase("better", "make it better")).toBe(false);
 
-        expect(stringExtensions.containsIgnoreCase("make it better", "MAKE")).toBe(true, "start, lower-case vs. upper-case");
-        expect(stringExtensions.containsIgnoreCase("make it better", "IT")).toBe(true, "middle, lower-case vs. upper-case");
-        expect(stringExtensions.containsIgnoreCase("make it better", "BETTER")).toBe(true, "end, lower-case vs. upper-case");
-        expect(stringExtensions.containsIgnoreCase("MAKE IT BETTER", "make it")).toBe(true, "with space, upper-case vs. lower-case");
+        expect(stringExtensions.containsIgnoreCase("make it better", "MAKE"), "start, lower-case vs. upper-case").toBe(true);
+        expect(stringExtensions.containsIgnoreCase("make it better", "IT"), "middle, lower-case vs. upper-case").toBe(true);
+        expect(stringExtensions.containsIgnoreCase("make it better", "BETTER"), "end, lower-case vs. upper-case").toBe(true);
+        expect(stringExtensions.containsIgnoreCase("MAKE IT BETTER", "make it"), "with space, upper-case vs. lower-case").toBe(true);
 
-        expect(stringExtensions.containsIgnoreCase(null, "null")).toBe(false, "null source");
-        expect(stringExtensions.containsIgnoreCase(undefined, "undefined")).toBe(false, "null source");
-        expect(stringExtensions.containsIgnoreCase("", "empty")).toBe(false, "empty string source");
-        expect(stringExtensions.containsIgnoreCase("non-empty", "")).toBe(true, "empty substring");
+        expect(stringExtensions.containsIgnoreCase(null, "null"), "null source").toBe(false);
+        expect(stringExtensions.containsIgnoreCase(undefined, "undefined"), "null source").toBe(false);
+        expect(stringExtensions.containsIgnoreCase("", "empty"), "empty string source").toBe(false);
+        expect(stringExtensions.containsIgnoreCase("non-empty", ""), "empty substring").toBe(true);
     });
 });

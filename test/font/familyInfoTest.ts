@@ -23,14 +23,15 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
-import { FamilyInfo } from "./../../src/font/familyInfo";
+import { vi } from "vitest";
+import { FamilyInfo } from "../../src/font/familyInfo";
 
 describe("FamilyInfo", () => {
     describe("family", () => {
         it("should call the getFamily method to get a result", () => {
             const familyInfo: FamilyInfo = createFamilyInfo();
 
-            spyOn(familyInfo, "getFamily").and.callThrough();
+            vi.spyOn(familyInfo as any, "getFamily");
 
             familyInfo.family;
 
@@ -71,7 +72,7 @@ describe("FamilyInfo", () => {
         it("should call the getCSS to get a result", () => {
             const familyInfo: FamilyInfo = createFamilyInfo();
 
-            spyOn(familyInfo, "getCSS").and.callThrough();
+            vi.spyOn(familyInfo as any, "getCSS");
 
             familyInfo.css;
 

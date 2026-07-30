@@ -24,8 +24,8 @@
 *  THE SOFTWARE.
 */
 
-import { TextProperties } from "./../src/interfaces";
-import { textMeasurementService, wordBreaker } from "./../src/index";
+import { TextProperties } from "../src/interfaces";
+import { textMeasurementService, wordBreaker } from "../src/index";
 
 describe("WordBreaker", () => {
 
